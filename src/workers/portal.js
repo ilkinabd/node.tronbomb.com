@@ -8,6 +8,10 @@ const setGame = (gameId, contractAddress, timestamp) => {
   console.log(gameId, contractAddress, timestamp);
 };
 
+const setToken = (tokenId, contractAddress, timestamp) => {
+  console.log(tokenId, contractAddress, timestamp);
+};
+
 const loadGames = async() => {
   const events = await tronWeb.getEventResult(PORTAL_CONTRACT, {
     eventName: 'SetGame',
@@ -24,8 +28,25 @@ const loadGames = async() => {
   }
 };
 
+const loadTokens = async() => {
+  const events = await tronWeb.getEventResult(PORTAL_CONTRACT, {
+    eventName: 'SetToken',
+  });
+
+  if (!events || events.length === 0) {
+    console.error('Tokens smart contracts not found.');
+  }
+
+  for (const event of events) {
+    const { timestamp, result } = event;
+    const { tokenId, contractAddress } = result;
+    setToken(tokenId, contractAddress, timestamp);
+  }
+};
+
 const loadPortal = () => {
   loadGames();
+  loadTokens();
 };
 
 loadPortal();
