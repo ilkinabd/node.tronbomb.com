@@ -11,7 +11,9 @@
     "errors": "pm2 logs --err",
     "eslint": "eslint --fix ."
   },
-  "_moduleAliases": {},
+  "_moduleAliases": {
+    "@workers": "src/workers"
+  },
   "repository": "https://gitlab.com/MaxieMind/tron_bomb/node",
   "author": "DenyStark <denyskrolevetskyi@gmail.com>",
   "license": "Apache-2.0",
@@ -19,6 +21,7 @@
     "babel-eslint": "^10.0.2",
     "eslint": "^6.0.1",
     "module-alias": "^2.2.0",
-    "pm2": "^3.5.1"
+    "pm2": "^3.5.1",
+    "tronweb": "^2.6.4"
   }
 }
