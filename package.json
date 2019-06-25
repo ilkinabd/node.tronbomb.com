@@ -1,0 +1,20 @@
+{
+  "name": "node",
+  "version": "0.1.0",
+  "description": "Microservice for TRON blockchain.",
+  "main": "server.js",
+  "scripts": {
+    "eslint": "eslint --fix ."
+  },
+  "_moduleAliases": {
+
+  },
+  "repository": "https://gitlab.com/MaxieMind/tron_bomb/node",
+  "author": "DenyStark <denyskrolevetskyi@gmail.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.0.1",
+    "module-alias": "^2.2.0"
+  }
+}
