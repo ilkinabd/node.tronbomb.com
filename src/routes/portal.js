@@ -26,10 +26,15 @@ router.route('/balance')
 router.route('/withdraw')
   .post(auth, validate('withdraw', false), controller.withdraw);
 
+// Events
+
 router.route('/events/main_status')
   .get(auth, validate('statusEvents', true), controller.events.mainStatus);
 
 router.route('/events/withdraws')
   .get(auth, controller.events.withdraws);
+
+router.route('/events/tokens')
+  .get(auth, controller.events.tokens);
 
 module.exports = router;

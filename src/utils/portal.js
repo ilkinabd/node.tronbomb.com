@@ -49,6 +49,7 @@ module.exports = {
   events: {
     mainStatus: events('ChangeMainStatus'),
     withdraws: events('Withdraw'),
+    tokens: events('SetToken'),
   },
   balance,
   withdraw: send('withdraw'),
