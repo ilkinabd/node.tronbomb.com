@@ -12,7 +12,7 @@ const getMainStatus = async(_req, res) => {
 const setMainStatus = async(req, res) => {
   const { status } = req.body;
 
-  const result = await utils.control.setMainStatus({ status });
+  const result = await utils.control.setMainStatus(status);
   if (result === null || result === undefined)
     return res.status(500).json(resError(73500));
 
@@ -33,6 +33,16 @@ const balance = async(_req, res) => {
     return res.status(500).json(resError(73500));
 
   res.json(resSuccess({ balance }));
+};
+
+const withdraw = async(req, res) => {
+  const { amount, tokenId } = req.body;
+
+  const result = await utils.withdraw(amount * 10 ** 6, tokenId);
+  if (result === null || result === undefined)
+    return res.status(500).json(resError(73500));
+
+  res.json(resSuccess({ result }));
 };
 
 // Events
@@ -56,7 +66,8 @@ module.exports = {
   setMainStatus,
   getOwner,
   balance,
+  withdraw,
   events: {
     mainStatus,
-  }
+  },
 };

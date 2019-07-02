@@ -8,6 +8,10 @@ const schemas = {
     from: Joi.number().integer().min(0),
     to: Joi.number().integer().min(Joi.ref('from')),
   }),
+  withdraw: Joi.object().keys({
+    amount: Joi.number().min(0).required(),
+    tokenId: Joi.number().integer().min(0).required(),
+  }),
 };
 
 const validate = (type, isQuery) => (req, res, next) => {

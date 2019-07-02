@@ -17,6 +17,9 @@ router.route('/get/owner')
 router.route('/balance')
   .get(auth, controller.balance);
 
+router.route('/withdraw')
+  .post(auth, validate('withdraw', false), controller.withdraw);
+
 router.route('/events/main_status')
   .get(auth, validate('statusEvents', true), controller.events.mainStatus);
 

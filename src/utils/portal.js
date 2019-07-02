@@ -19,7 +19,7 @@ const call = (variable) => async() => {
 
 const send = (method) => async(...params) => {
   if (!contract) return null;
-  const result = await contract[method](params).send({
+  const result = await contract[method](...params).send({
     shouldPollResponse: true,
   }).catch(console.error);
 
@@ -46,4 +46,5 @@ module.exports = {
     mainStatus: events('ChangeMainStatus'),
   },
   balance,
+  withdraw: send('withdraw'),
 };
