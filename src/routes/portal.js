@@ -11,4 +11,7 @@ router.route('/main_status/get')
 router.route('/main_status/set')
   .post(auth, validate('setMainStatus', false), controller.setMainStatus);
 
+router.route('/events/main_status')
+  .get(auth, validate('statusEvents', true), controller.getMainStatusEvents);
+
 module.exports = router;

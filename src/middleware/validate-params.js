@@ -4,6 +4,10 @@ const schemas = {
   setMainStatus: Joi.object().keys({
     status: Joi.boolean().required(),
   }),
+  statusEvents: Joi.object().keys({
+    from: Joi.number().integer().min(0),
+    to: Joi.number().integer().min(Joi.ref('from')),
+  }),
 };
 
 const validate = (type, isQuery) => (req, res, next) => {

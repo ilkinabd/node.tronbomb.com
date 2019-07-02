@@ -26,9 +26,20 @@ const send = (method) => async(...params) => {
   return result;
 };
 
+const events = (eventName) => async() => {
+  const events = await tronWeb.getEventResult(PORTAL_CONTRACT, {
+    eventName,
+  }).catch(console.error);
+
+  return events;
+};
+
 module.exports = {
   control: {
     getMainStatus: call('mainStatus'),
     setMainStatus: send('setMainStatus'),
+  },
+  events: {
+    mainStatus: events('ChangeMainStatus'),
   },
 };
