@@ -61,6 +61,20 @@ const mainStatus = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
+const withdraws = async(req, res) => {
+  const { from, to } = req.query;
+
+  let events = await utils.events.withdraws();
+  if (events === null || events === undefined)
+    return res.status(500).json(resError(73500));
+
+  events = events.filter((event) => (
+    (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
+  ));
+
+  res.json(resSuccess({ events }));
+};
+
 module.exports = {
   getMainStatus,
   setMainStatus,
@@ -69,5 +83,6 @@ module.exports = {
   withdraw,
   events: {
     mainStatus,
+    withdraws,
   },
 };

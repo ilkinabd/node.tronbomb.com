@@ -23,4 +23,7 @@ router.route('/withdraw')
 router.route('/events/main_status')
   .get(auth, validate('statusEvents', true), controller.events.mainStatus);
 
+router.route('/events/withdraws')
+  .get(auth, controller.events.withdraws);
+
 module.exports = router;
