@@ -149,6 +149,24 @@ const tokens = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
+const games = async(req, res) => {
+  const { from, to } = req.query;
+
+  const games = await utils.events.games();
+  if (games === null || games === undefined)
+    return res.status(500).json(resError(73500));
+
+  const gamesStatuses = await utils.events.gamesStatuses();
+  if (gamesStatuses === null || gamesStatuses === undefined)
+    return res.status(500).json(resError(73500));
+
+  const events = games.concat(gamesStatuses).filter((event) => (
+    (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
+  ));
+
+  res.json(resSuccess({ events }));
+};
+
 module.exports = {
   getMainStatus,
   setMainStatus,
@@ -165,5 +183,6 @@ module.exports = {
     mainStatus,
     withdraws,
     tokens,
+    games,
   },
 };

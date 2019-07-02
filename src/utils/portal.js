@@ -54,6 +54,8 @@ module.exports = {
     mainStatus: events('ChangeMainStatus'),
     withdraws: events('Withdraw'),
     tokens: events('SetToken'),
+    games: events('SetGame'),
+    gamesStatuses: events('SetGameStatus'),
   },
   balance,
   withdraw: send('withdraw'),

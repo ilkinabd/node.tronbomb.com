@@ -49,4 +49,7 @@ router.route('/events/withdraws')
 router.route('/events/tokens')
   .get(auth, controller.events.tokens);
 
+router.route('/events/games')
+  .get(auth, controller.events.games);
+
 module.exports = router;
