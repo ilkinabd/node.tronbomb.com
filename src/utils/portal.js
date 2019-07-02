@@ -45,6 +45,8 @@ module.exports = {
     getOwner: call('owner'),
     getToken: call('tokens'),
     setToken: send('setToken'),
+    getGame: call('games'),
+    setGame: send('setGame'),
   },
   events: {
     mainStatus: events('ChangeMainStatus'),

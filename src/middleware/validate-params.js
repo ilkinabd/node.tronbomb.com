@@ -19,6 +19,13 @@ const schemas = {
     tokenId: Joi.number().integer().min(0).required(),
     address: Joi.string().alphanum().length(34).required(),
   }),
+  getGame: Joi.object().keys({
+    gameId: Joi.number().integer().min(0).required(),
+  }),
+  setGame: Joi.object().keys({
+    gameId: Joi.number().integer().min(0).required(),
+    address: Joi.string().alphanum().length(34).required(),
+  }),
 };
 
 const validate = (type, isQuery) => (req, res, next) => {

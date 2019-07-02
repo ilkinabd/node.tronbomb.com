@@ -20,6 +20,12 @@ router.route('/get/token')
 router.route('/set/token')
   .post(auth, validate('setToken', false), controller.setToken);
 
+router.route('/get/game')
+  .get(auth, validate('getGame', true), controller.getGame);
+
+router.route('/set/game')
+  .post(auth, validate('setGame', false), controller.setGame);
+
 router.route('/balance')
   .get(auth, controller.balance);
 
