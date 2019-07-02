@@ -1,5 +1,8 @@
+const { NODE_PORT, NODE_URL } = process.env;
 require('module-alias/register');
 
-require('@workers/portal');
+const app = require('./app');
 
-console.log('Server started');
+app.listen(NODE_PORT, NODE_URL, () => {
+  console.info('Server started');
+});
