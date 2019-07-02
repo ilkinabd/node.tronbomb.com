@@ -5,13 +5,13 @@ const controller = require('@controllers/portal');
 const auth = require('@middleware/check-auth');
 const validate = require('@middleware/validate-params');
 
-router.route('/main_status/get')
+router.route('/get/main_status')
   .get(auth, controller.getMainStatus);
 
-router.route('/main_status/set')
+router.route('/set/main_status')
   .post(auth, validate('setMainStatus', false), controller.setMainStatus);
 
-router.route('/owner/get')
+router.route('/get/owner')
   .get(auth, controller.getOwner);
 
 router.route('/events/main_status')
