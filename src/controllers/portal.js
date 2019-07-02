@@ -19,6 +19,14 @@ const setMainStatus = async(req, res) => {
   res.json(resSuccess({ result }));
 };
 
+const getOwner = async(_req, res) => {
+  const owner = await utils.control.getOwner();
+  if (owner === null || owner === undefined)
+    return res.status(500).json(resError(73500));
+
+  res.json(resSuccess({ owner }));
+};
+
 const getMainStatusEvents = async(req, res) => {
   const { from, to } = req.query;
 
@@ -36,5 +44,6 @@ const getMainStatusEvents = async(req, res) => {
 module.exports = {
   getMainStatus,
   setMainStatus,
+  getOwner,
   getMainStatusEvents,
 };

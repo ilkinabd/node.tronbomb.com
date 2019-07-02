@@ -38,6 +38,7 @@ module.exports = {
   control: {
     getMainStatus: call('mainStatus'),
     setMainStatus: send('setMainStatus'),
+    getOwner: call('owner'),
   },
   events: {
     mainStatus: events('ChangeMainStatus'),
