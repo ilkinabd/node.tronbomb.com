@@ -26,6 +26,13 @@ const schemas = {
     gameId: Joi.number().integer().min(0).required(),
     address: Joi.string().alphanum().length(34).required(),
   }),
+  getGameStatus: Joi.object().keys({
+    address: Joi.string().alphanum().length(34).required(),
+  }),
+  setGameStatus: Joi.object().keys({
+    address: Joi.string().alphanum().length(34).required(),
+    status: Joi.boolean().required(),
+  }),
 };
 
 const validate = (type, isQuery) => (req, res, next) => {

@@ -26,6 +26,12 @@ router.route('/get/game')
 router.route('/set/game')
   .post(auth, validate('setGame', false), controller.setGame);
 
+router.route('/get/game_status')
+  .get(auth, validate('getGameStatus', true), controller.getGameStatus);
+
+router.route('/set/game_status')
+  .post(auth, validate('setGameStatus', false), controller.setGameStatus);
+
 router.route('/balance')
   .get(auth, controller.balance);
 

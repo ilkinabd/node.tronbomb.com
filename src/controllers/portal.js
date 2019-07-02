@@ -50,17 +50,37 @@ const setToken = async(req, res) => {
 const getGame = async(req, res) => {
   const { gameId } = req.query;
 
-  const token = await utils.control.getGame(gameId);
-  if (token === null || token === undefined)
+  const game = await utils.control.getGame(gameId);
+  if (game === null || game === undefined)
     return res.status(500).json(resError(73500));
 
-  res.json(resSuccess({ token }));
+  res.json(resSuccess({ game }));
 };
 
 const setGame = async(req, res) => {
   const { gameId, address } = req.body;
 
   const result = await utils.control.setGame(gameId, address);
+  if (result === null || result === undefined)
+    return res.status(500).json(resError(73500));
+
+  res.json(resSuccess({ result }));
+};
+
+const getGameStatus = async(req, res) => {
+  const { address } = req.query;
+
+  const gameStatus = await utils.control.getGameStatus(address);
+  if (gameStatus === null || gameStatus === undefined)
+    return res.status(500).json(resError(73500));
+
+  res.json(resSuccess({ gameStatus }));
+};
+
+const setGameStatus = async(req, res) => {
+  const { address, status } = req.body;
+
+  const result = await utils.control.setGameStatus(address, status);
   if (result === null || result === undefined)
     return res.status(500).json(resError(73500));
 
@@ -139,6 +159,8 @@ module.exports = {
   setToken,
   getGame,
   setGame,
+  getGameStatus,
+  setGameStatus,
   events: {
     mainStatus,
     withdraws,

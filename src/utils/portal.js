@@ -47,6 +47,8 @@ module.exports = {
     setToken: send('setToken'),
     getGame: call('games'),
     setGame: send('setGame'),
+    getGameStatus: call('gamesStatuses'),
+    setGameStatus: send('setGameStatus'),
   },
   events: {
     mainStatus: events('ChangeMainStatus'),
