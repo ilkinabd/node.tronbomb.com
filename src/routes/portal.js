@@ -14,6 +14,12 @@ router.route('/set/main_status')
 router.route('/get/owner')
   .get(auth, controller.getOwner);
 
+router.route('/get/token')
+  .get(auth, validate('getToken', true), controller.getToken);
+
+router.route('/set/token')
+  .post(auth, validate('setToken', false), controller.setToken);
+
 router.route('/balance')
   .get(auth, controller.balance);
 

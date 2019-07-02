@@ -12,6 +12,13 @@ const schemas = {
     amount: Joi.number().min(0).required(),
     tokenId: Joi.number().integer().min(0).required(),
   }),
+  getToken: Joi.object().keys({
+    tokenId: Joi.number().integer().min(0).required(),
+  }),
+  setToken: Joi.object().keys({
+    tokenId: Joi.number().integer().min(0).required(),
+    address: Joi.string().alphanum().length(34).required(),
+  }),
 };
 
 const validate = (type, isQuery) => (req, res, next) => {

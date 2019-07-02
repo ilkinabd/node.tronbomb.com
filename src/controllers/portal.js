@@ -27,6 +27,26 @@ const getOwner = async(_req, res) => {
   res.json(resSuccess({ owner }));
 };
 
+const getToken = async(req, res) => {
+  const { tokenId } = req.query;
+
+  const token = await utils.control.getToken(tokenId);
+  if (token === null || token === undefined)
+    return res.status(500).json(resError(73500));
+
+  res.json(resSuccess({ token }));
+};
+
+const setToken = async(req, res) => {
+  const { tokenId, address } = req.body;
+
+  const result = await utils.control.setToken(tokenId, address);
+  if (result === null || result === undefined)
+    return res.status(500).json(resError(73500));
+
+  res.json(resSuccess({ result }));
+};
+
 const balance = async(_req, res) => {
   const balance = await utils.balance();
   if (balance === null || balance === undefined)
@@ -81,6 +101,8 @@ module.exports = {
   getOwner,
   balance,
   withdraw,
+  getToken,
+  setToken,
   events: {
     mainStatus,
     withdraws,

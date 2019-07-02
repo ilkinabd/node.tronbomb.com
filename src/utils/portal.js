@@ -10,9 +10,11 @@ let contract;
   contract = await tronWeb.contract().at(PORTAL_CONTRACT);
 })();
 
-const call = (variable) => async() => {
+const call = (variable) => async(param) => {
   if (!contract) return null;
-  const result = await contract[variable]().call().catch(console.error);
+  const result = await
+  (param ? contract[variable](param) : contract[variable]())
+    .call().catch(console.error);
 
   return result;
 };
@@ -41,6 +43,8 @@ module.exports = {
     getMainStatus: call('mainStatus'),
     setMainStatus: send('setMainStatus'),
     getOwner: call('owner'),
+    getToken: call('tokens'),
+    setToken: send('setToken'),
   },
   events: {
     mainStatus: events('ChangeMainStatus'),
