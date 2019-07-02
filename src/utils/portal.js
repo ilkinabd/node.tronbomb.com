@@ -10,14 +10,25 @@ let contract;
   contract = await tronWeb.contract().at(PORTAL_CONTRACT);
 })();
 
-const getParam = (param) => async() => {
+const call = (variable) => async() => {
   if (!contract) return null;
-  const result = await contract[param]().call();
+  const result = await contract[variable]().call().catch(console.error);
+
+  return result;
+};
+
+const send = (method) => async(...params) => {
+  if (!contract) return null;
+  const result = await contract[method](params).send({
+    shouldPollResponse: true,
+  }).catch(console.error);
+
   return result;
 };
 
 module.exports = {
   control: {
-    getMianStatus: getParam('mainStatus'),
+    getMainStatus: call('mainStatus'),
+    setMainStatus: send('setMainStatus'),
   },
 };
