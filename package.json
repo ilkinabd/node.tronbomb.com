@@ -12,6 +12,9 @@
     "eslint": "eslint --fix ."
   },
   "_moduleAliases": {
+    "@controllers": "src/controllers",
+    "@middleware": "src/middleware",
+    "@routes": "src/routes",
     "@utils": "src/utils"
   },
   "repository": "https://gitlab.com/MaxieMind/tron_bomb/node",

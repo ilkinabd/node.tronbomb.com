@@ -4,5 +4,5 @@ require('module-alias/register');
 const app = require('./app');
 
 app.listen(NODE_PORT, NODE_URL, () => {
-  console.log('Server started');
+  console.info('Server started');
 });

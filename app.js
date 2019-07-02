@@ -2,6 +2,8 @@ const { npm_package_version: version } = process.env;
 
 const express = require('express');
 
+const portal = require('./src/routes/portal');
+
 const app = express();
 
 const { success: resSuccess } = require('@utils/res-builder');
@@ -22,5 +24,7 @@ app.use((_req, res, next) => {
 app.get('/', (_req, res) => {
   res.json(resSuccess({ version }));
 });
+
+app.use('/portal', portal);
 
 module.exports = app;
