@@ -27,7 +27,17 @@ const getOwner = async(_req, res) => {
   res.json(resSuccess({ owner }));
 };
 
-const getMainStatusEvents = async(req, res) => {
+const balance = async(_req, res) => {
+  const balance = await utils.balance();
+  if (balance === null || balance === undefined)
+    return res.status(500).json(resError(73500));
+
+  res.json(resSuccess({ balance }));
+};
+
+// Events
+
+const mainStatus = async(req, res) => {
   const { from, to } = req.query;
 
   let events = await utils.events.mainStatus();
@@ -45,5 +55,8 @@ module.exports = {
   getMainStatus,
   setMainStatus,
   getOwner,
-  getMainStatusEvents,
+  balance,
+  events: {
+    mainStatus,
+  }
 };

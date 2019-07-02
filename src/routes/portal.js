@@ -14,7 +14,10 @@ router.route('/set/main_status')
 router.route('/get/owner')
   .get(auth, controller.getOwner);
 
+router.route('/balance')
+  .get(auth, controller.balance);
+
 router.route('/events/main_status')
-  .get(auth, validate('statusEvents', true), controller.getMainStatusEvents);
+  .get(auth, validate('statusEvents', true), controller.events.mainStatus);
 
 module.exports = router;

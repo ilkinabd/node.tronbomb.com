@@ -34,6 +34,8 @@ const events = (eventName) => async() => {
   return events;
 };
 
+const balance = () => tronWeb.trx.getBalance(PORTAL_CONTRACT);
+
 module.exports = {
   control: {
     getMainStatus: call('mainStatus'),
@@ -43,4 +45,5 @@ module.exports = {
   events: {
     mainStatus: events('ChangeMainStatus'),
   },
+  balance,
 };
