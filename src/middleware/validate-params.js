@@ -33,6 +33,13 @@ const schemas = {
     address: Joi.string().alphanum().length(34).required(),
     status: Joi.boolean().required(),
   }),
+  takeTRXBet: Joi.object().keys({
+    amount: Joi.number().min(0).required(),
+    gameId: Joi.number().integer().min(0).required(),
+    data: Joi.array().items(
+      Joi.string().regex(/0[xX][0-9a-fA-F]+/m)
+    ).min(2).required(),
+  }),
 };
 
 const validate = (type, isQuery) => (req, res, next) => {
