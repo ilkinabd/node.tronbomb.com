@@ -70,6 +70,7 @@ module.exports = {
     tokens: events('SetToken'),
     games: events('SetGame'),
     gamesStatuses: events('SetGameStatus'),
+    rewards: events('PayReward'),
   },
   balance,
   withdraw: send('withdraw'),

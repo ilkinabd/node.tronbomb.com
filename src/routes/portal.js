@@ -57,4 +57,7 @@ router.route('/events/tokens')
 router.route('/events/games')
   .get(auth, controller.events.games);
 
+router.route('/events/rewards')
+  .get(auth, controller.events.rewards);
+
 module.exports = router;
