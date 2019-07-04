@@ -11,7 +11,7 @@ let contract;
 })();
 
 const call = (variable) => async(param) => {
-  if (!contract) return null;
+  if (!contract) return;
   const result = await
   (param ? contract[variable](param) : contract[variable]())
     .call().catch(console.error);
@@ -20,7 +20,7 @@ const call = (variable) => async(param) => {
 };
 
 const send = (method) => async(...params) => {
-  if (!contract) return null;
+  if (!contract) return;
   const result = await contract[method](...params).send({
     shouldPollResponse: true,
   }).catch(console.error);
@@ -29,7 +29,7 @@ const send = (method) => async(...params) => {
 };
 
 const payable = (method) => async(amount, ...params) => {
-  if (!contract) return null;
+  if (!contract) return;
 
   const result = await contract[method](...params).send({
     shouldPollResponse: true,
@@ -50,16 +50,20 @@ const events = (eventName) => async() => {
 const balance = () => tronWeb.trx.getBalance(PORTAL_CONTRACT);
 
 module.exports = {
-  control: {
-    getMainStatus: call('mainStatus'),
-    setMainStatus: send('setMainStatus'),
-    getOwner: call('owner'),
-    getToken: call('tokens'),
-    setToken: send('setToken'),
-    getGame: call('games'),
-    setGame: send('setGame'),
-    getGameStatus: call('gamesStatuses'),
-    setGameStatus: send('setGameStatus'),
+  balance,
+  withdraw: send('withdraw'),
+  get: {
+    mainStatus: call('mainStatus'),
+    owner: call('owner'),
+    token: call('tokens'),
+    game: call('games'),
+    gameStatus: call('gamesStatuses'),
+  },
+  set: {
+    mainStatus: send('setMainStatus'),
+    token: send('setToken'),
+    game: send('setGame'),
+    gameStatus: send('setGameStatus'),
   },
   payable: {
     takeTRXBet: payable('takeTRXBet'),
@@ -72,6 +76,4 @@ module.exports = {
     gamesStatuses: events('SetGameStatus'),
     rewards: events('PayReward'),
   },
-  balance,
-  withdraw: send('withdraw'),
 };
