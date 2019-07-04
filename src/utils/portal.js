@@ -28,6 +28,17 @@ const send = (method) => async(...params) => {
   return result;
 };
 
+const payable = (method) => async(amount, ...params) => {
+  if (!contract) return null;
+
+  const result = await contract[method](...params).send({
+    shouldPollResponse: true,
+    callValue: amount,
+  }).catch(console.error);
+
+  return result;
+};
+
 const events = (eventName) => async() => {
   const events = await tronWeb.getEventResult(PORTAL_CONTRACT, {
     eventName,
@@ -49,6 +60,9 @@ module.exports = {
     setGame: send('setGame'),
     getGameStatus: call('gamesStatuses'),
     setGameStatus: send('setGameStatus'),
+  },
+  payable: {
+    takeTRXBet: payable('takeTRXBet'),
   },
   events: {
     mainStatus: events('ChangeMainStatus'),

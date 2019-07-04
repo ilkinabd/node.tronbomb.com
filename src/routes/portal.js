@@ -38,6 +38,11 @@ router.route('/balance')
 router.route('/withdraw')
   .post(auth, validate('withdraw', false), controller.withdraw);
 
+// Payable
+
+router.route('/payable/take_trx_bet')
+  .post(auth, validate('takeTRXBet', false), controller.payable.takeTRXBet);
+
 // Events
 
 router.route('/events/main_status')

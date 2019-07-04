@@ -105,6 +105,18 @@ const withdraw = async(req, res) => {
   res.json(resSuccess({ result }));
 };
 
+// Payable
+
+const takeTRXBet = async(req, res) => {
+  const { amount, gameId, data } = req.body;
+
+  const result = await utils.payable.takeTRXBet(amount * 10 ** 6, gameId, data);
+  if (result === null || result === undefined)
+    return res.status(500).json(resError(73500));
+
+  res.json(resSuccess({ result }));
+};
+
 // Events
 
 const mainStatus = async(req, res) => {
@@ -179,6 +191,9 @@ module.exports = {
   setGame,
   getGameStatus,
   setGameStatus,
+  payable: {
+    takeTRXBet,
+  },
   events: {
     mainStatus,
     withdraws,
