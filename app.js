@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const portal = require('./src/routes/portal');
+const dice = require('./src/routes/dice');
 
 const app = express();
 
@@ -31,5 +32,6 @@ app.get('/', (_req, res) => {
 });
 
 app.use('/portal', portal);
+app.use('/dice', dice);
 
 module.exports = app;

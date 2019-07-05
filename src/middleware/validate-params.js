@@ -1,10 +1,10 @@
 const Joi = require('@hapi/joi');
 
-const schemas = {
+const portal = {
   setMainStatus: Joi.object().keys({
     status: Joi.boolean().required(),
   }),
-  statusEvents: Joi.object().keys({
+  events: Joi.object().keys({
     from: Joi.number().integer().min(0),
     to: Joi.number().integer().min(Joi.ref('from')),
   }),
@@ -42,7 +42,42 @@ const schemas = {
   }),
 };
 
-const validate = (type, isQuery) => (req, res, next) => {
+const dice = {
+  getGame: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+    gameId: Joi.number().integer().min(0).required(),
+  }),
+  getGames: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+  }),
+  getParams: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+  }),
+  setPortal: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+    address: Joi.string().alphanum().length(34).required(),
+  }),
+  setRTP: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+    rtp: Joi.number().min(0.001).max(1.000).required(),
+  }),
+  setBet: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+    min: Joi.number().min(0).required(),
+    max: Joi.number().min(Joi.ref('min')).required(),
+  }),
+  finishGame: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+    gameId: Joi.number().integer().min(0).required(),
+  }),
+  events: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+    from: Joi.number().integer().min(0),
+    to: Joi.number().integer().min(Joi.ref('from')),
+  }),
+};
+
+const validate = (schemas, type, isQuery) => (req, res, next) => {
   const schema = schemas[type];
   const data = (isQuery) ? req.query : req.body;
 
@@ -56,4 +91,10 @@ const validate = (type, isQuery) => (req, res, next) => {
   next();
 };
 
-module.exports = validate;
+const validatePortal = (type, isQuery) => validate(portal, type, isQuery);
+const validateDice = (type, isQuery) => validate(dice, type, isQuery);
+
+module.exports = {
+  validatePortal,
+  validateDice,
+};
