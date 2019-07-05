@@ -44,6 +44,7 @@ module.exports = {
   set: {
     portal: send('setPortalAddress'),
     rtp: send('setRTP'),
+    bet: send('setMinMaxBet'),
   },
   controll: {
 

@@ -2,6 +2,8 @@ const portal = require('@utils/portal');
 const dice = require('@utils/dice');
 const { success: resSuccess, error: resError } = require('@utils/res-builder');
 
+const toSun = amount => (amount * 10 ** 6);
+
 // const filterEvents = (events, from, to) => (events.filter((event) => (
 //   (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
 // )));
@@ -80,6 +82,16 @@ const setRTP = async(req, res) => {
   res.json(resSuccess({ result }));
 };
 
+const setBet = async(req, res) => {
+  const { contractId, min, max } = req.body;
+
+  const contractAddress = await portal.get.game(contractId);
+
+  const result = await dice.set.bet(contractAddress, toSun(min), toSun(max));
+  if (result === undefined) return res.status(500).json(resError(73500));
+  res.json(resSuccess({ result }));
+};
+
 // Events
 
 module.exports = {
@@ -91,6 +103,7 @@ module.exports = {
   set: {
     portal: setPortal,
     rtp: setRTP,
+    bet: setBet,
   },
   control: {
 

@@ -24,6 +24,9 @@ router.route('/set/portal')
 router.route('/set/rtp')
   .post(auth, validate('setRTP', false), controller.set.rtp);
 
+router.route('/set/bet')
+  .post(auth, validate('setBet', false), controller.set.bet);
+
 // Control
 
 // Events

@@ -61,6 +61,11 @@ const dice = {
     contractId: Joi.number().integer().min(0).required(),
     rtp: Joi.number().min(0.001).max(1.000).required(),
   }),
+  setBet: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+    min: Joi.number().min(0).required(),
+    max: Joi.number().min(Joi.ref('min')).required(),
+  }),
 };
 
 const validate = (schemas, type, isQuery) => (req, res, next) => {
