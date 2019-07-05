@@ -29,6 +29,9 @@ router.route('/set/bet')
 
 // Control
 
+router.route('/control/finish_game')
+  .post(auth, validate('finishGame', false), controller.control.finishGame);
+
 // Events
 
 module.exports = router;

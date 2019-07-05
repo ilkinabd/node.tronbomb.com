@@ -16,6 +16,10 @@ const getGame = async(req, res) => {
   const contractAddress = await portal.get.game(contractId);
   const game = await dice.get.game(contractAddress, gameId);
   if (game === undefined) return res.status(500).json(resError(73500));
+
+  game.finishBlock = parseFloat(game.finishBlock, 16);
+  game.userBet = parseFloat(game.userBet, 16);
+
   res.json(resSuccess({ game }));
 };
 
@@ -37,6 +41,11 @@ const getGames = async(req, res) => {
     console.error(error);
     return res.status(500).json(resError(73500));
   });
+
+  for (const game of games) {
+    game.finishBlock = parseFloat(game.finishBlock, 16);
+    game.userBet = parseFloat(game.userBet, 16);
+  }
 
   res.json(resSuccess({ games }));
 };
@@ -92,6 +101,18 @@ const setBet = async(req, res) => {
   res.json(resSuccess({ result }));
 };
 
+// Control
+
+const finishGame = async(req, res) => {
+  const { contractId, gameId } = req.body;
+
+  const contractAddress = await portal.get.game(contractId);
+
+  const result = await dice.controll.finishGame(contractAddress, gameId);
+  if (result === undefined) return res.status(500).json(resError(73500));
+  res.json(resSuccess({ result }));
+};
+
 // Events
 
 module.exports = {
@@ -106,7 +127,7 @@ module.exports = {
     bet: setBet,
   },
   control: {
-
+    finishGame,
   },
   events: {
 

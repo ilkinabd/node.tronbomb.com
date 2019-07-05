@@ -47,7 +47,7 @@ module.exports = {
     bet: send('setMinMaxBet'),
   },
   controll: {
-
+    finishGame: send('finishGame'),
   },
   events: {
 

@@ -66,6 +66,10 @@ const dice = {
     min: Joi.number().min(0).required(),
     max: Joi.number().min(Joi.ref('min')).required(),
   }),
+  finishGame: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+    gameId: Joi.number().integer().min(0).required(),
+  }),
 };
 
 const validate = (schemas, type, isQuery) => (req, res, next) => {
