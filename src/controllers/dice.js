@@ -127,6 +127,18 @@ const takeBets = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
+const finishGames = async(req, res) => {
+  const { contractId, from, to } = req.query;
+
+  const contractAddress = await portal.get.game(contractId);
+
+  let events = await dice.events.finishGames(contractAddress);
+  if (events === undefined) return res.status(500).json(resError(73500));
+
+  events = filterEvents(events, from, to);
+  res.json(resSuccess({ events }));
+};
+
 module.exports = {
   get: {
     game: getGame,
@@ -143,5 +155,6 @@ module.exports = {
   },
   events: {
     takeBets,
+    finishGames,
   },
 };

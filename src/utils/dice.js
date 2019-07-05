@@ -51,5 +51,6 @@ module.exports = {
   },
   events: {
     takeBets: events('TakeBet'),
+    finishGames: events('FinishGame'),
   },
 };
