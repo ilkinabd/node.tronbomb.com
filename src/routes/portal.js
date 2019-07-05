@@ -3,7 +3,7 @@ const router = new express.Router();
 
 const controller = require('@controllers/portal');
 const auth = require('@middleware/check-auth');
-const validate = require('@middleware/validate-params');
+const { validatePortal: validate } = require('@middleware/validate-params');
 
 router.route('/balance')
   .get(auth, controller.balance);

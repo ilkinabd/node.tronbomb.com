@@ -1,6 +1,6 @@
 const Joi = require('@hapi/joi');
 
-const schemas = {
+const portal = {
   setMainStatus: Joi.object().keys({
     status: Joi.boolean().required(),
   }),
@@ -42,7 +42,14 @@ const schemas = {
   }),
 };
 
-const validate = (type, isQuery) => (req, res, next) => {
+const dice = {
+  getGame: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+    gameId: Joi.number().integer().min(0).required(),
+  }),
+};
+
+const validate = (schemas, type, isQuery) => (req, res, next) => {
   const schema = schemas[type];
   const data = (isQuery) ? req.query : req.body;
 
@@ -56,4 +63,10 @@ const validate = (type, isQuery) => (req, res, next) => {
   next();
 };
 
-module.exports = validate;
+const validatePortal = (type, isQuery) => validate(portal, type, isQuery);
+const validateDice = (type, isQuery) => validate(dice, type, isQuery);
+
+module.exports = {
+  validatePortal,
+  validateDice,
+};
