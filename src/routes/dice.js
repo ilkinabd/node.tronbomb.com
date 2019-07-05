@@ -43,4 +43,7 @@ router.route('/events/finish_games')
 router.route('/events/players_win')
   .get(auth, validate('events', true), controller.events.playersWin);
 
+router.route('/events/change_params')
+  .get(auth, validate('events', true), controller.events.changeParams);
+
 module.exports = router;

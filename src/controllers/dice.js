@@ -151,6 +151,20 @@ const playersWin = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
+const changeParams = async(req, res) => {
+  const { contractId, from, to } = req.query;
+
+  const contractAddress = await portal.get.game(contractId);
+
+  const rtp = await dice.events.changeRTP(contractAddress);
+  if (rtp === undefined) return res.status(500).json(resError(73500));
+  const bet = await dice.events.changeMinMaxBet(contractAddress);
+  if (bet === undefined) return res.status(500).json(resError(73500));
+
+  const events = filterEvents(rtp.concat(bet), from, to);
+  res.json(resSuccess({ events }));
+};
+
 module.exports = {
   get: {
     game: getGame,
@@ -169,5 +183,6 @@ module.exports = {
     takeBets,
     finishGames,
     playersWin,
+    changeParams,
   },
 };
