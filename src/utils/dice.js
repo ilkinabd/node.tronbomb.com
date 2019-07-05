@@ -14,14 +14,14 @@ const call = (variable) => async(address, param) => {
   return result;
 };
 
-// const send = (method) => async(...params) => {
-//   const contract = await tronWeb.contract().at(address);
-//   const result = await contract[method](...params).send({
-//     shouldPollResponse: true,
-//   }).catch(console.error);
+const send = (method) => async(address, ...params) => {
+  const contract = await tronWeb.contract().at(address);
+  const result = await contract[method](...params).send({
+    shouldPollResponse: true,
+  }).catch(console.error);
 
-//   return result;
-// };
+  return result;
+};
 
 // const events = (eventName) => async(address) => {
 //   const events = await tronWeb.getEventResult(address, {
@@ -42,7 +42,7 @@ module.exports = {
     maxBet: call('maxBet'),
   },
   set: {
-
+    portal: send('setPortalAddress'),
   },
   controll: {
 

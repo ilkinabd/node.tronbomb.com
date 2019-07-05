@@ -18,6 +18,9 @@ router.route('/get/params')
 
 // Setters
 
+router.route('/set/portal')
+  .post(auth, validate('setPortal', false), controller.set.portal);
+
 // Control
 
 // Events

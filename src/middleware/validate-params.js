@@ -53,6 +53,10 @@ const dice = {
   getParams: Joi.object().keys({
     contractId: Joi.number().integer().min(0).required(),
   }),
+  setPortal: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+    address: Joi.string().alphanum().length(34).required(),
+  }),
 };
 
 const validate = (schemas, type, isQuery) => (req, res, next) => {

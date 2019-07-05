@@ -60,6 +60,16 @@ const getParams = async(req, res) => {
 
 // Setters
 
+const setPortal = async(req, res) => {
+  const { contractId, address } = req.body;
+
+  const contractAddress = await portal.get.game(contractId);
+
+  const result = await dice.set.portal(contractAddress, address);
+  if (result === undefined) return res.status(500).json(resError(73500));
+  res.json(resSuccess({ result }));
+};
+
 // Events
 
 module.exports = {
@@ -69,7 +79,7 @@ module.exports = {
     params: getParams,
   },
   set: {
-
+    portal: setPortal,
   },
   control: {
 
