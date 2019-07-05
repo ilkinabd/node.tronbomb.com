@@ -40,4 +40,7 @@ router.route('/events/take_bets')
 router.route('/events/finish_games')
   .get(auth, validate('events', true), controller.events.finishGames);
 
+router.route('/events/players_win')
+  .get(auth, validate('events', true), controller.events.playersWin);
+
 module.exports = router;
