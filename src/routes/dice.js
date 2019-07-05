@@ -10,6 +10,9 @@ const { validateDice: validate } = require('@middleware/validate-params');
 router.route('/get/game')
   .get(auth, validate('getGame', true), controller.get.game);
 
+router.route('/get/games')
+  .get(auth, validate('getGames', true), controller.get.games);
+
 // Setters
 
 // Control

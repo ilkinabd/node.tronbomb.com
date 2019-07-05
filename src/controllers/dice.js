@@ -17,6 +17,28 @@ const getGame = async(req, res) => {
   res.json(resSuccess({ game }));
 };
 
+const getGames = async(req, res) => {
+  const { contractId } = req.query;
+
+  const contractAddress = await portal.get.game(contractId);
+  const totalGames = await dice.get.totalGames(contractAddress);
+
+  const requests = [];
+
+  for (let gameId = 0; gameId < totalGames; gameId++) {
+    console.log(gameId);
+    const game = dice.get.game(contractAddress, gameId);
+    requests.push(game);
+  }
+
+  const games = await Promise.all(requests).catch((error) => {
+    console.error(error);
+    return res.status(500).json(resError(73500));
+  });
+
+  res.json(resSuccess({ games }));
+};
+
 // Setters
 
 // Events
@@ -24,6 +46,7 @@ const getGame = async(req, res) => {
 module.exports = {
   get: {
     game: getGame,
+    games: getGames,
   },
   set: {
 

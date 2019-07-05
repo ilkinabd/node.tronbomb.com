@@ -6,7 +6,7 @@ const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 
 const call = (variable) => async(address, param) => {
   const contract = await tronWeb.contract().at(address);
-  const result = await (param ?
+  const result = await (param !== undefined ?
     contract[variable](param) :
     contract[variable]()
   ).call().catch(console.error);
@@ -33,7 +33,8 @@ const call = (variable) => async(address, param) => {
 
 module.exports = {
   get: {
-    game: call('games')
+    game: call('games'),
+    totalGames: call('totalGames'),
   },
   set: {
 

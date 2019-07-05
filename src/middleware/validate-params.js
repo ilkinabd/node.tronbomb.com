@@ -47,6 +47,9 @@ const dice = {
     contractId: Joi.number().integer().min(0).required(),
     gameId: Joi.number().integer().min(0).required(),
   }),
+  getGames: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+  }),
 };
 
 const validate = (schemas, type, isQuery) => (req, res, next) => {
