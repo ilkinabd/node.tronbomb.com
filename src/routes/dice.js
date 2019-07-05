@@ -13,6 +13,9 @@ router.route('/get/game')
 router.route('/get/games')
   .get(auth, validate('getGames', true), controller.get.games);
 
+router.route('/get/params')
+  .get(auth, validate('getParams', true), controller.get.params);
+
 // Setters
 
 // Control

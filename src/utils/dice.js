@@ -35,6 +35,11 @@ module.exports = {
   get: {
     game: call('games'),
     totalGames: call('totalGames'),
+    portal: call('portal'),
+    rtp: call('rtp'),
+    rtpDivider: call('rtpDivider'),
+    minBet: call('minBet'),
+    maxBet: call('maxBet'),
   },
   set: {
 

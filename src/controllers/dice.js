@@ -39,6 +39,25 @@ const getGames = async(req, res) => {
   res.json(resSuccess({ games }));
 };
 
+const getParams = async(req, res) => {
+  const { contractId } = req.query;
+
+  const contractAddress = await portal.get.game(contractId);
+
+  const portalAddress = await dice.get.portal(contractAddress);
+  const rtp = await dice.get.rtp(contractAddress);
+  const rtpDivider = await dice.get.rtpDivider(contractAddress);
+  const minBet = await dice.get.minBet(contractAddress);
+  const maxBet = await dice.get.maxBet(contractAddress);
+
+  res.json(resSuccess({
+    portal: portalAddress,
+    rtp: rtp / rtpDivider,
+    minBet: parseFloat(minBet, 16),
+    maxBet: parseFloat(maxBet, 16),
+  }));
+};
+
 // Setters
 
 // Events
@@ -47,6 +66,7 @@ module.exports = {
   get: {
     game: getGame,
     games: getGames,
+    params: getParams,
   },
   set: {
 
