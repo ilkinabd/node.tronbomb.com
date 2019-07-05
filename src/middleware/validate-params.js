@@ -4,7 +4,7 @@ const portal = {
   setMainStatus: Joi.object().keys({
     status: Joi.boolean().required(),
   }),
-  statusEvents: Joi.object().keys({
+  events: Joi.object().keys({
     from: Joi.number().integer().min(0),
     to: Joi.number().integer().min(Joi.ref('from')),
   }),
@@ -69,6 +69,11 @@ const dice = {
   finishGame: Joi.object().keys({
     contractId: Joi.number().integer().min(0).required(),
     gameId: Joi.number().integer().min(0).required(),
+  }),
+  events: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+    from: Joi.number().integer().min(0),
+    to: Joi.number().integer().min(Joi.ref('from')),
   }),
 };
 

@@ -4,9 +4,9 @@ const { success: resSuccess, error: resError } = require('@utils/res-builder');
 
 const toSun = amount => (amount * 10 ** 6);
 
-// const filterEvents = (events, from, to) => (events.filter((event) => (
-//   (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
-// )));
+const filterEvents = (events, from, to) => (events.filter((event) => (
+  (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
+)));
 
 // Getters
 
@@ -115,6 +115,18 @@ const finishGame = async(req, res) => {
 
 // Events
 
+const takeBets = async(req, res) => {
+  const { contractId, from, to } = req.query;
+
+  const contractAddress = await portal.get.game(contractId);
+
+  let events = await dice.events.takeBets(contractAddress);
+  if (events === undefined) return res.status(500).json(resError(73500));
+
+  events = filterEvents(events, from, to);
+  res.json(resSuccess({ events }));
+};
+
 module.exports = {
   get: {
     game: getGame,
@@ -130,6 +142,6 @@ module.exports = {
     finishGame,
   },
   events: {
-
+    takeBets,
   },
 };

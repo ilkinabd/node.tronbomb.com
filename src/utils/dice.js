@@ -23,13 +23,13 @@ const send = (method) => async(address, ...params) => {
   return result;
 };
 
-// const events = (eventName) => async(address) => {
-//   const events = await tronWeb.getEventResult(address, {
-//     eventName,
-//   }).catch(console.error);
+const events = (eventName) => async(address) => {
+  const events = await tronWeb.getEventResult(address, {
+    eventName,
+  }).catch(console.error);
 
-//   return events;
-// };
+  return events;
+};
 
 module.exports = {
   get: {
@@ -50,6 +50,6 @@ module.exports = {
     finishGame: send('finishGame'),
   },
   events: {
-
+    takeBets: events('TakeBet'),
   },
 };

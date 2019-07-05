@@ -50,18 +50,18 @@ router.route('/payable/take_trx_bet')
 // Events
 
 router.route('/events/main_status')
-  .get(auth, validate('statusEvents', true), controller.events.mainStatus);
+  .get(auth, validate('events', true), controller.events.mainStatus);
 
 router.route('/events/withdraws')
-  .get(auth, controller.events.withdraws);
+  .get(auth, validate('events', true), controller.events.withdraws);
 
 router.route('/events/tokens')
-  .get(auth, controller.events.tokens);
+  .get(auth, validate('events', true), controller.events.tokens);
 
 router.route('/events/games')
-  .get(auth, controller.events.games);
+  .get(auth, validate('events', true), controller.events.games);
 
 router.route('/events/rewards')
-  .get(auth, controller.events.rewards);
+  .get(auth, validate('events', true), controller.events.rewards);
 
 module.exports = router;
