@@ -43,6 +43,7 @@ module.exports = {
   },
   set: {
     portal: send('setPortalAddress'),
+    rtp: send('setRTP'),
   },
   controll: {
 

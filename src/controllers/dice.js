@@ -70,6 +70,16 @@ const setPortal = async(req, res) => {
   res.json(resSuccess({ result }));
 };
 
+const setRTP = async(req, res) => {
+  const { contractId, rtp } = req.body;
+
+  const contractAddress = await portal.get.game(contractId);
+
+  const result = await dice.set.rtp(contractAddress, rtp * 10000, 10000);
+  if (result === undefined) return res.status(500).json(resError(73500));
+  res.json(resSuccess({ result }));
+};
+
 // Events
 
 module.exports = {
@@ -80,6 +90,7 @@ module.exports = {
   },
   set: {
     portal: setPortal,
+    rtp: setRTP,
   },
   control: {
 

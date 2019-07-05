@@ -21,6 +21,9 @@ router.route('/get/params')
 router.route('/set/portal')
   .post(auth, validate('setPortal', false), controller.set.portal);
 
+router.route('/set/rtp')
+  .post(auth, validate('setRTP', false), controller.set.rtp);
+
 // Control
 
 // Events

@@ -57,6 +57,10 @@ const dice = {
     contractId: Joi.number().integer().min(0).required(),
     address: Joi.string().alphanum().length(34).required(),
   }),
+  setRTP: Joi.object().keys({
+    contractId: Joi.number().integer().min(0).required(),
+    rtp: Joi.number().min(0.001).max(1.000).required(),
+  }),
 };
 
 const validate = (schemas, type, isQuery) => (req, res, next) => {
