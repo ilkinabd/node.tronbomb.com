@@ -2,6 +2,14 @@ const portal = require('@utils/portal');
 const dice = require('@utils/dice');
 const { success: resSuccess, error: resError } = require('@utils/res-builder');
 
+const toGameModel = (game) => {
+  game.gameId = parseFloat(game.gameId, 16);
+  game.finishBlock = parseFloat(game.finishBlock, 16);
+  game.userBet = parseFloat(game.userBet, 16);
+  game.result = (game.status === 0) ? null : game.result;
+  game.status = (game.status === 0) ? 'start' : 'finish';
+};
+
 const toSun = amount => (amount * 10 ** 6);
 
 const filterEvents = (events, from, to) => (events.filter((event) => (
@@ -16,9 +24,7 @@ const getGame = async(req, res) => {
   const contractAddress = await portal.get.game(contractId);
   const game = await dice.get.game(contractAddress, gameId);
   if (game === undefined) return res.status(500).json(resError(73500));
-
-  game.finishBlock = parseFloat(game.finishBlock, 16);
-  game.userBet = parseFloat(game.userBet, 16);
+  toGameModel(game);
 
   res.json(resSuccess({ game }));
 };
@@ -32,7 +38,6 @@ const getGames = async(req, res) => {
   const requests = [];
 
   for (let gameId = 0; gameId < totalGames; gameId++) {
-    console.log(gameId);
     const game = dice.get.game(contractAddress, gameId);
     requests.push(game);
   }
@@ -42,10 +47,7 @@ const getGames = async(req, res) => {
     return res.status(500).json(resError(73500));
   });
 
-  for (const game of games) {
-    game.finishBlock = parseFloat(game.finishBlock, 16);
-    game.userBet = parseFloat(game.userBet, 16);
-  }
+  for (const game of games) toGameModel(game);
 
   res.json(resSuccess({ games }));
 };
