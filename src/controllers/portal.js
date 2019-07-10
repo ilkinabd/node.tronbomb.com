@@ -1,4 +1,5 @@
 const utils = require('@utils/portal');
+const tron = require('@utils/tron');
 const { success: resSuccess, error: resError } = require('@utils/res-builder');
 
 const toSun = amount => (amount * 10 ** 6);
@@ -30,24 +31,30 @@ const getMainStatus = async(_req, res) => {
 };
 
 const getOwner = async(_req, res) => {
-  const owner = await utils.get.owner();
+  let owner = await utils.get.owner();
   if (owner === undefined) return res.status(500).json(resError(73500));
+
+  owner = tron.toBase58(owner);
   res.json(resSuccess({ owner }));
 };
 
 const getToken = async(req, res) => {
   const { tokenId } = req.query;
 
-  const token = await utils.get.token(tokenId);
+  let token = await utils.get.token(tokenId);
   if (token === undefined) return res.status(500).json(resError(73500));
+
+  token = tron.toBase58(token);
   res.json(resSuccess({ token }));
 };
 
 const getGame = async(req, res) => {
   const { gameId } = req.query;
 
-  const game = await utils.get.game(gameId);
+  let game = await utils.get.game(gameId);
   if (game === undefined) return res.status(500).json(resError(73500));
+
+  game = tron.toBase58(game);
   res.json(resSuccess({ game }));
 };
 
