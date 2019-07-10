@@ -4,12 +4,14 @@ const { toBase58, toTRX, toSun } = require('@utils/tron');
 const { success: resSuccess, error: resError } = require('@utils/res-builder');
 
 const toGameModel = (game) => {
+  const amount = parseFloat(game.amount, 16);
+
   game.gameId = parseFloat(game.gameId, 16);
   game.finishBlock = parseFloat(game.finishBlock, 16);
-  game.userBet = parseFloat(game.userBet, 16);
+  game.amount = (game.tokenId === 0) ? toTRX(amount) : amount;
   game.result = (game.status === 0) ? null : game.result;
   game.status = (game.status === 0) ? 'start' : 'finish';
-  game.userWallet = toBase58(game.userWallet);
+  game.player = toBase58(game.player);
 };
 
 const filterEvents = (events, from, to) => (events.filter((event) => (
@@ -127,9 +129,9 @@ const takeBets = async(req, res) => {
 
   events = filterEvents(events, from, to);
   for (const event of events) {
-    const { userBet, tokenId, userWallet } = event.result;
-    if (tokenId === '0') event.result.userBet = toTRX(userBet);
-    event.result.userWallet = toBase58(userWallet);
+    const { amount, tokenId, player } = event.result;
+    if (tokenId === '0') event.result.amount = toTRX(amount);
+    event.result.player = toBase58(player);
   }
 
   res.json(resSuccess({ events }));
@@ -157,9 +159,9 @@ const playersWin = async(req, res) => {
 
   events = filterEvents(events, from, to);
   for (const event of events) {
-    const { amount, tokenId, userWallet } = event.result;
+    const { amount, tokenId, player } = event.result;
     if (tokenId === '0') event.result.amount = toTRX(amount);
-    event.result.userWallet = toBase58(userWallet);
+    event.result.player = toBase58(player);
   }
 
   res.json(resSuccess({ events }));
