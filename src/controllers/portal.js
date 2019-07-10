@@ -1,15 +1,16 @@
 const utils = require('@utils/portal');
+const { toBase58, toTRX, toSun } = require('@utils/tron');
 const { success: resSuccess, error: resError } = require('@utils/res-builder');
-
-const toSun = amount => (amount * 10 ** 6);
 
 const filterEvents = (events, from, to) => (events.filter((event) => (
   (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
 )));
 
 const balance = async(_req, res) => {
-  const balance = await utils.balance();
+  let balance = await utils.balance();
   if (balance === undefined) return res.status(500).json(resError(73500));
+
+  balance = toTRX(balance);
   res.json(resSuccess({ balance }));
 };
 
@@ -30,24 +31,30 @@ const getMainStatus = async(_req, res) => {
 };
 
 const getOwner = async(_req, res) => {
-  const owner = await utils.get.owner();
+  let owner = await utils.get.owner();
   if (owner === undefined) return res.status(500).json(resError(73500));
+
+  owner = toBase58(owner);
   res.json(resSuccess({ owner }));
 };
 
 const getToken = async(req, res) => {
   const { tokenId } = req.query;
 
-  const token = await utils.get.token(tokenId);
+  let token = await utils.get.token(tokenId);
   if (token === undefined) return res.status(500).json(resError(73500));
+
+  token = toBase58(token);
   res.json(resSuccess({ token }));
 };
 
 const getGame = async(req, res) => {
   const { gameId } = req.query;
 
-  const game = await utils.get.game(gameId);
+  let game = await utils.get.game(gameId);
   if (game === undefined) return res.status(500).json(resError(73500));
+
+  game = toBase58(game);
   res.json(resSuccess({ game }));
 };
 
@@ -113,10 +120,7 @@ const mainStatus = async(req, res) => {
   let events = await utils.events.mainStatus();
   if (events === undefined) return res.status(500).json(resError(73500));
 
-  events = events.filter((event) => (
-    (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
-  ));
-
+  events = filterEvents(events, from, to);
   res.json(resSuccess({ events }));
 };
 
@@ -127,6 +131,10 @@ const withdraws = async(req, res) => {
   if (events === undefined) return res.status(500).json(resError(73500));
 
   events = filterEvents(events, from, to);
+  for (const event of events) {
+    event.result.amount = toTRX(event.result.amount);
+  }
+
   res.json(resSuccess({ events }));
 };
 
@@ -137,6 +145,10 @@ const tokens = async(req, res) => {
   if (events === undefined) return res.status(500).json(resError(73500));
 
   events = filterEvents(events, from, to);
+  for (const event of events) {
+    event.result.contractAddress = toBase58(event.result.contractAddress);
+  }
+
   res.json(resSuccess({ events }));
 };
 
@@ -149,6 +161,10 @@ const games = async(req, res) => {
   if (gamesStatuses === undefined) return res.status(500).json(resError(73500));
 
   const events = filterEvents(games.concat(gamesStatuses), from, to);
+  for (const event of events) {
+    event.result.contractAddress = toBase58(event.result.contractAddress);
+  }
+
   res.json(resSuccess({ events }));
 };
 
@@ -159,6 +175,12 @@ const rewards = async(req, res) => {
   if (events === undefined) return res.status(500).json(resError(73500));
 
   events = filterEvents(events, from, to);
+  for (const event of events) {
+    const { reward, tokenId, to } = event.result;
+    if (tokenId === '0') event.result.reward = toTRX(reward);
+    event.result.to = toBase58(to);
+  }
+
   res.json(resSuccess({ events }));
 };
 
