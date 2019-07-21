@@ -34,6 +34,9 @@ router.route('/func/init')
 
 // Events
 
+router.route('/events/init_game')
+  .get(server, validate('events', true), controller.events.initGame);
+
 router.route('/events/change_params')
   .get(server, validate('events', true), controller.events.changeParams);
 

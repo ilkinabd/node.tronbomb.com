@@ -85,7 +85,7 @@ const setDuration = async(req, res) => {
 
 // Functions
 
-const initGame = async(_req, res) => {
+const init = async(_req, res) => {
   const result = await utils.func.init();
   if (!result) return res.status(500).json(resError(73500));
   result.gameId = toDecimal(result.gameId);
@@ -93,6 +93,21 @@ const initGame = async(_req, res) => {
 };
 
 // Events
+
+const initGame = async(req, res) => {
+  const { from, to } = req.query;
+
+  let events = await utils.events.initGame();
+  if (!events) return res.status(500).json(resError(73500));
+
+  events = filterEvents(events, from, to);
+  for (const event of events) {
+    event.result.gameId = parseInt(event.result.gameId);
+    event.result.finishBlock = parseFloat(event.result.finishBlock);
+  }
+
+  res.json(resSuccess({ events }));
+};
 
 const changeParams = async(req, res) => {
   const { from, to } = req.query;
@@ -126,9 +141,10 @@ module.exports = {
     duration: setDuration
   },
   func: {
-    init: initGame,
+    init,
   },
   events: {
+    initGame,
     changeParams,
   },
 };

@@ -53,6 +53,7 @@ module.exports = {
     init: send('initGame'),
   },
   events: {
+    initGame: events('InitGame'),
     changeMinMaxBet: events('ChangeMinMaxBet'),
     changeDuration: events('ChangeGameDuration'),
   },
