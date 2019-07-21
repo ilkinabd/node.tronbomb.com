@@ -13,6 +13,9 @@ router.route('/get/game')
 router.route('/get/games')
   .get(server, controller.get.games);
 
+router.route('/get/game_bets')
+  .get(server, validate('getGame', true), controller.get.gameBets);
+
 router.route('/get/params')
   .get(server, controller.get.params);
 

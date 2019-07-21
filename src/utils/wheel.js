@@ -9,11 +9,10 @@ const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 const getAddress = () => db.contracts.get({ type: 'wheel' });
 const getContract = async() => tronWeb.contract().at(await getAddress());
 
-const call = (variable) => async(param) => {
+const call = (variable) => async(...params) => {
   const contract = await getContract();
-  const result = await
-  (param ? contract[variable](param) : contract[variable]())
-    .call().catch(console.error);
+  const result = await contract[variable](...params).call()
+    .catch(console.error);
 
   return result;
 };
@@ -39,6 +38,7 @@ module.exports = {
   get: {
     game: call('games'),
     totalGames: call('totalGames'),
+    gameBet: call('getGameBet'),
     portal: call('portal'),
     minBet: call('minBet'),
     maxBet: call('maxBet'),

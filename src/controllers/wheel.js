@@ -59,6 +59,28 @@ const getParams = async(_req, res) => {
   res.json(resSuccess({ portal, minBet, maxBet, duration }));
 };
 
+const getGameBets = async(req, res) => {
+  const { gameId } = req.query;
+
+  const betsCount = (await utils.get.game(gameId)).betsCount;
+
+  const requests = [];
+  for (let betId = 0; betId < betsCount; betId++) {
+    requests.push(utils.get.gameBet(betId, gameId));
+  }
+  const bets = await Promise.all(requests).catch((error) => {
+    console.error(error);
+    return res.status(500).json(resError(73500));
+  });
+
+  for (const bet of bets) {
+    bet.player = toBase58(bet.player);
+    bet.amount = toTRX(bet.amount);
+  }
+
+  res.json(resSuccess({ bets }));
+};
+
 // Setters
 
 const setPortal = async(req, res) => {
@@ -156,6 +178,7 @@ module.exports = {
   get: {
     game: getGame,
     games: getGames,
+    gameBets: getGameBets,
     params: getParams,
   },
   set: {
