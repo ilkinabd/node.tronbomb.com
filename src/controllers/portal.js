@@ -61,8 +61,8 @@ const getGameStatus = async(req, res) => {
 const setMainStatus = async(req, res) => {
   const { status } = req.body;
 
-  const result = await utils.set.mainStatus(status);
-  if (result === undefined) return res.status(500).json(resError(73500));
+  const result = await utils.set.mainStatus(status === 'true');
+  if (!result) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
 
@@ -116,6 +116,9 @@ const mainStatus = async(req, res) => {
 
   let events = await utils.events.mainStatus();
   if (events === undefined) return res.status(500).json(resError(73500));
+  for (const event of events) {
+    event.result.mainStatus = (event.result.mainStatus === 'true');
+  }
 
   events = filterEvents(events, from, to);
   res.json(resSuccess({ events }));
