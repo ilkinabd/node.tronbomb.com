@@ -3,6 +3,7 @@ const { PRIVATE_KEY, PROVIDER } = process.env;
 const TronWeb = require('tronweb');
 
 const db = require('@db');
+const utils = require('@utils/tron');
 
 const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 
@@ -46,7 +47,7 @@ const events = (eventName) => async() => {
   return events;
 };
 
-const balance = async() => tronWeb.trx.getBalance(await getAddress());
+const balance = async() => utils.getBalance(await getAddress());
 
 module.exports = {
   balance,

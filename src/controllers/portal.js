@@ -9,10 +9,8 @@ const filterEvents = (events, from, to) => (events.filter((event) => (
 // Getters
 
 const balance = async(_req, res) => {
-  let balance = await utils.balance();
+  const balance = await utils.balance();
   if (balance === undefined) return res.status(500).json(resError(73500));
-
-  balance = toTRX(balance);
   res.json(resSuccess({ balance }));
 };
 
