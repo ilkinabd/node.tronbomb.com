@@ -1,79 +1,76 @@
 const Joi = require('@hapi/joi');
 
+const templates = {
+  status: Joi.boolean().required(),
+  amount: Joi.number().min(0).required(),
+  id: Joi.number().integer().min(0).required(),
+  address: Joi.string().alphanum().length(34).required(),
+  bytes: Joi.string().regex(/0[xX][0-9a-fA-F]+/m),
+  rtp: Joi.number().min(0.001).max(1.000).required(),
+  from: Joi.number().integer().min(0),
+  to: Joi.number().integer().min(Joi.ref('from')),
+};
+
 const portal = {
-  setMainStatus: Joi.object().keys({
-    status: Joi.boolean().required(),
-  }),
-  events: Joi.object().keys({
-    from: Joi.number().integer().min(0),
-    to: Joi.number().integer().min(Joi.ref('from')),
-  }),
-  withdraw: Joi.object().keys({
-    amount: Joi.number().min(0).required(),
-    tokenId: Joi.number().integer().min(0).required(),
-  }),
   getToken: Joi.object().keys({
-    tokenId: Joi.number().integer().min(0).required(),
-  }),
-  setToken: Joi.object().keys({
-    tokenId: Joi.number().integer().min(0).required(),
-    address: Joi.string().alphanum().length(34).required(),
+    tokenId: templates.id,
   }),
   getGame: Joi.object().keys({
-    gameId: Joi.number().integer().min(0).required(),
-  }),
-  setGame: Joi.object().keys({
-    gameId: Joi.number().integer().min(0).required(),
-    address: Joi.string().alphanum().length(34).required(),
+    gameId: templates.id,
   }),
   getGameStatus: Joi.object().keys({
-    address: Joi.string().alphanum().length(34).required(),
+    address: templates.address,
+  }),
+  setMainStatus: Joi.object().keys({
+    status: templates.status,
+  }),
+  setToken: Joi.object().keys({
+    tokenId: templates.id,
+    address: templates.address,
+  }),
+  setGame: Joi.object().keys({
+    gameId: templates.id,
+    address: templates.address,
   }),
   setGameStatus: Joi.object().keys({
-    address: Joi.string().alphanum().length(34).required(),
-    status: Joi.boolean().required(),
+    address: templates.address,
+    status: templates.status,
   }),
   takeTRXBet: Joi.object().keys({
-    amount: Joi.number().min(0).required(),
-    gameId: Joi.number().integer().min(0).required(),
-    data: Joi.array().items(
-      Joi.string().regex(/0[xX][0-9a-fA-F]+/m)
-    ).min(2).required(),
+    amount: templates.amount,
+    gameId: templates.id,
+    data: Joi.array().items(templates.bytes).min(2).required(),
+  }),
+  withdraw: Joi.object().keys({
+    amount: templates.amount,
+    tokenId: templates.id,
+  }),
+  events: Joi.object().keys({
+    from: templates.from,
+    to: templates.to,
   }),
 };
 
 const dice = {
   getGame: Joi.object().keys({
-    contractId: Joi.number().integer().min(0).required(),
-    gameId: Joi.number().integer().min(0).required(),
-  }),
-  getGames: Joi.object().keys({
-    contractId: Joi.number().integer().min(0).required(),
-  }),
-  getParams: Joi.object().keys({
-    contractId: Joi.number().integer().min(0).required(),
+    gameId: templates.id,
   }),
   setPortal: Joi.object().keys({
-    contractId: Joi.number().integer().min(0).required(),
-    address: Joi.string().alphanum().length(34).required(),
+    address: templates.address,
   }),
   setRTP: Joi.object().keys({
-    contractId: Joi.number().integer().min(0).required(),
-    rtp: Joi.number().min(0.001).max(1.000).required(),
+    rtp: templates.rtp,
   }),
   setBet: Joi.object().keys({
-    contractId: Joi.number().integer().min(0).required(),
-    min: Joi.number().min(0).required(),
+    min: templates.amount,
     max: Joi.number().min(Joi.ref('min')).required(),
   }),
   finishGame: Joi.object().keys({
-    contractId: Joi.number().integer().min(0).required(),
-    gameId: Joi.number().integer().min(0).required(),
+    gameId: templates.id,
   }),
   events: Joi.object().keys({
-    contractId: Joi.number().integer().min(0).required(),
-    from: Joi.number().integer().min(0),
-    to: Joi.number().integer().min(Joi.ref('from')),
+    from: templates.from,
+    to: templates.to,
   }),
 };
 

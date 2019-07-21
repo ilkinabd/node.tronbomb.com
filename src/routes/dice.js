@@ -11,10 +11,10 @@ router.route('/get/game')
   .get(server, validate('getGame', true), controller.get.game);
 
 router.route('/get/games')
-  .get(server, validate('getGames', true), controller.get.games);
+  .get(server, controller.get.games);
 
 router.route('/get/params')
-  .get(server, validate('getParams', true), controller.get.params);
+  .get(server, controller.get.params);
 
 // Setters
 

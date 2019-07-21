@@ -1,4 +1,3 @@
-const portal = require('@utils/portal');
 const dice = require('@utils/dice');
 const { toBase58, toTRX, toSun } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
@@ -21,10 +20,9 @@ const filterEvents = (events, from, to) => (events.filter((event) => (
 // Getters
 
 const getGame = async(req, res) => {
-  const { contractId, gameId } = req.query;
+  const { gameId } = req.query;
 
-  const contractAddress = await portal.get.game(contractId);
-  const game = await dice.get.game(contractAddress, gameId);
+  const game = await dice.get.game(gameId);
   if (game === undefined) return res.status(500).json(resError(73500));
   toGameModel(game);
 
@@ -32,15 +30,12 @@ const getGame = async(req, res) => {
 };
 
 const getGames = async(req, res) => {
-  const { contractId } = req.query;
-
-  const contractAddress = await portal.get.game(contractId);
-  const totalGames = await dice.get.totalGames(contractAddress);
+  const totalGames = await dice.get.totalGames();
 
   const requests = [];
 
   for (let gameId = 0; gameId < totalGames; gameId++) {
-    const game = dice.get.game(contractAddress, gameId);
+    const game = dice.get.game(gameId);
     requests.push(game);
   }
 
@@ -55,15 +50,11 @@ const getGames = async(req, res) => {
 };
 
 const getParams = async(req, res) => {
-  const { contractId } = req.query;
-
-  const contractAddress = await portal.get.game(contractId);
-
-  const portalAddress = await dice.get.portal(contractAddress);
-  const rtp = await dice.get.rtp(contractAddress);
-  const rtpDivider = await dice.get.rtpDivider(contractAddress);
-  const minBet = await dice.get.minBet(contractAddress);
-  const maxBet = await dice.get.maxBet(contractAddress);
+  const portalAddress = await dice.get.portal();
+  const rtp = await dice.get.rtp();
+  const rtpDivider = await dice.get.rtpDivider();
+  const minBet = await dice.get.minBet();
+  const maxBet = await dice.get.maxBet();
 
   res.json(resSuccess({
     portal: toBase58(portalAddress),
@@ -76,31 +67,25 @@ const getParams = async(req, res) => {
 // Setters
 
 const setPortal = async(req, res) => {
-  const { contractId, address } = req.body;
+  const { address } = req.body;
 
-  const contractAddress = await portal.get.game(contractId);
-
-  const result = await dice.set.portal(contractAddress, address);
+  const result = await dice.set.portal(address);
   if (result === undefined) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
 
 const setRTP = async(req, res) => {
-  const { contractId, rtp } = req.body;
+  const { rtp } = req.body;
 
-  const contractAddress = await portal.get.game(contractId);
-
-  const result = await dice.set.rtp(contractAddress, rtp * 10000, 10000);
+  const result = await dice.set.rtp(rtp * 10000, 10000);
   if (result === undefined) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
 
 const setBet = async(req, res) => {
-  const { contractId, min, max } = req.body;
+  const { min, max } = req.body;
 
-  const contractAddress = await portal.get.game(contractId);
-
-  const result = await dice.set.bet(contractAddress, toSun(min), toSun(max));
+  const result = await dice.set.bet(toSun(min), toSun(max));
   if (result === undefined) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
@@ -108,11 +93,9 @@ const setBet = async(req, res) => {
 // Functions
 
 const finishGame = async(req, res) => {
-  const { contractId, gameId } = req.body;
+  const { gameId } = req.body;
 
-  const contractAddress = await portal.get.game(contractId);
-
-  const result = await dice.controll.finishGame(contractAddress, gameId);
+  const result = await dice.controll.finishGame(gameId);
   if (result === undefined) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
@@ -120,11 +103,9 @@ const finishGame = async(req, res) => {
 // Events
 
 const takeBets = async(req, res) => {
-  const { contractId, from, to } = req.query;
+  const { from, to } = req.query;
 
-  const contractAddress = await portal.get.game(contractId);
-
-  let events = await dice.events.takeBets(contractAddress);
+  let events = await dice.events.takeBets();
   if (events === undefined) return res.status(500).json(resError(73500));
 
   events = filterEvents(events, from, to);
@@ -138,11 +119,9 @@ const takeBets = async(req, res) => {
 };
 
 const finishGames = async(req, res) => {
-  const { contractId, from, to } = req.query;
+  const { from, to } = req.query;
 
-  const contractAddress = await portal.get.game(contractId);
-
-  let events = await dice.events.finishGames(contractAddress);
+  let events = await dice.events.finishGames();
   if (events === undefined) return res.status(500).json(resError(73500));
 
   events = filterEvents(events, from, to);
@@ -150,11 +129,9 @@ const finishGames = async(req, res) => {
 };
 
 const playersWin = async(req, res) => {
-  const { contractId, from, to } = req.query;
+  const { from, to } = req.query;
 
-  const contractAddress = await portal.get.game(contractId);
-
-  let events = await dice.events.playersWin(contractAddress);
+  let events = await dice.events.playersWin();
   if (events === undefined) return res.status(500).json(resError(73500));
 
   events = filterEvents(events, from, to);
@@ -168,13 +145,11 @@ const playersWin = async(req, res) => {
 };
 
 const changeParams = async(req, res) => {
-  const { contractId, from, to } = req.query;
+  const { from, to } = req.query;
 
-  const contractAddress = await portal.get.game(contractId);
-
-  const rtp = await dice.events.changeRTP(contractAddress);
+  const rtp = await dice.events.changeRTP();
   if (rtp === undefined) return res.status(500).json(resError(73500));
-  const bet = await dice.events.changeMinMaxBet(contractAddress);
+  const bet = await dice.events.changeMinMaxBet();
   if (bet === undefined) return res.status(500).json(resError(73500));
 
   const events = filterEvents(rtp.concat(bet), from, to);
