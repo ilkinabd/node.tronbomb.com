@@ -9,7 +9,12 @@ const toGameModel = (game) => {
   game.finishBlock = toDecimal(game.finishBlock);
   game.betsCount = toDecimal(game.betsCount);
   game.result = (game.status === 0) ? null : game.result;
-  game.status = (game.status === 0) ? 'start' : 'finish';
+
+  switch (game.status) {
+    case 0: game.status = 'empty'; break;
+    case 1: game.status = 'start'; break;
+    case 2: game.status = 'finish'; break;
+  }
 };
 
 const filterEvents = (events, from, to) => (events.filter((event) => (
@@ -109,6 +114,24 @@ const initGame = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
+const takeBet = async(req, res) => {
+  const { from, to } = req.query;
+
+  let events = await utils.events.takeBet();
+  if (!events) return res.status(500).json(resError(73500));
+
+  events = filterEvents(events, from, to);
+  for (const event of events) {
+    event.result.gameId = parseInt(event.result.gameId);
+    event.result.amount = toTRX(event.result.amount);
+    event.result.tokenId = parseInt(event.result.tokenId);
+    event.result.sector = parseInt(event.result.sector);
+    event.result.player = toBase58(event.result.player);
+  }
+
+  res.json(resSuccess({ events }));
+};
+
 const changeParams = async(req, res) => {
   const { from, to } = req.query;
 
@@ -145,6 +168,7 @@ module.exports = {
   },
   events: {
     initGame,
+    takeBet,
     changeParams,
   },
 };
