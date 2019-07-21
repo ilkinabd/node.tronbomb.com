@@ -8,7 +8,7 @@ const toGameModel = (game) => {
   game.gameId = toDecimal(game.gameId);
   game.finishBlock = toDecimal(game.finishBlock);
   game.betsCount = toDecimal(game.betsCount);
-  game.result = (game.status === 0) ? null : game.result;
+  game.result = (game.status !== 2) ? null : game.result;
 
   switch (game.status) {
     case 0: game.status = 'empty'; break;
@@ -119,6 +119,14 @@ const init = async(_req, res) => {
   res.json(resSuccess({ result }));
 };
 
+const finish = async(req, res) => {
+  const { gameId } = req.body;
+
+  const result = await utils.func.finish(gameId);
+  if (!result) return res.status(500).json(resError(73500));
+  res.json(resSuccess({ result }));
+};
+
 // Events
 
 const initGame = async(req, res) => {
@@ -147,6 +155,7 @@ const takeBet = async(req, res) => {
     event.result.gameId = parseInt(event.result.gameId);
     event.result.amount = toTRX(event.result.amount);
     event.result.tokenId = parseInt(event.result.tokenId);
+    event.result.betId = parseInt(event.result.betId);
     event.result.sector = parseInt(event.result.sector);
     event.result.player = toBase58(event.result.player);
   }
@@ -188,6 +197,7 @@ module.exports = {
   },
   func: {
     init,
+    finish,
   },
   events: {
     initGame,

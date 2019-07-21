@@ -51,6 +51,7 @@ module.exports = {
   },
   func: {
     init: send('initGame'),
+    finish: send('finishGame'),
   },
   events: {
     initGame: events('InitGame'),

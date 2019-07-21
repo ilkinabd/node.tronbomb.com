@@ -35,6 +35,9 @@ router.route('/set/duration')
 router.route('/func/init')
   .post(server, controller.func.init);
 
+router.route('/func/finish')
+  .post(server, validate('getGame', false), controller.func.finish);
+
 // Events
 
 router.route('/events/init_game')
