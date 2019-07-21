@@ -1,7 +1,7 @@
 const portal = require('@utils/portal');
 const dice = require('@utils/dice');
 const { toBase58, toTRX, toSun } = require('@utils/tron');
-const { success: resSuccess, error: resError } = require('@utils/res-builder');
+const { resSuccess, resError } = require('@utils/res-builder');
 
 const toGameModel = (game) => {
   const amount = parseFloat(game.amount, 16);

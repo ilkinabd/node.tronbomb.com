@@ -1,6 +1,6 @@
 const utils = require('@utils/portal');
 const { toBase58, toTRX, toSun } = require('@utils/tron');
-const { success: resSuccess, error: resError } = require('@utils/res-builder');
+const { resSuccess, resError } = require('@utils/res-builder');
 
 const filterEvents = (events, from, to) => (events.filter((event) => (
   (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)

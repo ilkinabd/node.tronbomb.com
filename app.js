@@ -1,4 +1,4 @@
-const { npm_package_version: version } = process.env;
+const { version } = process.env;
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -7,8 +7,6 @@ const portal = require('./src/routes/portal');
 const dice = require('./src/routes/dice');
 
 const app = express();
-
-const { success: resSuccess } = require('@utils/res-builder');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -28,7 +26,7 @@ app.use((_req, res, next) => {
 });
 
 app.get('/', (_req, res) => {
-  res.json(resSuccess({ version }));
+  res.json({ version });
 });
 
 app.use('/portal', portal);

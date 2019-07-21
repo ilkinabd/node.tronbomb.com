@@ -1,19 +1,13 @@
-const errors = {
-  73400: {
-    message: 'No token provided.'
-  },
-  73401: {
-    message: 'Wrong token.'
-  },
-  73500: {
-    message: 'Internal server error.'
-  },
-};
+const errors = new Map();
+
+errors.set(73400, 'Wrong address or password.');
+errors.set(73401, 'No token provided.');
+errors.set(73500, 'Internal server error.');
 
 const success = (data) => Object.assign({ status: 'success' }, data);
-const error = (code) => Object.assign({ status: 'error', code }, errors[code]);
+const error = (code) => ({ status: 'error', code, message: errors.get(code) });
 
 module.exports = {
-  success,
-  error,
+  resSuccess: success,
+  resError: error,
 };
