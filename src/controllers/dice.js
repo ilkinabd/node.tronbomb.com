@@ -1,5 +1,7 @@
 const dice = require('@utils/dice');
-const { toBase58, toTRX, toSun } = require('@utils/tron');
+const {
+  toBase58, toTRX, toSun, isAddress, isNullAddress
+} = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
 const toGameModel = (game) => {
@@ -49,19 +51,14 @@ const getGames = async(req, res) => {
   res.json(resSuccess({ games }));
 };
 
-const getParams = async(req, res) => {
-  const portalAddress = await dice.get.portal();
+const getParams = async(_req, res) => {
+  const portal = toBase58(await dice.get.portal());
   const rtp = await dice.get.rtp();
   const rtpDivider = await dice.get.rtpDivider();
-  const minBet = await dice.get.minBet();
-  const maxBet = await dice.get.maxBet();
+  const minBet = toTRX(await dice.get.minBet());
+  const maxBet = toTRX(await dice.get.maxBet());
 
-  res.json(resSuccess({
-    portal: toBase58(portalAddress),
-    rtp: rtp / rtpDivider,
-    minBet: toTRX(parseFloat(minBet, 16)),
-    maxBet: toTRX(parseFloat(maxBet, 16)),
-  }));
+  res.json(resSuccess({ portal, rtp: rtp / rtpDivider, minBet, maxBet }));
 };
 
 // Setters
@@ -69,16 +66,20 @@ const getParams = async(req, res) => {
 const setPortal = async(req, res) => {
   const { address } = req.body;
 
+  if (!isAddress(address) || isNullAddress(address))
+    return res.status(422).json(resError(73402));
+
   const result = await dice.set.portal(address);
-  if (result === undefined) return res.status(500).json(resError(73500));
+  if (!result) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
 
 const setRTP = async(req, res) => {
   const { rtp } = req.body;
 
-  const result = await dice.set.rtp(rtp * 10000, 10000);
-  if (result === undefined) return res.status(500).json(resError(73500));
+  const rtpDecimal = 10000;
+  const result = await dice.set.rtp(rtp * rtpDecimal, rtpDecimal);
+  if (!result) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
 
@@ -86,7 +87,7 @@ const setBet = async(req, res) => {
   const { min, max } = req.body;
 
   const result = await dice.set.bet(toSun(min), toSun(max));
-  if (result === undefined) return res.status(500).json(resError(73500));
+  if (!result) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
 
