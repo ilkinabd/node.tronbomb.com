@@ -105,7 +105,7 @@ const setBet = async(req, res) => {
   res.json(resSuccess({ result }));
 };
 
-// Control
+// Functions
 
 const finishGame = async(req, res) => {
   const { contractId, gameId } = req.body;
@@ -192,7 +192,7 @@ module.exports = {
     rtp: setRTP,
     bet: setBet,
   },
-  control: {
+  func: {
     finishGame,
   },
   events: {

@@ -27,10 +27,10 @@ router.route('/set/rtp')
 router.route('/set/bet')
   .post(auth, validate('setBet', false), controller.set.bet);
 
-// Control
+// Functions
 
-router.route('/control/finish_game')
-  .post(auth, validate('finishGame', false), controller.control.finishGame);
+router.route('/func/finish_game')
+  .post(auth, validate('finishGame', false), controller.func.finishGame);
 
 // Events
 
