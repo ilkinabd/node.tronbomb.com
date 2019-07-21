@@ -1,15 +1,14 @@
 const dice = require('@utils/dice');
 const {
-  toBase58, toTRX, toSun, isAddress, isNullAddress
+  toBase58, toDecimal, toTRX, toSun, isAddress, isNullAddress
 } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
 const toGameModel = (game) => {
-  const amount = parseFloat(game.amount, 16);
-
-  game.gameId = parseFloat(game.gameId, 16);
-  game.finishBlock = parseFloat(game.finishBlock, 16);
-  game.amount = (game.tokenId === 0) ? toTRX(amount) : amount;
+  game.gameId = toDecimal(game.gameId);
+  game.finishBlock = toDecimal(game.finishBlock);
+  game.amount =
+    (game.tokenId === 0) ? toTRX(game.amount) : toDecimal(game.amount);
   game.result = (game.status === 0) ? null : game.result;
   game.status = (game.status === 0) ? 'start' : 'finish';
   game.player = toBase58(game.player);
@@ -31,21 +30,18 @@ const getGame = async(req, res) => {
   res.json(resSuccess({ game }));
 };
 
-const getGames = async(req, res) => {
-  const totalGames = await dice.get.totalGames();
+const getGames = async(_req, res) => {
+  const totalGames = toDecimal(await dice.get.totalGames());
 
   const requests = [];
-
   for (let gameId = 0; gameId < totalGames; gameId++) {
-    const game = dice.get.game(gameId);
-    requests.push(game);
+    requests.push(dice.get.game(gameId.toString()));
   }
 
   const games = await Promise.all(requests).catch((error) => {
     console.error(error);
     return res.status(500).json(resError(73500));
   });
-
   for (const game of games) toGameModel(game);
 
   res.json(resSuccess({ games }));
@@ -107,12 +103,17 @@ const takeBets = async(req, res) => {
   const { from, to } = req.query;
 
   let events = await dice.events.takeBets();
-  if (events === undefined) return res.status(500).json(resError(73500));
+  if (!events) return res.status(500).json(resError(73500));
 
   events = filterEvents(events, from, to);
   for (const event of events) {
     const { amount, tokenId, player } = event.result;
     if (tokenId === '0') event.result.amount = toTRX(amount);
+    event.result.gameId = parseInt(event.result.gameId);
+    event.result.number = parseInt(event.result.number);
+    event.result.finishBlock = parseInt(event.result.finishBlock);
+    event.result.tokenId = parseInt(event.result.tokenId);
+    event.result.roll = parseInt(event.result.roll);
     event.result.player = toBase58(player);
   }
 
@@ -123,9 +124,14 @@ const finishGames = async(req, res) => {
   const { from, to } = req.query;
 
   let events = await dice.events.finishGames();
-  if (events === undefined) return res.status(500).json(resError(73500));
+  if (!events) return res.status(500).json(resError(73500));
 
   events = filterEvents(events, from, to);
+  for (const event of events) {
+    event.result.gameId = parseInt(event.result.gameId);
+    event.result.result = parseInt(event.result.result);
+  }
+
   res.json(resSuccess({ events }));
 };
 
@@ -139,6 +145,8 @@ const playersWin = async(req, res) => {
   for (const event of events) {
     const { amount, tokenId, player } = event.result;
     if (tokenId === '0') event.result.amount = toTRX(amount);
+    event.result.gameId = parseInt(event.result.gameId);
+    event.result.tokenId = parseInt(event.result.tokenId);
     event.result.player = toBase58(player);
   }
 
@@ -154,7 +162,7 @@ const changeParams = async(req, res) => {
   if (!bet) return res.status(500).json(resError(73500));
 
   for (const event of rtp) {
-    event.result.rtp = event.result.rtp / event.result.rtpDivider;
+    event.result.rtp /= event.result.rtpDivider;
     delete event.result.rtpDivider;
   }
   for (const event of bet) {

@@ -17,6 +17,7 @@ const getBalance = async(address) =>
 
 module.exports = {
   toBase58,
+  toDecimal,
   toTRX,
   toSun,
   isAddress,
