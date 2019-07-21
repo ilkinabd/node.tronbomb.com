@@ -1,5 +1,7 @@
 const utils = require('@utils/portal');
-const { toBase58, toTRX, toSun } = require('@utils/tron');
+const {
+  toBase58, toTRX, toSun, isAddress, isNullAddress
+} = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
 const filterEvents = (events, from, to) => (events.filter((event) => (
@@ -21,7 +23,7 @@ const getMainStatus = async(_req, res) => {
 };
 
 const getOwner = async(_req, res) => {
-  let owner = await utils.get.owner();
+  const owner = await utils.get.owner();
   if (owner === undefined) return res.status(500).json(resError(73500));
   res.json(resSuccess({ owner: toBase58(owner) }));
 };
@@ -32,7 +34,7 @@ const getToken = async(req, res) => {
   let token = await utils.get.token(tokenId);
   if (token === undefined) return res.status(500).json(resError(73500));
 
-  token = toBase58(token);
+  token = (isNullAddress(token)) ? null : toBase58(token);
   res.json(resSuccess({ token }));
 };
 
@@ -42,12 +44,15 @@ const getGame = async(req, res) => {
   let game = await utils.get.game(gameId);
   if (game === undefined) return res.status(500).json(resError(73500));
 
-  game = toBase58(game);
+  game = (isNullAddress(game)) ? null : toBase58(game);
   res.json(resSuccess({ game }));
 };
 
 const getGameStatus = async(req, res) => {
   const { address } = req.query;
+
+  if (!isAddress(address) || isNullAddress(address))
+    return res.status(422).json(resError(73402));
 
   const gameStatus = await utils.get.gameStatus(address);
   if (gameStatus === undefined) return res.status(500).json(resError(73500));
@@ -67,24 +72,33 @@ const setMainStatus = async(req, res) => {
 const setToken = async(req, res) => {
   const { tokenId, address } = req.body;
 
+  if (!isAddress(address) || isNullAddress(address))
+    return res.status(422).json(resError(73402));
+
   const result = await utils.set.token(tokenId, address);
-  if (result === undefined) return res.status(500).json(resError(73500));
+  if (!result) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
 
 const setGame = async(req, res) => {
   const { gameId, address } = req.body;
 
+  if (!isAddress(address) || isNullAddress(address))
+    return res.status(422).json(resError(73402));
+
   const result = await utils.set.game(gameId, address);
-  if (result === undefined) return res.status(500).json(resError(73500));
+  if (!result) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
 
 const setGameStatus = async(req, res) => {
   const { address, status } = req.body;
 
-  const result = await utils.set.gameStatus(address, status);
-  if (result === undefined) return res.status(500).json(resError(73500));
+  if (!isAddress(address) || isNullAddress(address))
+    return res.status(422).json(resError(73402));
+
+  const result = await utils.set.gameStatus(address, status === 'true');
+  if (!result) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
 
@@ -113,7 +127,7 @@ const mainStatus = async(req, res) => {
   const { from, to } = req.query;
 
   let events = await utils.events.mainStatus();
-  if (events === undefined) return res.status(500).json(resError(73500));
+  if (!events) return res.status(500).json(resError(73500));
   for (const event of events) {
     event.result.mainStatus = (event.result.mainStatus === 'true');
   }
@@ -140,7 +154,7 @@ const tokens = async(req, res) => {
   const { from, to } = req.query;
 
   let events = await utils.events.tokens();
-  if (events === undefined) return res.status(500).json(resError(73500));
+  if (!events) return res.status(500).json(resError(73500));
 
   events = filterEvents(events, from, to);
   for (const event of events) {
@@ -154,9 +168,13 @@ const games = async(req, res) => {
   const { from, to } = req.query;
 
   const games = await utils.events.games();
-  if (games === undefined) return res.status(500).json(resError(73500));
+  if (!games) return res.status(500).json(resError(73500));
   const gamesStatuses = await utils.events.gamesStatuses();
-  if (gamesStatuses === undefined) return res.status(500).json(resError(73500));
+  if (!gamesStatuses) return res.status(500).json(resError(73500));
+
+  for (const event of gamesStatuses) {
+    event.result.status = (event.result.status === 'true');
+  }
 
   const events = filterEvents(games.concat(gamesStatuses), from, to);
   for (const event of events) {
