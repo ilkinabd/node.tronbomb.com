@@ -40,12 +40,15 @@ module.exports = {
     portal: call('portal'),
     minBet: call('minBet'),
     maxBet: call('maxBet'),
+    duration: call('gameDuration'),
   },
   set: {
     portal: send('setPortalAddress'),
     bet: send('setMinMaxBet'),
+    duration: send('setGameDuration'),
   },
   events: {
     changeMinMaxBet: events('ChangeMinMaxBet'),
+    changeDuration: events('ChangeGameDuration'),
   },
 };

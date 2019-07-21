@@ -65,6 +65,9 @@ const game = {
     min: templates.amount,
     max: Joi.number().min(Joi.ref('min')).required(),
   }),
+  setDuration: Joi.object().keys({
+    duration: templates.id,
+  }),
   finishGame: Joi.object().keys({
     gameId: templates.id,
   }),

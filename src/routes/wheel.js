@@ -18,6 +18,9 @@ router.route('/set/portal')
 router.route('/set/bet')
   .post(server, validate('setBet', false), controller.set.bet);
 
+router.route('/set/duration')
+  .post(server, validate('setDuration', false), controller.set.duration);
+
 // Functions
 
 // Events
