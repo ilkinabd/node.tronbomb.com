@@ -107,7 +107,7 @@ const setGameStatus = async(req, res) => {
 const takeTRXBet = async(req, res) => {
   const { amount, gameId, data } = req.body;
 
-  const result = await utils.payable.takeTRXBet(toSun(amount), gameId, data);
+  const result = await utils.func.takeTRXBet(toSun(amount), gameId, data);
   if (!result) return res.status(500).json(resError(73500));
 
   res.json(resSuccess({ result }));

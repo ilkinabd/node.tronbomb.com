@@ -50,7 +50,7 @@ module.exports = {
     rtp: send('setRTP'),
     bet: send('setMinMaxBet'),
   },
-  controll: {
+  func: {
     finishGame: send('finishGame'),
   },
   events: {

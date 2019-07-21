@@ -65,7 +65,7 @@ module.exports = {
     game: send('setGame'),
     gameStatus: send('setGameStatus'),
   },
-  payable: {
+  func: {
     takeTRXBet: payable('takeTRXBet'),
   },
   events: {
