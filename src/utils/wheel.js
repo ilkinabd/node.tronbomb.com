@@ -37,6 +37,8 @@ const events = (eventName) => async() => {
 
 module.exports = {
   get: {
+    game: call('games'),
+    totalGames: call('totalGames'),
     portal: call('portal'),
     minBet: call('minBet'),
     maxBet: call('maxBet'),

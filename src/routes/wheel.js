@@ -7,6 +7,12 @@ const { validateGame: validate } = require('@middleware/validate-params');
 
 // Getters
 
+router.route('/get/game')
+  .get(server, validate('getGame', true), controller.get.game);
+
+router.route('/get/games')
+  .get(server, controller.get.games);
+
 router.route('/get/params')
   .get(server, controller.get.params);
 

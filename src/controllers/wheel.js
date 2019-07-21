@@ -4,11 +4,46 @@ const {
 } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
+const toGameModel = (game) => {
+  game.gameId = toDecimal(game.gameId);
+  game.finishBlock = toDecimal(game.finishBlock);
+  game.betsCount = toDecimal(game.betsCount);
+  game.result = (game.status === 0) ? null : game.result;
+  game.status = (game.status === 0) ? 'start' : 'finish';
+};
+
 const filterEvents = (events, from, to) => (events.filter((event) => (
   (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
 )));
 
 // Getters
+
+const getGame = async(req, res) => {
+  const { gameId } = req.query;
+
+  const game = await utils.get.game(gameId);
+  if (game === undefined) return res.status(500).json(resError(73500));
+  toGameModel(game);
+
+  res.json(resSuccess({ game }));
+};
+
+const getGames = async(_req, res) => {
+  const totalGames = toDecimal(await utils.get.totalGames());
+
+  const requests = [];
+  for (let gameId = 0; gameId < totalGames; gameId++) {
+    requests.push(utils.get.game(gameId.toString()));
+  }
+
+  const games = await Promise.all(requests).catch((error) => {
+    console.error(error);
+    return res.status(500).json(resError(73500));
+  });
+  for (const game of games) toGameModel(game);
+
+  res.json(resSuccess({ games }));
+};
 
 const getParams = async(_req, res) => {
   const portal = toBase58(await utils.get.portal());
@@ -81,6 +116,8 @@ const changeParams = async(req, res) => {
 
 module.exports = {
   get: {
+    game: getGame,
+    games: getGames,
     params: getParams,
   },
   set: {
