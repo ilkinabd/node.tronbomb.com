@@ -117,7 +117,7 @@ const withdraw = async(req, res) => {
   const { amount, tokenId } = req.body;
 
   const result = await utils.withdraw(toSun(amount), tokenId);
-  if (result === undefined) return res.status(500).json(resError(73500));
+  if (!result) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
 
@@ -188,7 +188,7 @@ const rewards = async(req, res) => {
   const { from, to } = req.query;
 
   let events = await utils.events.rewards();
-  if (events === undefined) return res.status(500).json(resError(73500));
+  if (!events) return res.status(500).json(resError(73500));
 
   events = filterEvents(events, from, to);
   for (const event of events) {
