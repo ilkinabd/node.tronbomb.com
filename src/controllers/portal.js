@@ -23,9 +23,7 @@ const getMainStatus = async(_req, res) => {
 const getOwner = async(_req, res) => {
   let owner = await utils.get.owner();
   if (owner === undefined) return res.status(500).json(resError(73500));
-
-  owner = toBase58(owner);
-  res.json(resSuccess({ owner }));
+  res.json(resSuccess({ owner: toBase58(owner) }));
 };
 
 const getToken = async(req, res) => {
