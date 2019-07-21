@@ -96,8 +96,7 @@ const takeTRXBet = async(req, res) => {
   const { amount, gameId, data } = req.body;
 
   const result = await utils.payable.takeTRXBet(toSun(amount), gameId, data);
-  if (result === null || result === undefined)
-    return res.status(500).json(resError(73500));
+  if (!result) return res.status(500).json(resError(73500));
 
   res.json(resSuccess({ result }));
 };
@@ -126,7 +125,7 @@ const withdraws = async(req, res) => {
   const { from, to } = req.query;
 
   let events = await utils.events.withdraws();
-  if (events === undefined) return res.status(500).json(resError(73500));
+  if (!events) return res.status(500).json(resError(73500));
 
   events = filterEvents(events, from, to);
   for (const event of events) {
