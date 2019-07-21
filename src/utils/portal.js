@@ -6,8 +6,8 @@ const db = require('@db');
 
 const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 
-const getPortalAddress = () => db.contracts.get({ type: 'portal' });
-const getContract = async() => tronWeb.contract().at(await getPortalAddress());
+const getAddress = () => db.contracts.get({ type: 'portal' });
+const getContract = async() => tronWeb.contract().at(await getAddress());
 
 const call = (variable) => async(param) => {
   const contract = await getContract();
@@ -39,14 +39,14 @@ const payable = (method) => async(amount, ...params) => {
 };
 
 const events = (eventName) => async() => {
-  const events = await tronWeb.getEventResult(await getPortalAddress(), {
+  const events = await tronWeb.getEventResult(await getAddress(), {
     eventName,
   }).catch(console.error);
 
   return events;
 };
 
-const balance = async() => tronWeb.trx.getBalance(await getPortalAddress());
+const balance = async() => tronWeb.trx.getBalance(await getAddress());
 
 module.exports = {
   balance,

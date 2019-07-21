@@ -2,20 +2,24 @@ const { PRIVATE_KEY, PROVIDER } = process.env;
 
 const TronWeb = require('tronweb');
 
+const db = require('@db');
+
 const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 
-const call = (variable) => async(address, param) => {
-  const contract = await tronWeb.contract().at(address);
-  const result = await (param !== undefined ?
-    contract[variable](param) :
-    contract[variable]()
-  ).call().catch(console.error);
+const getAddress = () => db.contracts.get({ type: 'dice' });
+const getContract = async() => tronWeb.contract().at(await getAddress());
+
+const call = (variable) => async(param) => {
+  const contract = await getContract();
+  const result = await
+  (param ? contract[variable](param) : contract[variable]())
+    .call().catch(console.error);
 
   return result;
 };
 
-const send = (method) => async(address, ...params) => {
-  const contract = await tronWeb.contract().at(address);
+const send = (method) => async(...params) => {
+  const contract = await getContract();
   const result = await contract[method](...params).send({
     shouldPollResponse: true,
   }).catch(console.error);
@@ -23,8 +27,8 @@ const send = (method) => async(address, ...params) => {
   return result;
 };
 
-const events = (eventName) => async(address) => {
-  const events = await tronWeb.getEventResult(address, {
+const events = (eventName) => async() => {
+  const events = await tronWeb.getEventResult(await getAddress(), {
     eventName,
   }).catch(console.error);
 
