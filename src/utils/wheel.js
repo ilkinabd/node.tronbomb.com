@@ -47,6 +47,9 @@ module.exports = {
     bet: send('setMinMaxBet'),
     duration: send('setGameDuration'),
   },
+  func: {
+    init: send('initGame'),
+  },
   events: {
     changeMinMaxBet: events('ChangeMinMaxBet'),
     changeDuration: events('ChangeGameDuration'),

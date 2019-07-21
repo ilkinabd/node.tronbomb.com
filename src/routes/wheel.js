@@ -23,6 +23,9 @@ router.route('/set/duration')
 
 // Functions
 
+router.route('/func/init')
+  .post(server, controller.func.init);
+
 // Events
 
 router.route('/events/change_params')

@@ -1,6 +1,6 @@
-const util = require('@utils/wheel');
+const utils = require('@utils/wheel');
 const {
-  toBase58, toTRX, toSun, isAddress, isNullAddress
+  toBase58, toTRX, toSun, isAddress, isNullAddress, toDecimal
 } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
@@ -11,10 +11,10 @@ const filterEvents = (events, from, to) => (events.filter((event) => (
 // Getters
 
 const getParams = async(_req, res) => {
-  const portal = toBase58(await util.get.portal());
-  const minBet = toTRX(await util.get.minBet());
-  const maxBet = toTRX(await util.get.maxBet());
-  const duration = parseInt(await util.get.duration());
+  const portal = toBase58(await utils.get.portal());
+  const minBet = toTRX(await utils.get.minBet());
+  const maxBet = toTRX(await utils.get.maxBet());
+  const duration = parseInt(await utils.get.duration());
 
   res.json(resSuccess({ portal, minBet, maxBet, duration }));
 };
@@ -27,7 +27,7 @@ const setPortal = async(req, res) => {
   if (!isAddress(address) || isNullAddress(address))
     return res.status(422).json(resError(73402));
 
-  const result = await util.set.portal(address);
+  const result = await utils.set.portal(address);
   if (!result) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
@@ -35,7 +35,7 @@ const setPortal = async(req, res) => {
 const setBet = async(req, res) => {
   const { min, max } = req.body;
 
-  const result = await util.set.bet(toSun(min), toSun(max));
+  const result = await utils.set.bet(toSun(min), toSun(max));
   if (!result) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
@@ -43,8 +43,17 @@ const setBet = async(req, res) => {
 const setDuration = async(req, res) => {
   const { duration } = req.body;
 
-  const result = await util.set.duration(duration);
+  const result = await utils.set.duration(duration);
   if (!result) return res.status(500).json(resError(73500));
+  res.json(resSuccess({ result }));
+};
+
+// Functions
+
+const initGame = async(_req, res) => {
+  const result = await utils.func.init();
+  if (!result) return res.status(500).json(resError(73500));
+  result.gameId = toDecimal(result.gameId);
   res.json(resSuccess({ result }));
 };
 
@@ -53,9 +62,9 @@ const setDuration = async(req, res) => {
 const changeParams = async(req, res) => {
   const { from, to } = req.query;
 
-  const bet = await util.events.changeMinMaxBet();
+  const bet = await utils.events.changeMinMaxBet();
   if (!bet) return res.status(500).json(resError(73500));
-  const duration = await util.events.changeDuration();
+  const duration = await utils.events.changeDuration();
   if (!duration) return res.status(500).json(resError(73500));
 
   for (const event of bet) {
@@ -78,6 +87,9 @@ module.exports = {
     portal: setPortal,
     bet: setBet,
     duration: setDuration
+  },
+  func: {
+    init: initGame,
   },
   events: {
     changeParams,
