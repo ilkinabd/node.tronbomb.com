@@ -49,6 +49,9 @@ router.route('/events/take_bet')
 router.route('/events/finish_game')
   .get(server, validate('events', true), controller.events.finishGame);
 
+router.route('/events/player_win')
+  .get(server, validate('events', true), controller.events.playerWin);
+
 router.route('/events/change_params')
   .get(server, validate('events', true), controller.events.changeParams);
 

@@ -178,6 +178,22 @@ const finishGame = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
+const playerWin = async(req, res) => {
+  const { from, to } = req.query;
+
+  let events = await utils.events.playerWin();
+  if (!events) return res.status(500).json(resError(73500));
+
+  events = filterEvents(events, from, to);
+  for (const event of events) {
+    event.result.reward = toTRX(event.result.reward);
+    event.result.betId = parseInt(event.result.betId);
+    event.result.gameId = parseInt(event.result.gameId);
+  }
+
+  res.json(resSuccess({ events }));
+};
+
 const changeParams = async(req, res) => {
   const { from, to } = req.query;
 
@@ -218,6 +234,7 @@ module.exports = {
     initGame,
     takeBet,
     finishGame,
+    playerWin,
     changeParams,
   },
 };
