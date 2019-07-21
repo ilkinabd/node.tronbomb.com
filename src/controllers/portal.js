@@ -6,6 +6,8 @@ const filterEvents = (events, from, to) => (events.filter((event) => (
   (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
 )));
 
+// Getters
+
 const balance = async(_req, res) => {
   let balance = await utils.balance();
   if (balance === undefined) return res.status(500).json(resError(73500));
@@ -13,16 +15,6 @@ const balance = async(_req, res) => {
   balance = toTRX(balance);
   res.json(resSuccess({ balance }));
 };
-
-const withdraw = async(req, res) => {
-  const { amount, tokenId } = req.body;
-
-  const result = await utils.withdraw(toSun(amount), tokenId);
-  if (result === undefined) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
-};
-
-// Getters
 
 const getMainStatus = async(_req, res) => {
   const mainStatus = await utils.get.mainStatus();
@@ -100,7 +92,7 @@ const setGameStatus = async(req, res) => {
   res.json(resSuccess({ result }));
 };
 
-// Payable
+// Functions
 
 const takeTRXBet = async(req, res) => {
   const { amount, gameId, data } = req.body;
@@ -109,6 +101,14 @@ const takeTRXBet = async(req, res) => {
   if (result === null || result === undefined)
     return res.status(500).json(resError(73500));
 
+  res.json(resSuccess({ result }));
+};
+
+const withdraw = async(req, res) => {
+  const { amount, tokenId } = req.body;
+
+  const result = await utils.withdraw(toSun(amount), tokenId);
+  if (result === undefined) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
 
@@ -185,9 +185,8 @@ const rewards = async(req, res) => {
 };
 
 module.exports = {
-  balance,
-  withdraw,
   get: {
+    balance,
     mainStatus: getMainStatus,
     owner: getOwner,
     token: getToken,
@@ -200,8 +199,9 @@ module.exports = {
     game: setGame,
     gameStatus: setGameStatus,
   },
-  payable: {
+  func: {
     takeTRXBet,
+    withdraw,
   },
   events: {
     mainStatus,

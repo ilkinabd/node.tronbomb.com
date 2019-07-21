@@ -5,13 +5,10 @@ const controller = require('@controllers/portal');
 const auth = require('@middleware/check-auth');
 const { validatePortal: validate } = require('@middleware/validate-params');
 
-router.route('/balance')
-  .get(auth, controller.balance);
-
-router.route('/withdraw')
-  .post(auth, validate('withdraw', false), controller.withdraw);
-
 // Getters
+
+router.route('/get/balance')
+  .get(auth, controller.get.balance);
 
 router.route('/get/main_status')
   .get(auth, controller.get.mainStatus);
@@ -42,10 +39,13 @@ router.route('/set/game')
 router.route('/set/game_status')
   .post(auth, validate('setGameStatus', false), controller.set.gameStatus);
 
-// Payable
+// Functions
 
-router.route('/payable/take_trx_bet')
-  .post(auth, validate('takeTRXBet', false), controller.payable.takeTRXBet);
+router.route('/func/take_trx_bet')
+  .post(auth, validate('takeTRXBet', false), controller.func.takeTRXBet);
+
+router.route('/func/withdraw')
+  .post(auth, validate('withdraw', false), controller.func.withdraw);
 
 // Events
 
