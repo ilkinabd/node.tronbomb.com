@@ -163,6 +163,21 @@ const takeBet = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
+const finishGame = async(req, res) => {
+  const { from, to } = req.query;
+
+  let events = await utils.events.finishGame();
+  if (!events) return res.status(500).json(resError(73500));
+
+  events = filterEvents(events, from, to);
+  for (const event of events) {
+    event.result.result = parseInt(event.result.result);
+    event.result.gameId = parseInt(event.result.gameId);
+  }
+
+  res.json(resSuccess({ events }));
+};
+
 const changeParams = async(req, res) => {
   const { from, to } = req.query;
 
@@ -202,6 +217,7 @@ module.exports = {
   events: {
     initGame,
     takeBet,
+    finishGame,
     changeParams,
   },
 };
