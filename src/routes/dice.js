@@ -3,7 +3,7 @@ const router = new express.Router();
 
 const controller = require('@controllers/dice');
 const { server } = require('@middleware/auth');
-const { validateDice: validate } = require('@middleware/validate-params');
+const { validateGame: validate } = require('@middleware/validate-params');
 
 // Getters
 

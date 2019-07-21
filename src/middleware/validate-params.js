@@ -51,7 +51,7 @@ const portal = {
   }),
 };
 
-const dice = {
+const game = {
   getGame: Joi.object().keys({
     gameId: templates.id,
   }),
@@ -89,9 +89,9 @@ const validate = (schemas, type, isQuery) => (req, res, next) => {
 };
 
 const validatePortal = (type, isQuery) => validate(portal, type, isQuery);
-const validateDice = (type, isQuery) => validate(dice, type, isQuery);
+const validateGame = (type, isQuery) => validate(game, type, isQuery);
 
 module.exports = {
   validatePortal,
-  validateDice,
+  validateGame,
 };
