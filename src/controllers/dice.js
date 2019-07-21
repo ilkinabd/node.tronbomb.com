@@ -77,8 +77,8 @@ const setPortal = async(req, res) => {
 const setRTP = async(req, res) => {
   const { rtp } = req.body;
 
-  const rtpDecimal = 10000;
-  const result = await dice.set.rtp(rtp * rtpDecimal, rtpDecimal);
+  const rtpDivider = 10000;
+  const result = await dice.set.rtp(rtp * rtpDivider, rtpDivider);
   if (!result) return res.status(500).json(resError(73500));
   res.json(resSuccess({ result }));
 };
@@ -149,9 +149,18 @@ const changeParams = async(req, res) => {
   const { from, to } = req.query;
 
   const rtp = await dice.events.changeRTP();
-  if (rtp === undefined) return res.status(500).json(resError(73500));
+  if (!rtp) return res.status(500).json(resError(73500));
   const bet = await dice.events.changeMinMaxBet();
-  if (bet === undefined) return res.status(500).json(resError(73500));
+  if (!bet) return res.status(500).json(resError(73500));
+
+  for (const event of rtp) {
+    event.result.rtp = event.result.rtp / event.result.rtpDivider;
+    delete event.result.rtpDivider;
+  }
+  for (const event of bet) {
+    event.result.minBet = toTRX(event.result.minBet);
+    event.result.maxBet = toTRX(event.result.maxBet);
+  }
 
   const events = filterEvents(rtp.concat(bet), from, to);
   res.json(resSuccess({ events }));
