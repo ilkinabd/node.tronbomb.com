@@ -6,14 +6,13 @@ const db = require('@db');
 
 const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 
-const getAddress = () => db.contracts.get({ type: 'dice' });
+const getAddress = () => db.contracts.get({ type: 'wheel' });
 const getContract = async() => tronWeb.contract().at(await getAddress());
 
-const call = (variable) => async(param) => {
+const call = (variable) => async(...params) => {
   const contract = await getContract();
-  const result = await
-  (param ? contract[variable](param) : contract[variable]())
-    .call().catch(console.error);
+  const result = await contract[variable](...params).call()
+    .catch(console.error);
 
   return result;
 };
@@ -39,25 +38,27 @@ module.exports = {
   get: {
     game: call('games'),
     totalGames: call('totalGames'),
+    gameBet: call('getGameBet'),
     portal: call('portal'),
-    rtp: call('rtp'),
-    rtpDivider: call('rtpDivider'),
     minBet: call('minBet'),
     maxBet: call('maxBet'),
+    duration: call('gameDuration'),
   },
   set: {
     portal: send('setPortalAddress'),
-    rtp: send('setRTP'),
     bet: send('setMinMaxBet'),
+    duration: send('setGameDuration'),
   },
   func: {
-    finishGame: send('finishGame'),
+    init: send('initGame'),
+    finish: send('finishGame'),
   },
   events: {
-    takeBets: events('TakeBet'),
-    finishGames: events('FinishGame'),
-    playersWin: events('PlayerWin'),
-    changeRTP: events('ChangeRTP'),
+    initGame: events('InitGame'),
+    takeBet: events('TakeBet'),
+    finishGame: events('FinishGame'),
+    playerWin: events('PlayerWin'),
     changeMinMaxBet: events('ChangeMinMaxBet'),
+    changeDuration: events('ChangeGameDuration'),
   },
 };

@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 
 const portal = require('./src/routes/portal');
 const dice = require('./src/routes/dice');
+const wheel = require('./src/routes/wheel');
 
 const app = express();
 
@@ -31,5 +32,6 @@ app.get('/', (_req, res) => {
 
 app.use('/portal', portal);
 app.use('/dice', dice);
+app.use('/wheel', wheel);
 
 module.exports = app;
