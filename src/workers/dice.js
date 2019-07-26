@@ -12,13 +12,13 @@ const takePart = async(blockNumber, diceContract, io) => {
     } = data.result;
 
     const event = {
-      amount: (tokenId === '0') ? toTRX(amount) : toDecimal(amount),
-      gameId: parseInt(gameId),
+      bet: (tokenId === '0') ? toTRX(amount) : toDecimal(amount),
+      index: parseInt(gameId),
       number: parseInt(number),
       finishBlock: parseInt(finishBlock),
       tokenId: parseInt(tokenId),
       roll: parseInt(roll),
-      player: toBase58(player),
+      wallet: toBase58(player),
     };
 
     io.in('dice').emit('dice', event);
