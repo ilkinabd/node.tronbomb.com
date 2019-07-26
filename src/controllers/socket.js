@@ -1,3 +1,5 @@
+const { TOKEN } = process.env;
+
 const db = require('@db');
 
 db.sockets.clear();
@@ -17,7 +19,8 @@ const disconnected = (socket) => {
 };
 
 const subscribe = async(data, socket) => {
-  const { room } = data;
+  const { room, token } = data;
+  if (token !== TOKEN) return;
   socket.join(room);
 
   const { id, adapter } = socket;
@@ -26,7 +29,8 @@ const subscribe = async(data, socket) => {
   await db.sockets.setRooms({ id, rooms });
 };
 const unsubscribe = async(data, socket) => {
-  const { room } = data;
+  const { room, token } = data;
+  if (token !== TOKEN) return;
   socket.leave(room);
 
   const { id, adapter } = socket;
