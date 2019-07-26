@@ -2,9 +2,10 @@ const { PG_HOST, PG_USER, PG_PORT, PG_PASS, PG_DB } = process.env;
 
 const PgClient = require('pg').Client;
 
-const { getValue, getAll, fillTemplate } = require('./tools');
+const { getValue, getAll, getId, fillTemplate } = require('./tools');
 
 const contracts = require('./requests/contracts');
+const sockets = require('./requests/sockets');
 
 const client = new PgClient({
   host: PG_HOST,
@@ -31,5 +32,11 @@ module.exports = {
   contracts: {
     get: getValue(request(contracts['get'])),
     getAll: getAll(request(contracts['get-all'])),
+  },
+  sockets: {
+    add: getId(request(sockets['add'])),
+    setRooms: request(sockets['set-rooms']),
+    delete: getAll(request(sockets['delete'])),
+    clear: getValue(request(sockets['clear'])),
   },
 };
