@@ -1,38 +1,10 @@
 const db = require('@db');
-const {
-  getEventResult, currentBlock, getBlock, toTRX, toDecimal, toBase58
-} = require('@utils/tron');
-
-let diceContract;
-
-const diceEvents = async(blockNumber, io) => {
-  const payload = await getEventResult(diceContract, {
-    eventName: 'TakeBet',
-    blockNumber,
-  });
-
-  for (const data of payload) {
-    const {
-      amount, tokenId, player, gameId, number, finishBlock, roll
-    } = data.result;
-
-    const event = {
-      amount: (tokenId === '0') ? toTRX(amount) : toDecimal(amount),
-      gameId: parseInt(gameId),
-      number: parseInt(number),
-      finishBlock: parseInt(finishBlock),
-      tokenId: parseInt(tokenId),
-      roll: parseInt(roll),
-      player: toBase58(player),
-    };
-
-    io.in('dice').emit('dice', event);
-  }
-};
+const { currentBlock, getBlock } = require('@utils/tron');
+const dice = require('@workers/dice');
 
 module.exports = async(io) => {
   let lastBlock = (await currentBlock()).block_header;
-  diceContract = await db.contracts.get({ type: 'dice' });
+  const diceContract = await db.contracts.get({ type: 'dice' });
 
   setInterval(async() => {
     const current = await currentBlock();
@@ -43,7 +15,8 @@ module.exports = async(io) => {
       };
 
       io.in('blocks').emit('blocks', block);
-      diceEvents(number, io);
+      dice.takePart(number, diceContract, io);
+      dice.finish(number, diceContract, io);
     }
     lastBlock = current;
   }, 1500);
