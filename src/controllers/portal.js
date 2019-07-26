@@ -1,6 +1,6 @@
 const utils = require('@utils/portal');
 const {
-  toBase58, toTRX, toSun, isAddress, isNullAddress
+  toBase58, toTRX, toSun, toDecimal, isAddress, isNullAddress
 } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
@@ -109,6 +109,7 @@ const takeTRXBet = async(req, res) => {
 
   const result = await utils.func.takeTRXBet(toSun(amount), gameId, data);
   if (!result) return res.status(500).json(resError(73500));
+  result.index = toDecimal(result.index);
 
   res.json(resSuccess({ result }));
 };
