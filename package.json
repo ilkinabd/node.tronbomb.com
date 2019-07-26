@@ -16,7 +16,8 @@
     "@controllers": "src/controllers",
     "@middleware": "src/middleware",
     "@routes": "src/routes",
-    "@utils": "src/utils"
+    "@utils": "src/utils",
+    "@workers": "src/workers"
   },
   "repository": "https://gitlab.com/MaxieMind/tron_bomb/node",
   "author": "DenyStark <denyskrolevetskyi@gmail.com>",

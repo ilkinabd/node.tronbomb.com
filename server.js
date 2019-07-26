@@ -8,6 +8,8 @@ const io = require('socket.io')(server);
 const ws = require('@controllers/socket');
 io.on('connection', ws);
 
+require('@workers/blocks')(io);
+
 server.listen(NODE_PORT, NODE_URL, () => {
   console.info('Server started');
 });
