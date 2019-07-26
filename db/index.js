@@ -2,7 +2,7 @@ const { PG_HOST, PG_USER, PG_PORT, PG_PASS, PG_DB } = process.env;
 
 const PgClient = require('pg').Client;
 
-const { getValue, fillTemplate } = require('./tools');
+const { getValue, getAll, fillTemplate } = require('./tools');
 
 const contracts = require('./requests/contracts');
 
@@ -30,5 +30,6 @@ const request = template => params => {
 module.exports = {
   contracts: {
     get: getValue(request(contracts['get'])),
+    getAll: getAll(request(contracts['get-all'])),
   },
 };
