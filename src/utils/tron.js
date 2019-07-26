@@ -17,7 +17,10 @@ const getBalance = async(address) =>
 
 const currentBlock = async() =>
   (await tronWeb.trx.getCurrentBlock()).block_header.raw_data.number;
-const block = (number) => tronWeb.trx.getBlock(number);
+const getBlock = (number) => tronWeb.trx.getBlock(number);
+
+const getEventResult = (contract, params) =>
+  tronWeb.getEventResult(contract, params).catch(console.error);
 
 module.exports = {
   toBase58,
@@ -28,5 +31,6 @@ module.exports = {
   isNullAddress,
   getBalance,
   currentBlock,
-  block,
+  getBlock,
+  getEventResult,
 };
