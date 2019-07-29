@@ -16,6 +16,9 @@ router.route('/get/games')
 router.route('/get/params')
   .get(server, controller.get.params);
 
+router.route('/get/rng')
+  .get(server, validate('getRNG', true), controller.get.rng);
+
 // Setters
 
 router.route('/set/portal')
