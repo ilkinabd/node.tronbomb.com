@@ -1,4 +1,4 @@
-const { getEventResult } = require('@utils/tron');
+const { getEventResult, toTRX, toDecimal, toBase58 } = require('@utils/tron');
 
 const start = async(blockNumber, contract, io) => {
   const payload = await getEventResult(contract, {
@@ -18,6 +18,28 @@ const start = async(blockNumber, contract, io) => {
   }
 };
 
+const takePart = async(blockNumber, contract, io) => {
+  const payload = await getEventResult(contract, {
+    eventName: 'TakeBet',
+    blockNumber,
+  });
+
+  for (const data of payload) {
+    const { amount, tokenId, player, gameId, sector } = data.result;
+
+    const event = {
+      bet: (tokenId === '0') ? toTRX(amount) : toDecimal(amount),
+      index: parseInt(gameId),
+      sector: parseInt(sector),
+      tokenId: parseInt(tokenId),
+      wallet: toBase58(player),
+    };
+
+    io.in('wheel').emit('take-part', event);
+  }
+};
+
 module.exports = {
   start,
+  takePart,
 };

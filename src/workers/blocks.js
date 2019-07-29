@@ -25,6 +25,7 @@ module.exports = async(io) => {
 
       // Wheel workers
       wheel.start(number, wheelContract, io);
+      wheel.takePart(number, wheelContract, io);
     }
     lastBlock = current;
   }, 1500);
