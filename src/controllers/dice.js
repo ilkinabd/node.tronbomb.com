@@ -57,6 +57,14 @@ const getParams = async(_req, res) => {
   res.json(resSuccess({ portal, rtp: rtp / rtpDivider, minBet, maxBet }));
 };
 
+const getRNG = async(req, res) => {
+  const { wallet, blockNumber, blockHash } = req.query;
+
+  const result = await utils.get.rng(wallet, blockNumber, blockHash);
+  if (result === undefined) return res.status(500).json(resError(73500));
+  res.json(resSuccess({ result }));
+};
+
 // Setters
 
 const setPortal = async(req, res) => {
@@ -179,6 +187,7 @@ module.exports = {
     game: getGame,
     games: getGames,
     params: getParams,
+    rng: getRNG,
   },
   set: {
     portal: setPortal,

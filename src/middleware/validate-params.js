@@ -55,6 +55,15 @@ const game = {
   getGame: Joi.object().keys({
     gameId: templates.id,
   }),
+  diceRNG: Joi.object().keys({
+    wallet: templates.address,
+    blockNumber: templates.id,
+    blockHash: templates.bytes.required(),
+  }),
+  wheelRNG: Joi.object().keys({
+    blockNumber: templates.id,
+    blockHash: templates.bytes.required(),
+  }),
   setPortal: Joi.object().keys({
     address: templates.address,
   }),

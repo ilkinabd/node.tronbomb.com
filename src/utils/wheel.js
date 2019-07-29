@@ -43,6 +43,7 @@ module.exports = {
     minBet: call('minBet'),
     maxBet: call('maxBet'),
     duration: call('gameDuration'),
+    rng: call('wheelRNG'),
   },
   set: {
     portal: send('setPortalAddress'),

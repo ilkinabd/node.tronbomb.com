@@ -9,10 +9,9 @@ const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 const getAddress = () => db.contracts.get({ type: 'dice' });
 const getContract = async() => tronWeb.contract().at(await getAddress());
 
-const call = (variable) => async(param) => {
+const call = (variable) => async(...params) => {
   const contract = await getContract();
-  const result = await
-  (param ? contract[variable](param) : contract[variable]())
+  const result = await contract[variable](...params)
     .call().catch(console.error);
 
   return result;
@@ -44,6 +43,7 @@ module.exports = {
     rtpDivider: call('rtpDivider'),
     minBet: call('minBet'),
     maxBet: call('maxBet'),
+    rng: call('diceRNG'),
   },
   set: {
     portal: send('setPortalAddress'),

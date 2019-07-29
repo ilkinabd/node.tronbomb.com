@@ -17,3 +17,10 @@ VALUES
   (DEFAULT, 'dice', 'TPgUUX5pmQhzy7jgkPtqEA6UXJNiRxE7Xx', NULL, 'Dice'),
   (DEFAULT, 'wheel', 'TFiEehREibAJTubTft4xK2nVFV8XHGRDVr', NULL, 'Wheel'),
   (DEFAULT, 'token', 'TAchv6odQC1PFPApdBJ1tNQ4uKTv2Yv4es', NULL, 'BOMB');
+
+CREATE TABLE "sockets" (
+  "socket_id" CHAR(20)      NOT NULL,
+  "rooms"     VARCHAR(25)[],
+
+  PRIMARY KEY("socket_id")
+);

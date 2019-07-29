@@ -81,6 +81,14 @@ const getGameBets = async(req, res) => {
   res.json(resSuccess({ bets }));
 };
 
+const getRNG = async(req, res) => {
+  const { blockNumber, blockHash } = req.query;
+
+  const result = await utils.get.rng(blockNumber, blockHash);
+  if (result === undefined) return res.status(500).json(resError(73500));
+  res.json(resSuccess({ result }));
+};
+
 // Setters
 
 const setPortal = async(req, res) => {
@@ -220,6 +228,7 @@ module.exports = {
     games: getGames,
     gameBets: getGameBets,
     params: getParams,
+    rng: getRNG,
   },
   set: {
     portal: setPortal,
