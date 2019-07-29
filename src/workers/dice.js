@@ -21,7 +21,7 @@ const takePart = async(blockNumber, diceContract, io) => {
       wallet: toBase58(player),
     };
 
-    io.in('dice').emit('dice', event);
+    io.in('dice').emit('take-part', event);
   }
 };
 
@@ -39,11 +39,32 @@ const finish = async(blockNumber, diceContract, io) => {
       result: parseInt(result),
     };
 
-    io.in('dice').emit('dice', event);
+    io.in('dice').emit('finish', event);
+  }
+};
+
+const reward = async(blockNumber, diceContract, io) => {
+  const payload = await getEventResult(diceContract, {
+    eventName: 'PlayerWin',
+    blockNumber,
+  });
+
+  for (const data of payload) {
+    const { gameId, amount, tokenId, player } = data.result;
+
+    const event = {
+      amount: (tokenId === '0') ? toTRX(amount) : toDecimal(amount),
+      wallet: toBase58(player),
+      tokenId: parseInt(tokenId),
+      gameId: parseInt(gameId),
+    };
+
+    io.in('dice').emit('reward', event);
   }
 };
 
 module.exports = {
   takePart,
   finish,
+  reward,
 };

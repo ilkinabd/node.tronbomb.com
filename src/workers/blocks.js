@@ -17,6 +17,7 @@ module.exports = async(io) => {
       io.in('blocks').emit('blocks', block);
       dice.takePart(number, diceContract, io);
       dice.finish(number, diceContract, io);
+      dice.reward(number, diceContract, io);
     }
     lastBlock = current;
   }, 1500);
