@@ -11,7 +11,7 @@ module.exports = async(io) => {
     for (let number = lastBlock + 1; number <= current; number++) {
       const block = {
         number,
-        hash: (await getBlock(number)).blockID,
+        hash: '0x' + (await getBlock(number)).blockID,
       };
 
       io.in('blocks').emit('blocks', block);
