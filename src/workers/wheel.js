@@ -39,7 +39,26 @@ const takePart = async(blockNumber, contract, io) => {
   }
 };
 
+const finish = async(blockNumber, contract, io) => {
+  const payload = await getEventResult(contract, {
+    eventName: 'FinishGame',
+    blockNumber,
+  });
+
+  for (const data of payload) {
+    const { result, gameId } = data.result;
+
+    const event = {
+      gameId: parseInt(gameId),
+      result: parseInt(result),
+    };
+
+    io.in('wheel').emit('finish', event);
+  }
+};
+
 module.exports = {
   start,
   takePart,
+  finish,
 };
