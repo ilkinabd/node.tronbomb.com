@@ -25,13 +25,14 @@ const takePart = async(blockNumber, contract, io) => {
   });
 
   for (const data of payload) {
-    const { amount, tokenId, player, gameId, sector } = data.result;
+    const { amount, tokenId, player, gameId, betId, sector } = data.result;
 
     const event = {
       bet: (tokenId === '0') ? toTRX(amount) : toDecimal(amount),
       index: parseInt(gameId),
       sector: parseInt(sector),
       tokenId: parseInt(tokenId),
+      betId: parseInt(betId),
       wallet: toBase58(player),
     };
 
