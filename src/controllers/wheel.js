@@ -120,10 +120,8 @@ const setDuration = async(req, res) => {
 
 // Functions
 
-const init = async(req, res) => {
-  const { startBlock } = req.body;
-
-  const result = await utils.func.init(startBlock);
+const init = async(_req, res) => {
+  const result = await utils.func.init();
   if (!result) return res.status(500).json(resError(73500));
   result.gameId = toDecimal(result.gameId);
   res.json(resSuccess({ result }));

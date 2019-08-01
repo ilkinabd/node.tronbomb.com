@@ -77,9 +77,6 @@ const game = {
   setDuration: Joi.object().keys({
     duration: templates.id,
   }),
-  initGame: Joi.object().keys({
-    startBlock: templates.id,
-  }),
   finishGame: Joi.object().keys({
     gameId: templates.id,
   }),
