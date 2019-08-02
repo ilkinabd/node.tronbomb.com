@@ -9,7 +9,7 @@ module.exports = async(io) => {
   const wheelContract = await db.contracts.get({ type: 'wheel' });
 
   setInterval(async() => {
-    const current = await currentBlock();
+    const current = await currentBlock() - 1;
     for (let number = lastBlock + 1; number <= current; number++) {
       const block = {
         number,
@@ -30,5 +30,5 @@ module.exports = async(io) => {
       wheel.reward(number, wheelContract, io);
     }
     lastBlock = current;
-  }, 1500);
+  }, 3000);
 };
