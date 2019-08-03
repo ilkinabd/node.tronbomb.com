@@ -15,6 +15,7 @@
     "@db": "db",
     "@controllers": "src/controllers",
     "@middleware": "src/middleware",
+    "@models": "src/models",
     "@routes": "src/routes",
     "@utils": "src/utils",
     "@workers": "src/workers"

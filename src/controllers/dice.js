@@ -1,4 +1,5 @@
 const utils = require('@utils/dice');
+const models = require('@models/dice');
 const {
   toBase58, toDecimal, toTRX, toSun, isAddress, isNullAddress
 } = require('@utils/tron');
@@ -23,9 +24,9 @@ const filterEvents = (events, from, to) => (events.filter((event) => (
 const getGame = async(req, res) => {
   const { gameId } = req.query;
 
-  const game = await utils.get.game(gameId);
-  if (game === undefined) return res.status(500).json(resError(73500));
-  toGameModel(game);
+  const payload = await utils.get.game(gameId);
+  if (!payload) return res.status(500).json(resError(73500));
+  const game = models.game(payload);
 
   res.json(resSuccess({ game }));
 };
