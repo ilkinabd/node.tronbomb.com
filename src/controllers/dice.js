@@ -54,9 +54,12 @@ const getParams = async(_req, res) => {
 const getRNG = async(req, res) => {
   const { wallet, blockNumber, blockHash } = req.query;
 
-  const result = await utils.get.rng(wallet, blockNumber, blockHash);
-  if (result === undefined) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+  const payload = await utils.get.rng(wallet, blockNumber, blockHash);
+  if (!payload) return res.status(500).json(resError(73500));
+
+  const random = payload.result;
+
+  res.json(resSuccess({ random }));
 };
 
 // Setters
