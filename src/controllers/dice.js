@@ -1,6 +1,6 @@
 const utils = require('@utils/dice');
 const models = require('@models/dice');
-const { toBase58, toDecimal, toTRX, toSun, isAddress } = require('@utils/tron');
+const { toDecimal, toTRX, toSun, isAddress } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
 const filterEvents = (payload, model, from, to) => {
@@ -136,17 +136,10 @@ const finishGames = async(req, res) => {
 const playersWin = async(req, res) => {
   const { from, to } = req.query;
 
-  let events = await utils.events.playersWin();
-  if (events === undefined) return res.status(500).json(resError(73500));
+  const payload = await utils.events.playersWin();
+  if (!payload) return res.status(500).json(resError(73500));
 
-  events = filterEvents(events, from, to);
-  for (const event of events) {
-    const { amount, tokenId, player } = event.result;
-    if (tokenId === '0') event.result.amount = toTRX(amount);
-    event.result.gameId = parseInt(event.result.gameId);
-    event.result.tokenId = parseInt(event.result.tokenId);
-    event.result.player = toBase58(player);
-  }
+  const events = filterEvents(payload, models.playerWin, from, to);
 
   res.json(resSuccess({ events }));
 };

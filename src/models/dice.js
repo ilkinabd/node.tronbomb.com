@@ -64,9 +64,23 @@ const finishGame = (payload) => {
   return model;
 };
 
+const playerWin = (payload) => {
+  const { player, amount, tokenId, gameId } = payload;
+
+  const model = {
+    player: toBase58(player),
+    amount: (tokenId === 0) ? toTRX(amount) : toDecimal(amount),
+    tokenId: toDecimal(tokenId),
+    gameId: toDecimal(gameId),
+  };
+
+  return model;
+};
+
 module.exports = {
   game,
   params,
   takeBets,
   finishGame,
+  playerWin,
 };
