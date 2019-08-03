@@ -98,7 +98,8 @@ const finishGame = async(req, res) => {
 
   const result = await utils.func.finishGame(gameId);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 // Events
