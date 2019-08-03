@@ -5,16 +5,6 @@ const {
 } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
-const toGameModel = (game) => {
-  game.gameId = toDecimal(game.gameId);
-  game.finishBlock = toDecimal(game.finishBlock);
-  game.amount =
-    (game.tokenId === 0) ? toTRX(game.amount) : toDecimal(game.amount);
-  game.result = (game.status === 0) ? null : game.result;
-  game.status = (game.status === 0) ? 'start' : 'finish';
-  game.player = toBase58(game.player);
-};
-
 const filterEvents = (events, from, to) => (events.filter((event) => (
   (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
 )));
@@ -31,19 +21,20 @@ const getGame = async(req, res) => {
   res.json(resSuccess({ game }));
 };
 
-const getGames = async(_req, res) => {
+const getGames = async(req, res) => {
+  const { from, to } = req.query;
+
   const totalGames = toDecimal(await utils.get.totalGames());
+  if (!totalGames) return res.status(500).json(resError(73500));
+
+  const first = from || 0;
+  const last = Math.min(totalGames, to || totalGames);
 
   const requests = [];
-  for (let gameId = 0; gameId < totalGames; gameId++) {
-    requests.push(utils.get.game(gameId.toString()));
-  }
+  for (let id = first; id < last; id++) requests.push(utils.get.game(id));
+  const payload = await Promise.all(requests).catch(console.error);
 
-  const games = await Promise.all(requests).catch((error) => {
-    console.error(error);
-    return res.status(500).json(resError(73500));
-  });
-  for (const game of games) toGameModel(game);
+  const games = Array.from(payload, item => models.game(item));
 
   res.json(resSuccess({ games }));
 };
