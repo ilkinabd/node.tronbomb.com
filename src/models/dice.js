@@ -77,10 +77,33 @@ const playerWin = (payload) => {
   return model;
 };
 
+const changeRTP = (payload) => {
+  const { rtp, rtpDivider } = payload;
+
+  const model = {
+    rtp: rtp / rtpDivider,
+  };
+
+  return model;
+};
+
+const changeMinMaxBet = (payload) => {
+  const { minBet, maxBet } = payload;
+
+  const model = {
+    minBet: toTRX(minBet),
+    maxBet: toTRX(maxBet),
+  };
+
+  return model;
+};
+
 module.exports = {
   game,
   params,
   takeBets,
   finishGame,
   playerWin,
+  changeRTP,
+  changeMinMaxBet,
 };

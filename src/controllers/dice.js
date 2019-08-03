@@ -1,6 +1,6 @@
 const utils = require('@utils/dice');
 const models = require('@models/dice');
-const { toDecimal, toTRX, toSun, isAddress } = require('@utils/tron');
+const { toDecimal, toSun, isAddress } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
 const filterEvents = (payload, model, from, to) => {
@@ -147,21 +147,15 @@ const playersWin = async(req, res) => {
 const changeParams = async(req, res) => {
   const { from, to } = req.query;
 
-  const rtp = await utils.events.changeRTP();
-  if (!rtp) return res.status(500).json(resError(73500));
-  const bet = await utils.events.changeMinMaxBet();
-  if (!bet) return res.status(500).json(resError(73500));
+  const rtpPayload = await utils.events.changeRTP();
+  if (!rtpPayload) return res.status(500).json(resError(73500));
+  const rtp = filterEvents(rtpPayload, models.changeRTP, from, to);
 
-  for (const event of rtp) {
-    event.result.rtp /= event.result.rtpDivider;
-    delete event.result.rtpDivider;
-  }
-  for (const event of bet) {
-    event.result.minBet = toTRX(event.result.minBet);
-    event.result.maxBet = toTRX(event.result.maxBet);
-  }
+  const betPayload = await utils.events.changeMinMaxBet();
+  if (!betPayload) return res.status(500).json(resError(73500));
+  const bet = filterEvents(betPayload, models.changeMinMaxBet, from, to);
 
-  const events = filterEvents(rtp.concat(bet), from, to);
+  const events = rtp.concat(bet);
   res.json(resSuccess({ events }));
 };
 
