@@ -125,14 +125,10 @@ const takeBets = async(req, res) => {
 const finishGames = async(req, res) => {
   const { from, to } = req.query;
 
-  let events = await utils.events.finishGames();
-  if (!events) return res.status(500).json(resError(73500));
+  const payload = await utils.events.finishGames();
+  if (!payload) return res.status(500).json(resError(73500));
 
-  events = filterEvents(events, from, to);
-  for (const event of events) {
-    event.result.gameId = parseInt(event.result.gameId);
-    event.result.result = parseInt(event.result.result);
-  }
+  const events = filterEvents(payload, models.finishGame, from, to);
 
   res.json(resSuccess({ events }));
 };

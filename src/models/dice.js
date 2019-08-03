@@ -53,8 +53,20 @@ const takeBets = (payload) => {
   return model;
 };
 
+const finishGame = (payload) => {
+  const { result, gameId } = payload;
+
+  const model = {
+    result: toDecimal(result),
+    gameId: toDecimal(gameId),
+  };
+
+  return model;
+};
+
 module.exports = {
   game,
   params,
   takeBets,
+  finishGame,
 };
