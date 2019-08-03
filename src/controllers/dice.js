@@ -3,9 +3,16 @@ const models = require('@models/dice');
 const { toBase58, toDecimal, toTRX, toSun, isAddress } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
-const filterEvents = (events, from, to) => (events.filter((event) => (
-  (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
-)));
+const filterEvents = (payload, model, from, to) => {
+  const events = payload.filter(item => (
+    (from || 0) <= item.timestamp && item.timestamp <= (to || Infinity)
+  )).map(item => {
+    item.result = model(item.result);
+    return item;
+  });
+
+  return events;
+};
 
 // Getters
 
@@ -107,20 +114,10 @@ const finishGame = async(req, res) => {
 const takeBets = async(req, res) => {
   const { from, to } = req.query;
 
-  let events = await utils.events.takeBets();
-  if (!events) return res.status(500).json(resError(73500));
+  const payload = await utils.events.takeBets();
+  if (!payload) return res.status(500).json(resError(73500));
 
-  events = filterEvents(events, from, to);
-  for (const event of events) {
-    const { amount, tokenId, player } = event.result;
-    if (tokenId === '0') event.result.amount = toTRX(amount);
-    event.result.gameId = parseInt(event.result.gameId);
-    event.result.number = parseInt(event.result.number);
-    event.result.finishBlock = parseInt(event.result.finishBlock);
-    event.result.tokenId = parseInt(event.result.tokenId);
-    event.result.roll = parseInt(event.result.roll);
-    event.result.player = toBase58(player);
-  }
+  const events = filterEvents(payload, models.takeBets, from, to);
 
   res.json(resSuccess({ events }));
 };

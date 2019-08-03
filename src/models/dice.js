@@ -35,7 +35,26 @@ const params = (payload) => {
   return model;
 };
 
+const takeBets = (payload) => {
+  const {
+    player, amount, number, roll, tokenId, finishBlock, gameId
+  } = payload;
+
+  const model = {
+    player: toBase58(player),
+    amount: (tokenId === 0) ? toTRX(amount) : toDecimal(amount),
+    number: toDecimal(number),
+    roll: toDecimal(roll),
+    tokenId: toDecimal(tokenId),
+    finishBlock: toDecimal(finishBlock),
+    gameId: toDecimal(gameId),
+  };
+
+  return model;
+};
+
 module.exports = {
   game,
   params,
+  takeBets,
 };
