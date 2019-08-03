@@ -13,9 +13,9 @@ CREATE TABLE "contracts" (
 
 INSERT INTO "contracts"
 VALUES
-  (DEFAULT, 'portal', 'TWQcSML3UQKa6XqZvrQD6EaiHyZYrEiWYY', NULL, 'Portal'),
-  (DEFAULT, 'dice', 'TPgUUX5pmQhzy7jgkPtqEA6UXJNiRxE7Xx', NULL, 'Dice'),
-  (DEFAULT, 'wheel', 'TFiEehREibAJTubTft4xK2nVFV8XHGRDVr', NULL, 'Wheel'),
+  (DEFAULT, 'portal', 'TTF2udpEwuFtjd8YZjZm4mGCKfwc6KJsXY', NULL, 'Portal'),
+  (DEFAULT, 'dice', 'TUoYPCJSPKuzvDmhGzSWPTokDKUfJbLtWi', NULL, 'Dice'),
+  (DEFAULT, 'wheel', 'TE4Cerczq6YqNRpnLbamRy8Rw6eNZdp1Tr', NULL, 'Wheel'),
   (DEFAULT, 'token', 'TAchv6odQC1PFPApdBJ1tNQ4uKTv2Yv4es', NULL, 'BOMB');
 
 CREATE TABLE "sockets" (
