@@ -1,8 +1,6 @@
 const utils = require('@utils/dice');
 const models = require('@models/dice');
-const {
-  toBase58, toDecimal, toTRX, toSun, isAddress, isNullAddress
-} = require('@utils/tron');
+const { toBase58, toDecimal, toTRX, toSun, isAddress } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
 const filterEvents = (events, from, to) => (events.filter((event) => (
@@ -67,21 +65,21 @@ const getRNG = async(req, res) => {
 const setPortal = async(req, res) => {
   const { address } = req.body;
 
-  if (!isAddress(address) || isNullAddress(address))
-    return res.status(422).json(resError(73402));
-
+  if (!isAddress(address)) return res.status(422).json(resError(73402));
   const result = await utils.set.portal(address);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 const setRTP = async(req, res) => {
   const { rtp } = req.body;
 
-  const rtpDivider = 10000;
-  const result = await utils.set.rtp(rtp * rtpDivider, rtpDivider);
+  const divider = 10000;
+  const result = await utils.set.rtp(Math.floor(rtp * divider), divider);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 const setBet = async(req, res) => {
@@ -89,7 +87,8 @@ const setBet = async(req, res) => {
 
   const result = await utils.set.bet(toSun(min), toSun(max));
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 // Functions
