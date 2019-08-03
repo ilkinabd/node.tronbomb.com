@@ -40,13 +40,15 @@ const getGames = async(req, res) => {
 };
 
 const getParams = async(_req, res) => {
-  const portal = toBase58(await utils.get.portal());
+  const portal = await utils.get.portal();
   const rtp = await utils.get.rtp();
   const rtpDivider = await utils.get.rtpDivider();
-  const minBet = toTRX(await utils.get.minBet());
-  const maxBet = toTRX(await utils.get.maxBet());
+  const minBet = await utils.get.minBet();
+  const maxBet = await utils.get.maxBet();
 
-  res.json(resSuccess({ portal, rtp: rtp / rtpDivider, minBet, maxBet }));
+  const params = models.params({ portal, rtp, rtpDivider, minBet, maxBet });
+
+  res.json(resSuccess({ params }));
 };
 
 const getRNG = async(req, res) => {

@@ -22,6 +22,20 @@ const game = (payload) => {
   return model;
 };
 
+const params = (payload) => {
+  const { portal, rtp, rtpDivider, minBet, maxBet } = payload;
+
+  const model = {
+    portal: toBase58(portal),
+    rtp: rtp / rtpDivider,
+    minBet: toTRX(minBet),
+    maxBet: toTRX(maxBet),
+  };
+
+  return model;
+};
+
 module.exports = {
   game,
+  params,
 };
