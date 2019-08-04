@@ -114,7 +114,7 @@ const finishGame = async(req, res) => {
 const takeBetEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  const payload = await utils.events.takeBets();
+  const payload = await utils.events.takeBet();
   if (!payload) return res.status(500).json(resError(73500));
 
   const events = filterEvents(payload, models.takeBets, from, to);
@@ -125,7 +125,7 @@ const takeBetEvents = async(req, res) => {
 const finishGameEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  const payload = await utils.events.finishGames();
+  const payload = await utils.events.finishGame();
   if (!payload) return res.status(500).json(resError(73500));
 
   const events = filterEvents(payload, models.finishGame, from, to);
