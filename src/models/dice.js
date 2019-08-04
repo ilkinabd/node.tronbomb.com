@@ -1,5 +1,15 @@
 const { toBase58, toDecimal, toTRX } = require('@utils/tron');
 
+const rollType = (index) => {
+  let roll;
+  switch (index) {
+    case 0: roll = 'under'; break;
+    case 1: roll = 'over'; break;
+    case 2: roll = 'exact'; break;
+  }
+  return roll;
+};
+
 const game = (payload) => {
   const {
     gameId, finishBlock, player, amount, tokenId, number, roll, result, status
@@ -7,21 +17,14 @@ const game = (payload) => {
 
   if (toDecimal(finishBlock) === 0) return null;
 
-  let rollType;
-  switch (roll) {
-    case 0: rollType = 'under'; break;
-    case 1: rollType = 'over'; break;
-    case 2: rollType = 'exact'; break;
-  }
-
   const model = {
     gameId: toDecimal(gameId),
     finishBlock: toDecimal(finishBlock),
     player: toBase58(player),
-    amount: (tokenId === 0) ? toTRX(amount) : toDecimal(amount),
+    amount: (toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount),
     tokenId,
     number,
-    roll: rollType,
+    roll: rollType(roll),
     result: (status === 0) ? null : result,
     status: (status === 0) ? 'start' : 'finish',
   };
@@ -49,9 +52,9 @@ const takeBets = (payload) => {
 
   const model = {
     player: toBase58(player),
-    amount: (tokenId === 0) ? toTRX(amount) : toDecimal(amount),
+    amount: (toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount),
     number: toDecimal(number),
-    roll: toDecimal(roll),
+    roll: rollType(toDecimal(roll)),
     tokenId: toDecimal(tokenId),
     finishBlock: toDecimal(finishBlock),
     gameId: toDecimal(gameId),
@@ -76,7 +79,7 @@ const playerWin = (payload) => {
 
   const model = {
     player: toBase58(player),
-    amount: (tokenId === 0) ? toTRX(amount) : toDecimal(amount),
+    amount: (toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount),
     tokenId: toDecimal(tokenId),
     gameId: toDecimal(gameId),
   };

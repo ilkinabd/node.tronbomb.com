@@ -29,9 +29,10 @@ const payable = (method, contract) => async(amount, ...params) => {
   return result;
 };
 
-const events = (eventName, address) => async() => {
+const events = (eventName, address) => async(blockNumber) => {
   const events = await tronWeb.getEventResult(await address, {
     eventName,
+    blockNumber,
   }).catch(console.error);
 
   return events;
@@ -44,15 +45,11 @@ const toSun = (amount) => parseFloat(tronWeb.toSun(amount));
 const isAddress = (address) => tronWeb.isAddress(address);
 const isNullAddress = (address) => (address === nullAddress);
 
-const getBalance = async(address) =>
-  toTRX(await tronWeb.trx.getBalance(address));
+const balance = async(address) => toTRX(await tronWeb.trx.getBalance(address));
 
 const currentBlock = async() =>
   (await tronWeb.trx.getCurrentBlock()).block_header.raw_data.number;
 const getBlock = (number) => tronWeb.trx.getBlock(number);
-
-const getEventResult = (contract, params) =>
-  tronWeb.getEventResult(contract, params).catch(console.error);
 
 module.exports = {
   call,
@@ -65,8 +62,7 @@ module.exports = {
   toSun,
   isAddress,
   isNullAddress,
-  getBalance,
+  balance,
   currentBlock,
   getBlock,
-  getEventResult,
 };

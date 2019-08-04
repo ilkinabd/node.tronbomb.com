@@ -3,18 +3,16 @@ const { PRIVATE_KEY, PROVIDER } = process.env;
 const TronWeb = require('tronweb');
 
 const db = require('@db');
-const { call, send, payable, events, getBalance } = require('@utils/tron');
+const { call, send, payable, events, balance } = require('@utils/tron');
 
 const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 
 const address = db.contracts.get({ type: 'portal' });
 const contract = async() => tronWeb.contract().at(await address);
 
-const balance = async() => getBalance(await address);
-
 module.exports = {
   get: {
-    balance,
+    balance: async() => balance(await address),
     mainStatus: call('mainStatus', contract),
     owner: call('owner', contract),
     token: call('tokens', contract),
