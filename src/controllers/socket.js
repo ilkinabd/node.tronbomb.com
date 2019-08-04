@@ -8,13 +8,13 @@ const connected = (socket) => {
   const { id, adapter } = socket;
   const rooms = Object.keys(adapter.rooms);
 
-  console.log(`User ${id} connected. Rooms: ${rooms}`);
+  console.info(`User ${id} connected. Rooms: ${rooms}.`);
   db.sockets.add({ id, rooms });
 };
 const disconnected = (socket) => {
   const { id } = socket;
 
-  console.log(`User ${id} disconnected`);
+  console.info(`User ${id} disconnected.`);
   db.sockets.delete({ id });
 };
 
@@ -42,8 +42,8 @@ const unsubscribe = async(data, socket) => {
 module.exports = (socket) => {
   connected(socket);
 
-  socket.on('subscribe', (data) => subscribe(data, socket));
-  socket.on('unsubscribe', (data) => unsubscribe(data, socket));
+  socket.on('subscribe', data => subscribe(data, socket));
+  socket.on('unsubscribe', data => unsubscribe(data, socket));
 
   socket.on('disconnect', () => {
     disconnected(socket);
