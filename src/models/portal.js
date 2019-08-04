@@ -2,6 +2,9 @@ const { toDecimal, toTRX, toBase58, isNullAddress } = require('@utils/tron');
 
 const address = payload => (isNullAddress(payload) ? null : toBase58(payload));
 
+const toAmount = (tokenId, amount) =>
+  ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
+
 const takeTRXBet = (payload) => {
   const { index } = payload;
 
@@ -22,11 +25,12 @@ const mainStatus = (payload) => {
   return model;
 };
 
-const withdraws = (payload) => {
-  const { amount } = payload;
+const withdraw = (payload) => {
+  const { amount, tokenId } = payload;
 
   const model = {
-    amount: toTRX(amount),
+    amount: toAmount(tokenId, amount),
+    tokenId: toDecimal(tokenId),
   };
 
   return model;
@@ -46,7 +50,7 @@ const reward = (payload) => {
   const { reward, tokenId, to } = payload;
 
   const model = {
-    reward: (toDecimal(tokenId) === 0) ? toTRX(reward) : toDecimal(reward),
+    reward: toAmount(tokenId, reward),
     to: toBase58(to),
   };
 
@@ -57,7 +61,7 @@ module.exports = {
   address,
   takeTRXBet,
   mainStatus,
-  withdraws,
+  withdraw,
   contract,
   reward,
 };

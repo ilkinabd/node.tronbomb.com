@@ -10,6 +10,9 @@ const rollType = (index) => {
   return roll;
 };
 
+const toAmount = (tokenId, amount) =>
+  ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
+
 const game = (payload) => {
   const {
     gameId, finishBlock, player, amount, tokenId, number, roll, result, status
@@ -21,7 +24,7 @@ const game = (payload) => {
     gameId: toDecimal(gameId),
     finishBlock: toDecimal(finishBlock),
     player: toBase58(player),
-    amount: (toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount),
+    amount: toAmount(tokenId, amount),
     tokenId,
     number,
     roll: rollType(roll),
@@ -52,7 +55,7 @@ const takeBets = (payload) => {
 
   const model = {
     player: toBase58(player),
-    amount: (toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount),
+    amount: toAmount(tokenId, amount),
     number: toDecimal(number),
     roll: rollType(toDecimal(roll)),
     tokenId: toDecimal(tokenId),
@@ -79,7 +82,7 @@ const playerWin = (payload) => {
 
   const model = {
     player: toBase58(player),
-    amount: (toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount),
+    amount: toAmount(tokenId, amount),
     tokenId: toDecimal(tokenId),
     gameId: toDecimal(gameId),
   };

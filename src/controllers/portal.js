@@ -157,7 +157,7 @@ const withdrawEvents = async(req, res) => {
   const payload = await utils.events.withdraw();
   if (!payload) return res.status(500).json(resError(73500));
 
-  const events = filterEvents(payload, models.withdraws, from, to);
+  const events = filterEvents(payload, models.withdraw, from, to);
 
   res.json(resSuccess({ events }));
 };

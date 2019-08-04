@@ -1,5 +1,8 @@
 const { toDecimal, toBase58, toTRX } = require('@utils/tron');
 
+const toAmount = (tokenId, amount) =>
+  ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
+
 const game = (payload) => {
   const { gameId, finishBlock, betsCount, result, status } = payload;
 
@@ -41,7 +44,7 @@ const bet = (payload) => {
 
   const model = {
     player: toBase58(player),
-    amount: (tokenId === 0) ? toTRX(amount) : toDecimal(amount),
+    amount: toAmount(tokenId, amount),
     tokenId,
     sector,
   };
@@ -67,7 +70,7 @@ const takeBet = (payload) => {
 
   const model = {
     player: toBase58(player),
-    amount: (tokenId === 0) ? toTRX(amount) : toDecimal(amount),
+    amount: toAmount(tokenId, amount),
     tokenId: toDecimal(tokenId),
     sector: toDecimal(sector),
     betId: toDecimal(betId),
@@ -92,7 +95,7 @@ const playerWin = (payload) => {
   const { amount, tokenId, betId, gameId } = payload;
 
   const model = {
-    amount: (toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount),
+    amount: toAmount(tokenId, amount),
     tokenId: toDecimal(tokenId),
     betId: toDecimal(betId),
     gameId: toDecimal(gameId),
