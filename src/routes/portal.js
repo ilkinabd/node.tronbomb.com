@@ -53,15 +53,15 @@ router.route('/events/main_status')
   .get(server, validate('events', true), controller.events.mainStatus);
 
 router.route('/events/withdraws')
-  .get(server, validate('events', true), controller.events.withdraws);
+  .get(server, validate('events', true), controller.events.withdraw);
 
 router.route('/events/tokens')
-  .get(server, validate('events', true), controller.events.tokens);
+  .get(server, validate('events', true), controller.events.token);
 
 router.route('/events/games')
-  .get(server, validate('events', true), controller.events.games);
+  .get(server, validate('events', true), controller.events.game);
 
 router.route('/events/rewards')
-  .get(server, validate('events', true), controller.events.rewards);
+  .get(server, validate('events', true), controller.events.reward);
 
 module.exports = router;

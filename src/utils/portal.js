@@ -70,10 +70,10 @@ module.exports = {
   },
   events: {
     mainStatus: events('ChangeMainStatus'),
-    withdraws: events('Withdraw'),
-    tokens: events('SetToken'),
-    games: events('SetGame'),
-    gamesStatuses: events('SetGameStatus'),
-    rewards: events('PayReward'),
+    withdraw: events('Withdraw'),
+    token: events('SetToken'),
+    game: events('SetGame'),
+    gamesStatus: events('SetGameStatus'),
+    reward: events('PayReward'),
   },
 };

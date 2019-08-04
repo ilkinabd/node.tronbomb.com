@@ -140,7 +140,7 @@ const withdraw = async(req, res) => {
 
 // Events
 
-const mainStatus = async(req, res) => {
+const mainStatusEvents = async(req, res) => {
   const { from, to } = req.query;
 
   const payload = await utils.events.mainStatus();
@@ -151,10 +151,10 @@ const mainStatus = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
-const withdraws = async(req, res) => {
+const withdrawEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  const payload = await utils.events.withdraws();
+  const payload = await utils.events.withdraw();
   if (!payload) return res.status(500).json(resError(73500));
 
   const events = filterEvents(payload, models.withdraws, from, to);
@@ -162,10 +162,10 @@ const withdraws = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
-const tokens = async(req, res) => {
+const tokenEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  const payload = await utils.events.tokens();
+  const payload = await utils.events.token();
   if (!payload) return res.status(500).json(resError(73500));
 
   const events = filterEvents(payload, models.contract, from, to);
@@ -173,14 +173,14 @@ const tokens = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
-const games = async(req, res) => {
+const gameEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  const gamesPayload = await utils.events.games();
+  const gamesPayload = await utils.events.game();
   if (!gamesPayload) return res.status(500).json(resError(73500));
   const games = filterEvents(gamesPayload, models.contract, from, to);
 
-  const statusesPayload = await utils.events.gamesStatuses();
+  const statusesPayload = await utils.events.gamesStatus();
   if (!statusesPayload) return res.status(500).json(resError(73500));
   const statuses = filterEvents(statusesPayload, models.mainStatus, from, to);
 
@@ -189,10 +189,10 @@ const games = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
-const rewards = async(req, res) => {
+const rewardEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  const payload = await utils.events.rewards();
+  const payload = await utils.events.reward();
   if (!payload) return res.status(500).json(resError(73500));
 
   const events = filterEvents(payload, models.reward, from, to);
@@ -220,10 +220,10 @@ module.exports = {
     withdraw,
   },
   events: {
-    mainStatus,
-    withdraws,
-    tokens,
-    games,
-    rewards,
+    mainStatus: mainStatusEvents,
+    withdraw: withdrawEvents,
+    token: tokenEvents,
+    game: gameEvents,
+    reward: rewardEvents,
   },
 };
