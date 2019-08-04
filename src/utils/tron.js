@@ -20,6 +20,15 @@ const send = (method, contract) => async(...params) => {
   return result;
 };
 
+const payable = (method, contract) => async(amount, ...params) => {
+  const result = await (await contract())[method](...params).send({
+    shouldPollResponse: true,
+    callValue: amount,
+  }).catch(console.error);
+
+  return result;
+};
+
 const events = (eventName, address) => async() => {
   const events = await tronWeb.getEventResult(await address, {
     eventName,
@@ -48,6 +57,7 @@ const getEventResult = (contract, params) =>
 module.exports = {
   call,
   send,
+  payable,
   events,
   toBase58,
   toDecimal,

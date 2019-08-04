@@ -17,7 +17,7 @@ const filterEvents = (payload, model, from, to) => {
 // Getters
 
 const balance = async(_req, res) => {
-  const balance = await utils.balance();
+  const balance = await utils.get.balance();
   if (balance === undefined) return res.status(500).json(resError(73500));
 
   res.json(resSuccess({ balance }));
@@ -132,7 +132,7 @@ const takeTRXBet = async(req, res) => {
 const withdraw = async(req, res) => {
   const { amount, id } = req.body;
 
-  const result = await utils.withdraw(toSun(amount), id);
+  const result = await utils.func.withdraw(toSun(amount), id);
   if (!result) return res.status(500).json(resError(73500));
 
   res.json(resSuccess());
