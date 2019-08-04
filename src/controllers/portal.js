@@ -69,40 +69,41 @@ const setMainStatus = async(req, res) => {
 
   const result = await utils.set.mainStatus(status === 'true');
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 const setToken = async(req, res) => {
   const { tokenId, address } = req.body;
 
-  if (!isAddress(address) || isNullAddress(address))
-    return res.status(422).json(resError(73402));
+  if (!isAddress(address)) return res.status(422).json(resError(73402));
 
   const result = await utils.set.token(tokenId, address);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 const setGame = async(req, res) => {
   const { gameId, address } = req.body;
 
-  if (!isAddress(address) || isNullAddress(address))
-    return res.status(422).json(resError(73402));
+  if (!isAddress(address)) return res.status(422).json(resError(73402));
 
   const result = await utils.set.game(gameId, address);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 const setGameStatus = async(req, res) => {
   const { address, status } = req.body;
 
-  if (!isAddress(address) || isNullAddress(address))
-    return res.status(422).json(resError(73402));
+  if (!isAddress(address)) return res.status(422).json(resError(73402));
 
   const result = await utils.set.gameStatus(address, status === 'true');
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 // Functions
