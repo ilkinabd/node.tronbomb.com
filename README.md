@@ -1,5 +1,5 @@
 # Node
-v0.6.1 Aug 1, 2019
+v0.7.0 Aug 4, 2019
 
 Microservice for **TronBomb** smart contracts.
 
@@ -13,12 +13,12 @@ Microservice for **TronBomb** smart contracts.
 yarn
 yarn start
 ```
-3. Stop and Restart tools
+4. Stop and Restart tools
 ```
 yarn stop
 yarn restart
 ```
-4. Logs and Errors tools
+5. Logs and Errors tools
 ```
 yarn logs
 yarn errors
