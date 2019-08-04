@@ -52,16 +52,16 @@ router.route('/func/withdraw')
 router.route('/events/main_status')
   .get(server, validate('fromTo', true), controller.events.mainStatus);
 
-router.route('/events/withdraws')
+router.route('/events/withdraw')
   .get(server, validate('fromTo', true), controller.events.withdraw);
 
-router.route('/events/tokens')
+router.route('/events/token')
   .get(server, validate('fromTo', true), controller.events.token);
 
-router.route('/events/games')
+router.route('/events/game')
   .get(server, validate('fromTo', true), controller.events.game);
 
-router.route('/events/rewards')
+router.route('/events/reward')
   .get(server, validate('fromTo', true), controller.events.reward);
 
 module.exports = router;

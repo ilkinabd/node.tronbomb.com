@@ -5,6 +5,29 @@ const TronWeb = require('tronweb');
 const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 const nullAddress = '410000000000000000000000000000000000000000';
 
+const call = (variable, contract) => async(...params) => {
+  const result = await (await contract())[variable](...params).call()
+    .catch(console.error);
+
+  return result;
+};
+
+const send = (method, contract) => async(...params) => {
+  const result = await (await contract())[method](...params).send({
+    shouldPollResponse: true,
+  }).catch(console.error);
+
+  return result;
+};
+
+const events = (eventName, address) => async() => {
+  const events = await tronWeb.getEventResult(await address, {
+    eventName,
+  }).catch(console.error);
+
+  return events;
+};
+
 const toBase58 = (address) => tronWeb.address.fromHex(address);
 const toDecimal = (amount) => tronWeb.toDecimal(amount);
 const toTRX = (amount) => parseFloat(tronWeb.fromSun(toDecimal(amount)));
@@ -23,6 +46,9 @@ const getEventResult = (contract, params) =>
   tronWeb.getEventResult(contract, params).catch(console.error);
 
 module.exports = {
+  call,
+  send,
+  events,
   toBase58,
   toDecimal,
   toTRX,

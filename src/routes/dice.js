@@ -37,10 +37,10 @@ router.route('/func/finish_game')
 
 // Events
 
-router.route('/events/take_bets')
+router.route('/events/take_bet')
   .get(server, validate('fromTo', true), controller.events.takeBet);
 
-router.route('/events/finish_games')
+router.route('/events/finish_game')
   .get(server, validate('fromTo', true), controller.events.finishGame);
 
 router.route('/events/players_win')
