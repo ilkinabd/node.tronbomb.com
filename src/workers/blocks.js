@@ -1,11 +1,9 @@
-// const db = require('@db');
 const { currentBlock, getBlock } = require('@utils/tron');
 const dice = require('@workers/dice');
-// const wheel = require('@workers/wheel');
+const wheel = require('@workers/wheel');
 
 module.exports = async(io) => {
   let lastBlock = (await currentBlock()).block_header;
-  // const wheelContract = await db.contracts.get({ type: 'wheel' });
 
   setInterval(async() => {
     const current = await currentBlock() - 1;
@@ -18,12 +16,7 @@ module.exports = async(io) => {
       io.in('blocks').emit('blocks', block);
 
       dice(number, io);
-
-      // // Wheel workers
-      // wheel.start(number, wheelContract, io);
-      // wheel.takePart(number, wheelContract, io);
-      // wheel.finish(number, wheelContract, io);
-      // wheel.reward(number, wheelContract, io);
+      wheel(number, io);
     }
     lastBlock = current;
   }, 3000);
