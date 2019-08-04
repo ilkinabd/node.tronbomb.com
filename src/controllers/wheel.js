@@ -1,8 +1,6 @@
 const utils = require('@utils/wheel');
 const models = require('@models/wheel');
-const {
-  toBase58, toTRX, toSun, isAddress, isNullAddress, toDecimal
-} = require('@utils/tron');
+const { toBase58, toTRX, toSun, isAddress, toDecimal } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
 const filterEvents = (events, from, to) => (events.filter((event) => (
@@ -84,12 +82,11 @@ const getRNG = async(req, res) => {
 const setPortal = async(req, res) => {
   const { address } = req.body;
 
-  if (!isAddress(address) || isNullAddress(address))
-    return res.status(422).json(resError(73402));
-
+  if (!isAddress(address)) return res.status(422).json(resError(73402));
   const result = await utils.set.portal(address);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 const setBet = async(req, res) => {
@@ -97,7 +94,8 @@ const setBet = async(req, res) => {
 
   const result = await utils.set.bet(toSun(min), toSun(max));
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 const setDuration = async(req, res) => {
@@ -105,7 +103,8 @@ const setDuration = async(req, res) => {
 
   const result = await utils.set.duration(duration);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 // Functions
