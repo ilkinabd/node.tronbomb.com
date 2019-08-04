@@ -30,7 +30,7 @@ const params = (payload) => {
     portal: toBase58(portal),
     minBet: toTRX(minBet),
     maxBet: toTRX(maxBet),
-    duration,
+    duration: toDecimal(duration),
   };
 
   return model;

@@ -17,9 +17,9 @@ const filterEvents = (payload, model, from, to) => {
 // Getters
 
 const getGame = async(req, res) => {
-  const { gameId } = req.query;
+  const { id } = req.query;
 
-  const payload = await utils.get.game(gameId);
+  const payload = await utils.get.game(id);
   if (!payload) return res.status(500).json(resError(73500));
   const game = models.game(payload);
 
@@ -45,14 +45,14 @@ const getGames = async(req, res) => {
 };
 
 const getGameBets = async(req, res) => {
-  const { gameId } = req.query;
+  const { id } = req.query;
 
-  const betsCount = (await utils.get.game(gameId)).betsCount;
+  const betsCount = (await utils.get.game(id)).betsCount;
   if (!betsCount) return res.status(500).json(resError(73500));
 
   const requests = [];
-  for (let id = 0; id < betsCount; id++) {
-    requests.push(utils.get.gameBet(id, gameId));
+  for (let betId = 0; betId < betsCount; betId++) {
+    requests.push(utils.get.gameBet(betId, id));
   }
   const payload = await Promise.all(requests).catch(console.error);
 
@@ -63,20 +63,19 @@ const getGameBets = async(req, res) => {
 
 const getParams = async(_req, res) => {
   const portal = await utils.get.portal();
-  const rtp = await utils.get.rtp();
-  const rtpDivider = await utils.get.rtpDivider();
   const minBet = await utils.get.minBet();
   const maxBet = await utils.get.maxBet();
+  const duration = await utils.get.duration();
 
-  const params = models.params({ portal, rtp, rtpDivider, minBet, maxBet });
+  const params = models.params({ portal, duration, minBet, maxBet });
 
   res.json(resSuccess({ params }));
 };
 
 const getRNG = async(req, res) => {
-  const { blockNumber, blockHash } = req.query;
+  const { block, hash } = req.query;
 
-  const payload = await utils.get.rng(blockNumber, blockHash);
+  const payload = await utils.get.rng(block, hash);
   if (!payload) return res.status(500).json(resError(73500));
 
   const random = payload.result;
@@ -126,9 +125,9 @@ const init = async(_req, res) => {
 };
 
 const finish = async(req, res) => {
-  const { gameId } = req.body;
+  const { id } = req.body;
 
-  const result = await utils.func.finish(gameId);
+  const result = await utils.func.finish(id);
   if (!result) return res.status(500).json(resError(73500));
 
   res.json(resSuccess());

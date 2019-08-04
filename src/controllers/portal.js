@@ -40,9 +40,9 @@ const getOwner = async(_req, res) => {
 };
 
 const getToken = async(req, res) => {
-  const { tokenId } = req.query;
+  const { id } = req.query;
 
-  const payload = await utils.get.token(tokenId);
+  const payload = await utils.get.token(id);
   if (!payload) return res.status(500).json(resError(73500));
 
   const token = models.address(payload);
@@ -51,9 +51,9 @@ const getToken = async(req, res) => {
 };
 
 const getGame = async(req, res) => {
-  const { gameId } = req.query;
+  const { id } = req.query;
 
-  const payload = await utils.get.game(gameId);
+  const payload = await utils.get.game(id);
   if (!payload) return res.status(500).json(resError(73500));
 
   const game = models.address(payload);
@@ -84,22 +84,22 @@ const setMainStatus = async(req, res) => {
 };
 
 const setToken = async(req, res) => {
-  const { tokenId, address } = req.body;
+  const { id, address } = req.body;
 
   if (!isAddress(address)) return res.status(422).json(resError(73402));
 
-  const result = await utils.set.token(tokenId, address);
+  const result = await utils.set.token(id, address);
   if (!result) return res.status(500).json(resError(73500));
 
   res.json(resSuccess());
 };
 
 const setGame = async(req, res) => {
-  const { gameId, address } = req.body;
+  const { id, address } = req.body;
 
   if (!isAddress(address)) return res.status(422).json(resError(73402));
 
-  const result = await utils.set.game(gameId, address);
+  const result = await utils.set.game(id, address);
   if (!result) return res.status(500).json(resError(73500));
 
   res.json(resSuccess());
@@ -119,9 +119,9 @@ const setGameStatus = async(req, res) => {
 // Functions
 
 const takeTRXBet = async(req, res) => {
-  const { amount, gameId, data } = req.body;
+  const { amount, id, data } = req.body;
 
-  const payload = await utils.func.takeTRXBet(toSun(amount), gameId, data);
+  const payload = await utils.func.takeTRXBet(toSun(amount), id, data);
   if (!payload) return res.status(500).json(resError(73500));
 
   const result = models.takeTRXBet(payload);
@@ -130,9 +130,9 @@ const takeTRXBet = async(req, res) => {
 };
 
 const withdraw = async(req, res) => {
-  const { amount, tokenId } = req.body;
+  const { amount, id } = req.body;
 
-  const result = await utils.withdraw(toSun(amount), tokenId);
+  const result = await utils.withdraw(toSun(amount), id);
   if (!result) return res.status(500).json(resError(73500));
 
   res.json(resSuccess());

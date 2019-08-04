@@ -17,9 +17,9 @@ const filterEvents = (payload, model, from, to) => {
 // Getters
 
 const getGame = async(req, res) => {
-  const { gameId } = req.query;
+  const { id } = req.query;
 
-  const payload = await utils.get.game(gameId);
+  const payload = await utils.get.game(id);
   if (!payload) return res.status(500).json(resError(73500));
   const game = models.game(payload);
 
@@ -57,9 +57,9 @@ const getParams = async(_req, res) => {
 };
 
 const getRNG = async(req, res) => {
-  const { wallet, blockNumber, blockHash } = req.query;
+  const { address, block, hash } = req.query;
 
-  const payload = await utils.get.rng(wallet, blockNumber, blockHash);
+  const payload = await utils.get.rng(address, block, hash);
   if (!payload) return res.status(500).json(resError(73500));
 
   const random = payload.result;
@@ -101,9 +101,9 @@ const setBet = async(req, res) => {
 // Functions
 
 const finishGame = async(req, res) => {
-  const { gameId } = req.body;
+  const { id } = req.body;
 
-  const result = await utils.func.finishGame(gameId);
+  const result = await utils.func.finishGame(id);
   if (!result) return res.status(500).json(resError(73500));
 
   res.json(resSuccess());
