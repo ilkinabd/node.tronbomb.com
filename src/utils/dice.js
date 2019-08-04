@@ -54,8 +54,8 @@ module.exports = {
     finishGame: send('finishGame'),
   },
   events: {
-    takeBets: events('TakeBet'),
-    finishGames: events('FinishGame'),
+    takeBet: events('TakeBet'),
+    finishGame: events('FinishGame'),
     playersWin: events('PlayerWin'),
     changeRTP: events('ChangeRTP'),
     changeMinMaxBet: events('ChangeMinMaxBet'),

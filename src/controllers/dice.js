@@ -111,7 +111,7 @@ const finishGame = async(req, res) => {
 
 // Events
 
-const takeBets = async(req, res) => {
+const takeBetEvents = async(req, res) => {
   const { from, to } = req.query;
 
   const payload = await utils.events.takeBets();
@@ -122,7 +122,7 @@ const takeBets = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
-const finishGames = async(req, res) => {
+const finishGameEvents = async(req, res) => {
   const { from, to } = req.query;
 
   const payload = await utils.events.finishGames();
@@ -133,7 +133,7 @@ const finishGames = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
-const playersWin = async(req, res) => {
+const playersWinEvents = async(req, res) => {
   const { from, to } = req.query;
 
   const payload = await utils.events.playersWin();
@@ -144,7 +144,7 @@ const playersWin = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
-const changeParams = async(req, res) => {
+const changeParamsEvents = async(req, res) => {
   const { from, to } = req.query;
 
   const rtpPayload = await utils.events.changeRTP();
@@ -175,9 +175,9 @@ module.exports = {
     finishGame,
   },
   events: {
-    takeBets,
-    finishGames,
-    playersWin,
-    changeParams,
+    takeBet: takeBetEvents,
+    finishGame: finishGameEvents,
+    playersWin: playersWinEvents,
+    changeParams: changeParamsEvents,
   },
 };
