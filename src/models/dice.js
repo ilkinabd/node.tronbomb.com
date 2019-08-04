@@ -7,6 +7,13 @@ const game = (payload) => {
 
   if (toDecimal(finishBlock) === 0) return null;
 
+  let rollType;
+  switch (roll) {
+    case 0: rollType = 'under'; break;
+    case 1: rollType = 'over'; break;
+    case 2: rollType = 'exact'; break;
+  }
+
   const model = {
     gameId: toDecimal(gameId),
     finishBlock: toDecimal(finishBlock),
@@ -14,7 +21,7 @@ const game = (payload) => {
     amount: (tokenId === 0) ? toTRX(amount) : toDecimal(amount),
     tokenId,
     number,
-    roll,
+    roll: rollType,
     result: (status === 0) ? null : result,
     status: (status === 0) ? 'start' : 'finish',
   };
