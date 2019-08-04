@@ -13,49 +13,52 @@ const filterEvents = (events, from, to) => (events.filter((event) => (
 const balance = async(_req, res) => {
   const balance = await utils.balance();
   if (balance === undefined) return res.status(500).json(resError(73500));
+
   res.json(resSuccess({ balance }));
 };
 
 const getMainStatus = async(_req, res) => {
   const mainStatus = await utils.get.mainStatus();
   if (mainStatus === undefined) return res.status(500).json(resError(73500));
+
   res.json(resSuccess({ mainStatus }));
 };
 
 const getOwner = async(_req, res) => {
   const owner = await utils.get.owner();
-  if (owner === undefined) return res.status(500).json(resError(73500));
+  if (!owner) return res.status(500).json(resError(73500));
+
   res.json(resSuccess({ owner: toBase58(owner) }));
 };
 
 const getToken = async(req, res) => {
   const { tokenId } = req.query;
 
-  let token = await utils.get.token(tokenId);
-  if (token === undefined) return res.status(500).json(resError(73500));
+  const payload = await utils.get.token(tokenId);
+  if (!payload) return res.status(500).json(resError(73500));
 
-  token = (isNullAddress(token)) ? null : toBase58(token);
+  const token = (isNullAddress(payload)) ? null : toBase58(payload);
   res.json(resSuccess({ token }));
 };
 
 const getGame = async(req, res) => {
   const { gameId } = req.query;
 
-  let game = await utils.get.game(gameId);
-  if (game === undefined) return res.status(500).json(resError(73500));
+  const payload = await utils.get.game(gameId);
+  if (!payload) return res.status(500).json(resError(73500));
 
-  game = (isNullAddress(game)) ? null : toBase58(game);
+  const game = (isNullAddress(payload)) ? null : toBase58(payload);
   res.json(resSuccess({ game }));
 };
 
 const getGameStatus = async(req, res) => {
   const { address } = req.query;
 
-  if (!isAddress(address) || isNullAddress(address))
-    return res.status(422).json(resError(73402));
+  if (!isAddress(address)) return res.status(422).json(resError(73402));
 
   const gameStatus = await utils.get.gameStatus(address);
   if (gameStatus === undefined) return res.status(500).json(resError(73500));
+
   res.json(resSuccess({ gameStatus }));
 };
 
