@@ -1,92 +1,86 @@
 const utils = require('@utils/wheel');
-const {
-  toBase58, toTRX, toSun, isAddress, isNullAddress, toDecimal
-} = require('@utils/tron');
+const models = require('@models/wheel');
+const { toSun, isAddress, toDecimal } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
-const toGameModel = (game) => {
-  game.gameId = toDecimal(game.gameId);
-  game.finishBlock = toDecimal(game.finishBlock);
-  game.betsCount = toDecimal(game.betsCount);
-  game.result = (game.status !== 2) ? null : game.result;
+const filterEvents = (payload, model, from, to) => {
+  const events = payload.filter(item => (
+    (from || 0) <= item.timestamp && item.timestamp <= (to || Infinity)
+  )).map(item => {
+    item.result = model(item.result);
+    return item;
+  });
 
-  switch (game.status) {
-    case 0: game.status = 'empty'; break;
-    case 1: game.status = 'start'; break;
-    case 2: game.status = 'finish'; break;
-  }
+  return events;
 };
-
-const filterEvents = (events, from, to) => (events.filter((event) => (
-  (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
-)));
 
 // Getters
 
 const getGame = async(req, res) => {
-  const { gameId } = req.query;
+  const { id } = req.query;
 
-  const game = await utils.get.game(gameId);
-  if (game === undefined) return res.status(500).json(resError(73500));
-  toGameModel(game);
+  const payload = await utils.get.game(id);
+  if (!payload) return res.status(500).json(resError(73500));
+  const game = models.game(payload);
 
   res.json(resSuccess({ game }));
 };
 
-const getGames = async(_req, res) => {
+const getGames = async(req, res) => {
+  const { from, to } = req.query;
+
   const totalGames = toDecimal(await utils.get.totalGames());
+  if (!totalGames) return res.status(500).json(resError(73500));
+
+  const first = from || 0;
+  const last = Math.min(totalGames, to || totalGames);
 
   const requests = [];
-  for (let gameId = 0; gameId < totalGames; gameId++) {
-    requests.push(utils.get.game(gameId.toString()));
-  }
+  for (let id = first; id < last; id++) requests.push(utils.get.game(id));
+  const payload = await Promise.all(requests).catch(console.error);
 
-  const games = await Promise.all(requests).catch((error) => {
-    console.error(error);
-    return res.status(500).json(resError(73500));
-  });
-  for (const game of games) toGameModel(game);
+  const games = Array.from(payload, item => models.game(item));
 
   res.json(resSuccess({ games }));
 };
 
-const getParams = async(_req, res) => {
-  const portal = toBase58(await utils.get.portal());
-  const minBet = toTRX(await utils.get.minBet());
-  const maxBet = toTRX(await utils.get.maxBet());
-  const duration = parseInt(await utils.get.duration());
-
-  res.json(resSuccess({ portal, minBet, maxBet, duration }));
-};
-
 const getGameBets = async(req, res) => {
-  const { gameId } = req.query;
+  const { id } = req.query;
 
-  const betsCount = (await utils.get.game(gameId)).betsCount;
+  const betsCount = (await utils.get.game(id)).betsCount;
+  if (!betsCount) return res.status(500).json(resError(73500));
 
   const requests = [];
   for (let betId = 0; betId < betsCount; betId++) {
-    requests.push(utils.get.gameBet(betId, gameId));
+    requests.push(utils.get.gameBet(betId, id));
   }
-  const bets = await Promise.all(requests).catch((error) => {
-    console.error(error);
-    return res.status(500).json(resError(73500));
-  });
+  const payload = await Promise.all(requests).catch(console.error);
 
-  for (const bet of bets) {
-    bet.player = toBase58(bet.player);
-    bet.amount = toTRX(bet.amount);
-  }
+  const bets = Array.from(payload, item => models.bet(item));
 
   res.json(resSuccess({ bets }));
 };
 
-const getRNG = async(req, res) => {
-  const { blockNumber, blockHash } = req.query;
+const getParams = async(_req, res) => {
+  const portal = await utils.get.portal();
+  const minBet = await utils.get.minBet();
+  const maxBet = await utils.get.maxBet();
+  const duration = await utils.get.duration();
 
-  const result = await utils.get.rng(blockNumber, blockHash);
-  if (result === undefined) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+  const params = models.params({ portal, duration, minBet, maxBet });
+
+  res.json(resSuccess({ params }));
+};
+
+const getRNG = async(req, res) => {
+  const { block, hash } = req.query;
+
+  const payload = await utils.get.rng(block, hash);
+  if (!payload) return res.status(500).json(resError(73500));
+
+  const random = payload.result;
+
+  res.json(resSuccess({ random }));
 };
 
 // Setters
@@ -94,12 +88,11 @@ const getRNG = async(req, res) => {
 const setPortal = async(req, res) => {
   const { address } = req.body;
 
-  if (!isAddress(address) || isNullAddress(address))
-    return res.status(422).json(resError(73402));
-
+  if (!isAddress(address)) return res.status(422).json(resError(73402));
   const result = await utils.set.portal(address);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 const setBet = async(req, res) => {
@@ -107,7 +100,8 @@ const setBet = async(req, res) => {
 
   const result = await utils.set.bet(toSun(min), toSun(max));
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 const setDuration = async(req, res) => {
@@ -115,7 +109,8 @@ const setDuration = async(req, res) => {
 
   const result = await utils.set.duration(duration);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 // Functions
@@ -123,16 +118,19 @@ const setDuration = async(req, res) => {
 const init = async(_req, res) => {
   const result = await utils.func.init();
   if (!result) return res.status(500).json(resError(73500));
+
   result.gameId = toDecimal(result.gameId);
+
   res.json(resSuccess({ result }));
 };
 
 const finish = async(req, res) => {
-  const { gameId } = req.body;
+  const { id } = req.body;
 
-  const result = await utils.func.finish(gameId);
+  const result = await utils.func.finish(id);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 // Events
@@ -140,14 +138,10 @@ const finish = async(req, res) => {
 const initGame = async(req, res) => {
   const { from, to } = req.query;
 
-  let events = await utils.events.initGame();
-  if (!events) return res.status(500).json(resError(73500));
+  const payload = await utils.events.initGame();
+  if (!payload) return res.status(500).json(resError(73500));
 
-  events = filterEvents(events, from, to);
-  for (const event of events) {
-    event.result.gameId = parseInt(event.result.gameId);
-    event.result.finishBlock = parseFloat(event.result.finishBlock);
-  }
+  const events = filterEvents(payload, models.initGame, from, to);
 
   res.json(resSuccess({ events }));
 };
@@ -155,18 +149,10 @@ const initGame = async(req, res) => {
 const takeBet = async(req, res) => {
   const { from, to } = req.query;
 
-  let events = await utils.events.takeBet();
-  if (!events) return res.status(500).json(resError(73500));
+  const payload = await utils.events.takeBet();
+  if (!payload) return res.status(500).json(resError(73500));
 
-  events = filterEvents(events, from, to);
-  for (const event of events) {
-    event.result.gameId = parseInt(event.result.gameId);
-    event.result.amount = toTRX(event.result.amount);
-    event.result.tokenId = parseInt(event.result.tokenId);
-    event.result.betId = parseInt(event.result.betId);
-    event.result.sector = parseInt(event.result.sector);
-    event.result.player = toBase58(event.result.player);
-  }
+  const events = filterEvents(payload, models.takeBet, from, to);
 
   res.json(resSuccess({ events }));
 };
@@ -174,14 +160,10 @@ const takeBet = async(req, res) => {
 const finishGame = async(req, res) => {
   const { from, to } = req.query;
 
-  let events = await utils.events.finishGame();
-  if (!events) return res.status(500).json(resError(73500));
+  const payload = await utils.events.finishGame();
+  if (!payload) return res.status(500).json(resError(73500));
 
-  events = filterEvents(events, from, to);
-  for (const event of events) {
-    event.result.result = parseInt(event.result.result);
-    event.result.gameId = parseInt(event.result.gameId);
-  }
+  const events = filterEvents(payload, models.finishGame, from, to);
 
   res.json(resSuccess({ events }));
 };
@@ -189,15 +171,10 @@ const finishGame = async(req, res) => {
 const playerWin = async(req, res) => {
   const { from, to } = req.query;
 
-  let events = await utils.events.playerWin();
-  if (!events) return res.status(500).json(resError(73500));
+  const payload = await utils.events.playerWin();
+  if (!payload) return res.status(500).json(resError(73500));
 
-  events = filterEvents(events, from, to);
-  for (const event of events) {
-    event.result.reward = toTRX(event.result.reward);
-    event.result.betId = parseInt(event.result.betId);
-    event.result.gameId = parseInt(event.result.gameId);
-  }
+  const events = filterEvents(payload, models.playerWin, from, to);
 
   res.json(resSuccess({ events }));
 };
@@ -205,20 +182,15 @@ const playerWin = async(req, res) => {
 const changeParams = async(req, res) => {
   const { from, to } = req.query;
 
-  const bet = await utils.events.changeMinMaxBet();
-  if (!bet) return res.status(500).json(resError(73500));
-  const duration = await utils.events.changeDuration();
-  if (!duration) return res.status(500).json(resError(73500));
+  const betPayload = await utils.events.changeMinMaxBet();
+  if (!betPayload) return res.status(500).json(resError(73500));
+  const bet = filterEvents(betPayload, models.changeMinMaxBet, from, to);
 
-  for (const event of bet) {
-    event.result.minBet = toTRX(event.result.minBet);
-    event.result.maxBet = toTRX(event.result.maxBet);
-  }
-  for (const event of duration) {
-    event.result.gameDuration = parseInt(event.result.gameDuration);
-  }
+  const durPayload = await utils.events.changeDuration();
+  if (!durPayload) return res.status(500).json(resError(73500));
+  const duration = filterEvents(durPayload, models.changeDuration, from, to);
 
-  const events = filterEvents(bet.concat(duration), from, to);
+  const events = bet.concat(duration);
   res.json(resSuccess({ events }));
 };
 

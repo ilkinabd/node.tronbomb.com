@@ -3,63 +3,39 @@ const { PRIVATE_KEY, PROVIDER } = process.env;
 const TronWeb = require('tronweb');
 
 const db = require('@db');
+const { call, send, events } = require('@utils/tron');
 
 const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 
-const getAddress = () => db.contracts.get({ type: 'wheel' });
-const getContract = async() => tronWeb.contract().at(await getAddress());
-
-const call = (variable) => async(...params) => {
-  const contract = await getContract();
-  const result = await contract[variable](...params).call()
-    .catch(console.error);
-
-  return result;
-};
-
-const send = (method) => async(...params) => {
-  const contract = await getContract();
-  const result = await contract[method](...params).send({
-    shouldPollResponse: true,
-  }).catch(console.error);
-
-  return result;
-};
-
-const events = (eventName) => async() => {
-  const events = await tronWeb.getEventResult(await getAddress(), {
-    eventName,
-  }).catch(console.error);
-
-  return events;
-};
+const address = db.contracts.get({ type: 'wheel' });
+const contract = async() => tronWeb.contract().at(await address);
 
 module.exports = {
   get: {
-    game: call('games'),
-    totalGames: call('totalGames'),
-    gameBet: call('getGameBet'),
-    portal: call('portal'),
-    minBet: call('minBet'),
-    maxBet: call('maxBet'),
-    duration: call('gameDuration'),
-    rng: call('wheelRNG'),
+    game: call('games', contract),
+    totalGames: call('totalGames', contract),
+    gameBet: call('getGameBet', contract),
+    portal: call('portal', contract),
+    minBet: call('minBet', contract),
+    maxBet: call('maxBet', contract),
+    duration: call('gameDuration', contract),
+    rng: call('wheelRNG', contract),
   },
   set: {
-    portal: send('setPortalAddress'),
-    bet: send('setMinMaxBet'),
-    duration: send('setGameDuration'),
+    portal: send('setPortalAddress', contract),
+    bet: send('setMinMaxBet', contract),
+    duration: send('setGameDuration', contract),
   },
   func: {
-    init: send('initGame'),
-    finish: send('finishGame'),
+    init: send('initGame', contract),
+    finish: send('finishGame', contract),
   },
   events: {
-    initGame: events('InitGame'),
-    takeBet: events('TakeBet'),
-    finishGame: events('FinishGame'),
-    playerWin: events('PlayerWin'),
-    changeMinMaxBet: events('ChangeMinMaxBet'),
-    changeDuration: events('ChangeGameDuration'),
+    initGame: events('InitGame', address),
+    takeBet: events('TakeBet', address),
+    finishGame: events('FinishGame', address),
+    playerWin: events('PlayerWin', address),
+    changeMinMaxBet: events('ChangeMinMaxBet', address),
+    changeDuration: events('ChangeGameDuration', address),
   },
 };

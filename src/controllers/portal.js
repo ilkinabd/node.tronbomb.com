@@ -1,61 +1,74 @@
 const utils = require('@utils/portal');
-const {
-  toBase58, toTRX, toSun, toDecimal, isAddress, isNullAddress
-} = require('@utils/tron');
+const models = require('@models/portal');
+const { toSun, isAddress } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
-const filterEvents = (events, from, to) => (events.filter((event) => (
-  (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
-)));
+const filterEvents = (payload, model, from, to) => {
+  const events = payload.filter(item => (
+    (from || 0) <= item.timestamp && item.timestamp <= (to || Infinity)
+  )).map(item => {
+    item.result = model(item.result);
+    return item;
+  });
+
+  return events;
+};
 
 // Getters
 
 const balance = async(_req, res) => {
-  const balance = await utils.balance();
+  const balance = await utils.get.balance();
   if (balance === undefined) return res.status(500).json(resError(73500));
+
   res.json(resSuccess({ balance }));
 };
 
 const getMainStatus = async(_req, res) => {
   const mainStatus = await utils.get.mainStatus();
   if (mainStatus === undefined) return res.status(500).json(resError(73500));
+
   res.json(resSuccess({ mainStatus }));
 };
 
 const getOwner = async(_req, res) => {
-  const owner = await utils.get.owner();
-  if (owner === undefined) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ owner: toBase58(owner) }));
+  const payload = await utils.get.owner();
+  if (!payload) return res.status(500).json(resError(73500));
+
+  const owner = models.address(payload);
+
+  res.json(resSuccess({ owner }));
 };
 
 const getToken = async(req, res) => {
-  const { tokenId } = req.query;
+  const { id } = req.query;
 
-  let token = await utils.get.token(tokenId);
-  if (token === undefined) return res.status(500).json(resError(73500));
+  const payload = await utils.get.token(id);
+  if (!payload) return res.status(500).json(resError(73500));
 
-  token = (isNullAddress(token)) ? null : toBase58(token);
+  const token = models.address(payload);
+
   res.json(resSuccess({ token }));
 };
 
 const getGame = async(req, res) => {
-  const { gameId } = req.query;
+  const { id } = req.query;
 
-  let game = await utils.get.game(gameId);
-  if (game === undefined) return res.status(500).json(resError(73500));
+  const payload = await utils.get.game(id);
+  if (!payload) return res.status(500).json(resError(73500));
 
-  game = (isNullAddress(game)) ? null : toBase58(game);
+  const game = models.address(payload);
+
   res.json(resSuccess({ game }));
 };
 
 const getGameStatus = async(req, res) => {
   const { address } = req.query;
 
-  if (!isAddress(address) || isNullAddress(address))
-    return res.status(422).json(resError(73402));
+  if (!isAddress(address)) return res.status(422).json(resError(73402));
 
   const gameStatus = await utils.get.gameStatus(address);
   if (gameStatus === undefined) return res.status(500).json(resError(73500));
+
   res.json(resSuccess({ gameStatus }));
 };
 
@@ -66,137 +79,123 @@ const setMainStatus = async(req, res) => {
 
   const result = await utils.set.mainStatus(status === 'true');
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 const setToken = async(req, res) => {
-  const { tokenId, address } = req.body;
+  const { id, address } = req.body;
 
-  if (!isAddress(address) || isNullAddress(address))
-    return res.status(422).json(resError(73402));
+  if (!isAddress(address)) return res.status(422).json(resError(73402));
 
-  const result = await utils.set.token(tokenId, address);
+  const result = await utils.set.token(id, address);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 const setGame = async(req, res) => {
-  const { gameId, address } = req.body;
+  const { id, address } = req.body;
 
-  if (!isAddress(address) || isNullAddress(address))
-    return res.status(422).json(resError(73402));
+  if (!isAddress(address)) return res.status(422).json(resError(73402));
 
-  const result = await utils.set.game(gameId, address);
+  const result = await utils.set.game(id, address);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 const setGameStatus = async(req, res) => {
   const { address, status } = req.body;
 
-  if (!isAddress(address) || isNullAddress(address))
-    return res.status(422).json(resError(73402));
+  if (!isAddress(address)) return res.status(422).json(resError(73402));
 
   const result = await utils.set.gameStatus(address, status === 'true');
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 // Functions
 
 const takeTRXBet = async(req, res) => {
-  const { amount, gameId, data } = req.body;
+  const { amount, id, data } = req.body;
 
-  const result = await utils.func.takeTRXBet(toSun(amount), gameId, data);
-  if (!result) return res.status(500).json(resError(73500));
-  result.index = toDecimal(result.index);
+  const payload = await utils.func.takeTRXBet(toSun(amount), id, data);
+  if (!payload) return res.status(500).json(resError(73500));
+
+  const result = models.takeTRXBet(payload);
 
   res.json(resSuccess({ result }));
 };
 
 const withdraw = async(req, res) => {
-  const { amount, tokenId } = req.body;
+  const { amount, id } = req.body;
 
-  const result = await utils.withdraw(toSun(amount), tokenId);
+  const result = await utils.func.withdraw(toSun(amount), id);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 // Events
 
-const mainStatus = async(req, res) => {
+const mainStatusEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  let events = await utils.events.mainStatus();
-  if (!events) return res.status(500).json(resError(73500));
-  for (const event of events) {
-    event.result.mainStatus = (event.result.mainStatus === 'true');
-  }
+  const payload = await utils.events.mainStatus();
+  if (!payload) return res.status(500).json(resError(73500));
 
-  events = filterEvents(events, from, to);
-  res.json(resSuccess({ events }));
-};
-
-const withdraws = async(req, res) => {
-  const { from, to } = req.query;
-
-  let events = await utils.events.withdraws();
-  if (!events) return res.status(500).json(resError(73500));
-
-  events = filterEvents(events, from, to);
-  for (const event of events) {
-    event.result.amount = toTRX(event.result.amount);
-  }
+  const events = filterEvents(payload, models.mainStatus, from, to);
 
   res.json(resSuccess({ events }));
 };
 
-const tokens = async(req, res) => {
+const withdrawEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  let events = await utils.events.tokens();
-  if (!events) return res.status(500).json(resError(73500));
+  const payload = await utils.events.withdraw();
+  if (!payload) return res.status(500).json(resError(73500));
 
-  events = filterEvents(events, from, to);
-  for (const event of events) {
-    event.result.contractAddress = toBase58(event.result.contractAddress);
-  }
+  const events = filterEvents(payload, models.withdraw, from, to);
 
   res.json(resSuccess({ events }));
 };
 
-const games = async(req, res) => {
+const tokenEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  const games = await utils.events.games();
-  if (!games) return res.status(500).json(resError(73500));
-  const gamesStatuses = await utils.events.gamesStatuses();
-  if (!gamesStatuses) return res.status(500).json(resError(73500));
+  const payload = await utils.events.token();
+  if (!payload) return res.status(500).json(resError(73500));
 
-  for (const event of gamesStatuses) {
-    event.result.status = (event.result.status === 'true');
-  }
-
-  const events = filterEvents(games.concat(gamesStatuses), from, to);
-  for (const event of events) {
-    event.result.contractAddress = toBase58(event.result.contractAddress);
-  }
+  const events = filterEvents(payload, models.contract, from, to);
 
   res.json(resSuccess({ events }));
 };
 
-const rewards = async(req, res) => {
+const gameEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  let events = await utils.events.rewards();
-  if (!events) return res.status(500).json(resError(73500));
+  const gamesPayload = await utils.events.game();
+  if (!gamesPayload) return res.status(500).json(resError(73500));
+  const games = filterEvents(gamesPayload, models.contract, from, to);
 
-  events = filterEvents(events, from, to);
-  for (const event of events) {
-    const { reward, tokenId, to } = event.result;
-    if (tokenId === '0') event.result.reward = toTRX(reward);
-    event.result.to = toBase58(to);
-  }
+  const statusesPayload = await utils.events.gamesStatus();
+  if (!statusesPayload) return res.status(500).json(resError(73500));
+  const statuses = filterEvents(statusesPayload, models.mainStatus, from, to);
+
+  const events = games.concat(statuses);
+
+  res.json(resSuccess({ events }));
+};
+
+const rewardEvents = async(req, res) => {
+  const { from, to } = req.query;
+
+  const payload = await utils.events.reward();
+  if (!payload) return res.status(500).json(resError(73500));
+
+  const events = filterEvents(payload, models.reward, from, to);
 
   res.json(resSuccess({ events }));
 };
@@ -221,10 +220,10 @@ module.exports = {
     withdraw,
   },
   events: {
-    mainStatus,
-    withdraws,
-    tokens,
-    games,
-    rewards,
+    mainStatus: mainStatusEvents,
+    withdraw: withdrawEvents,
+    token: tokenEvents,
+    game: gameEvents,
+    reward: rewardEvents,
   },
 };

@@ -1,70 +1,38 @@
-const { getEventResult, toTRX, toDecimal, toBase58 } = require('@utils/tron');
+const utils = require('@utils/dice');
+const models = require('@models/dice');
 
-const takePart = async(blockNumber, diceContract, io) => {
-  const payload = await getEventResult(diceContract, {
-    eventName: 'TakeBet',
-    blockNumber,
-  });
+const takePart = async(blockNumber, chanel) => {
+  const payload = await utils.events.takeBet(blockNumber);
+  if (!payload) return;
 
-  for (const data of payload) {
-    const {
-      amount, tokenId, player, gameId, number, finishBlock, roll
-    } = data.result;
-
-    const event = {
-      bet: (tokenId === '0') ? toTRX(amount) : toDecimal(amount),
-      index: parseInt(gameId),
-      number: parseInt(number),
-      finishBlock: parseInt(finishBlock),
-      tokenId: parseInt(tokenId),
-      roll: parseInt(roll),
-      wallet: toBase58(player),
-    };
-
-    io.in('dice').emit('take-part', event);
+  for (const item of payload) {
+    const event = models.takeBets(item.result);
+    chanel.emit('take-part', event);
   }
 };
 
-const finish = async(blockNumber, diceContract, io) => {
-  const payload = await getEventResult(diceContract, {
-    eventName: 'FinishGame',
-    blockNumber,
-  });
+const finish = async(blockNumber, chanel) => {
+  const payload = await utils.events.finishGame(blockNumber);
+  if (!payload) return;
 
-  for (const data of payload) {
-    const { result, gameId } = data.result;
-
-    const event = {
-      gameId: parseInt(gameId),
-      result: parseInt(result),
-    };
-
-    io.in('dice').emit('finish', event);
+  for (const item of payload) {
+    const event = models.finishGame(item.result);
+    chanel.emit('finish', event);
   }
 };
 
-const reward = async(blockNumber, diceContract, io) => {
-  const payload = await getEventResult(diceContract, {
-    eventName: 'PlayerWin',
-    blockNumber,
-  });
+const reward = async(blockNumber, chanel) => {
+  const payload = await utils.events.playersWin(blockNumber);
+  if (!payload) return;
 
-  for (const data of payload) {
-    const { gameId, amount, tokenId, player } = data.result;
-
-    const event = {
-      amount: (tokenId === '0') ? toTRX(amount) : toDecimal(amount),
-      wallet: toBase58(player),
-      tokenId: parseInt(tokenId),
-      gameId: parseInt(gameId),
-    };
-
-    io.in('dice').emit('reward', event);
+  for (const item of payload) {
+    const event = models.playerWin(item.result);
+    chanel.emit('reward', event);
   }
 };
 
-module.exports = {
-  takePart,
-  finish,
-  reward,
+module.exports = async(number, chanel) => {
+  takePart(number, chanel);
+  finish(number, chanel);
+  reward(number, chanel);
 };

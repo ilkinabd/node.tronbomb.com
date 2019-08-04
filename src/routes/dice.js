@@ -3,50 +3,50 @@ const router = new express.Router();
 
 const controller = require('@controllers/dice');
 const { server } = require('@middleware/auth');
-const { validateGame: validate } = require('@middleware/validate-params');
+const validate = require('@middleware/validate');
 
 // Getters
 
 router.route('/get/game')
-  .get(server, validate('getGame', true), controller.get.game);
+  .get(server, validate('id'), controller.get.game);
 
 router.route('/get/games')
-  .get(server, controller.get.games);
+  .get(server, validate('fromTo', true), controller.get.games);
 
 router.route('/get/params')
   .get(server, controller.get.params);
 
 router.route('/get/rng')
-  .get(server, validate('diceRNG', true), controller.get.rng);
+  .get(server, validate('addressBlockHash', true), controller.get.rng);
 
 // Setters
 
 router.route('/set/portal')
-  .post(server, validate('setPortal', false), controller.set.portal);
+  .post(server, validate('address', false), controller.set.portal);
 
 router.route('/set/rtp')
-  .post(server, validate('setRTP', false), controller.set.rtp);
+  .post(server, validate('rtp', false), controller.set.rtp);
 
 router.route('/set/bet')
-  .post(server, validate('setBet', false), controller.set.bet);
+  .post(server, validate('bet', false), controller.set.bet);
 
 // Functions
 
 router.route('/func/finish_game')
-  .post(server, validate('finishGame', false), controller.func.finishGame);
+  .post(server, validate('id', false), controller.func.finishGame);
 
 // Events
 
-router.route('/events/take_bets')
-  .get(server, validate('events', true), controller.events.takeBets);
+router.route('/events/take_bet')
+  .get(server, validate('fromTo', true), controller.events.takeBet);
 
-router.route('/events/finish_games')
-  .get(server, validate('events', true), controller.events.finishGames);
+router.route('/events/finish_game')
+  .get(server, validate('fromTo', true), controller.events.finishGame);
 
 router.route('/events/players_win')
-  .get(server, validate('events', true), controller.events.playersWin);
+  .get(server, validate('fromTo', true), controller.events.playersWin);
 
 router.route('/events/change_params')
-  .get(server, validate('events', true), controller.events.changeParams);
+  .get(server, validate('fromTo', true), controller.events.changeParams);
 
 module.exports = router;
