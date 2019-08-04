@@ -39,43 +39,44 @@ const getGames = async(req, res) => {
   res.json(resSuccess({ games }));
 };
 
-const getParams = async(_req, res) => {
-  const portal = toBase58(await utils.get.portal());
-  const minBet = toTRX(await utils.get.minBet());
-  const maxBet = toTRX(await utils.get.maxBet());
-  const duration = parseInt(await utils.get.duration());
-
-  res.json(resSuccess({ portal, minBet, maxBet, duration }));
-};
-
 const getGameBets = async(req, res) => {
   const { gameId } = req.query;
 
   const betsCount = (await utils.get.game(gameId)).betsCount;
+  if (!betsCount) return res.status(500).json(resError(73500));
 
   const requests = [];
-  for (let betId = 0; betId < betsCount; betId++) {
-    requests.push(utils.get.gameBet(betId, gameId));
+  for (let id = 0; id < betsCount; id++) {
+    requests.push(utils.get.gameBet(id, gameId));
   }
-  const bets = await Promise.all(requests).catch((error) => {
-    console.error(error);
-    return res.status(500).json(resError(73500));
-  });
+  const payload = await Promise.all(requests).catch(console.error);
 
-  for (const bet of bets) {
-    bet.player = toBase58(bet.player);
-    bet.amount = toTRX(bet.amount);
-  }
+  const bets = Array.from(payload, item => models.bet(item));
 
   res.json(resSuccess({ bets }));
+};
+
+const getParams = async(_req, res) => {
+  const portal = await utils.get.portal();
+  const rtp = await utils.get.rtp();
+  const rtpDivider = await utils.get.rtpDivider();
+  const minBet = await utils.get.minBet();
+  const maxBet = await utils.get.maxBet();
+
+  const params = models.params({ portal, rtp, rtpDivider, minBet, maxBet });
+
+  res.json(resSuccess({ params }));
 };
 
 const getRNG = async(req, res) => {
   const { blockNumber, blockHash } = req.query;
 
-  const result = await utils.get.rng(blockNumber, blockHash);
-  if (result === undefined) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+  const payload = await utils.get.rng(blockNumber, blockHash);
+  if (!payload) return res.status(500).json(resError(73500));
+
+  const random = payload.result;
+
+  res.json(resSuccess({ random }));
 };
 
 // Setters
