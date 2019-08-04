@@ -1,49 +1,49 @@
 const utils = require('@utils/wheel');
 const models = require('@models/wheel');
 
-const start = async(blockNumber, io) => {
+const start = async(blockNumber, chanel) => {
   const payload = await utils.events.initGame(blockNumber);
   if (!payload) return;
 
   for (const item of payload) {
     const event = models.initGame(item.result);
-    io.in('wheel').emit('start', event);
+    chanel.emit('start', event);
   }
 };
 
-const takePart = async(blockNumber, io) => {
+const takePart = async(blockNumber, chanel) => {
   const payload = await utils.events.takeBet(blockNumber);
   if (!payload) return;
 
   for (const item of payload) {
     const event = models.takeBet(item.result);
-    io.in('wheel').emit('take-part', event);
+    chanel.emit('take-part', event);
   }
 };
 
-const finish = async(blockNumber, io) => {
+const finish = async(blockNumber, chanel) => {
   const payload = await utils.events.finishGame(blockNumber);
   if (!payload) return;
 
   for (const item of payload) {
     const event = models.finishGame(item.result);
-    io.in('wheel').emit('finish', event);
+    chanel.emit('finish', event);
   }
 };
 
-const reward = async(blockNumber, io) => {
+const reward = async(blockNumber, chanel) => {
   const payload = await utils.events.playerWin(blockNumber);
   if (!payload) return;
 
   for (const item of payload) {
     const event = models.playerWin(item.result);
-    io.in('wheel').emit('reward', event);
+    chanel.emit('reward', event);
   }
 };
 
-module.exports = (number, io) => {
-  start(number, io);
-  takePart(number, io);
-  finish(number, io);
-  reward(number, io);
+module.exports = (number, chanel) => {
+  start(number, chanel);
+  takePart(number, chanel);
+  finish(number, chanel);
+  reward(number, chanel);
 };

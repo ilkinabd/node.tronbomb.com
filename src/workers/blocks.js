@@ -15,8 +15,8 @@ module.exports = async(io) => {
 
       io.in('blocks').emit('blocks', block);
 
-      dice(number, io);
-      wheel(number, io);
+      dice(number, io.in('dice'));
+      wheel(number, io.in('wheel'));
     }
     lastBlock = current;
   }, 3000);
