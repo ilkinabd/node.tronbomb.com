@@ -1,6 +1,7 @@
 const utils = require('@utils/portal');
+const models = require('@models/portal');
 const {
-  toBase58, toTRX, toSun, toDecimal, isAddress, isNullAddress
+  toBase58, toTRX, toSun, isAddress, isNullAddress
 } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
 
@@ -111,9 +112,10 @@ const setGameStatus = async(req, res) => {
 const takeTRXBet = async(req, res) => {
   const { amount, gameId, data } = req.body;
 
-  const result = await utils.func.takeTRXBet(toSun(amount), gameId, data);
-  if (!result) return res.status(500).json(resError(73500));
-  result.index = toDecimal(result.index);
+  const payload = await utils.func.takeTRXBet(toSun(amount), gameId, data);
+  if (!payload) return res.status(500).json(resError(73500));
+
+  const result = models.takeTRXBet(payload);
 
   res.json(resSuccess({ result }));
 };
@@ -123,7 +125,8 @@ const withdraw = async(req, res) => {
 
   const result = await utils.withdraw(toSun(amount), tokenId);
   if (!result) return res.status(500).json(resError(73500));
-  res.json(resSuccess({ result }));
+
+  res.json(resSuccess());
 };
 
 // Events
