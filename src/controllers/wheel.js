@@ -1,21 +1,9 @@
 const utils = require('@utils/wheel');
+const models = require('@models/wheel');
 const {
   toBase58, toTRX, toSun, isAddress, isNullAddress, toDecimal
 } = require('@utils/tron');
 const { resSuccess, resError } = require('@utils/res-builder');
-
-const toGameModel = (game) => {
-  game.gameId = toDecimal(game.gameId);
-  game.finishBlock = toDecimal(game.finishBlock);
-  game.betsCount = toDecimal(game.betsCount);
-  game.result = (game.status !== 2) ? null : game.result;
-
-  switch (game.status) {
-    case 0: game.status = 'empty'; break;
-    case 1: game.status = 'start'; break;
-    case 2: game.status = 'finish'; break;
-  }
-};
 
 const filterEvents = (events, from, to) => (events.filter((event) => (
   (from || 0) <= event.timestamp && event.timestamp <= (to || Infinity)
@@ -26,26 +14,27 @@ const filterEvents = (events, from, to) => (events.filter((event) => (
 const getGame = async(req, res) => {
   const { gameId } = req.query;
 
-  const game = await utils.get.game(gameId);
-  if (game === undefined) return res.status(500).json(resError(73500));
-  toGameModel(game);
+  const payload = await utils.get.game(gameId);
+  if (!payload) return res.status(500).json(resError(73500));
+  const game = models.game(payload);
 
   res.json(resSuccess({ game }));
 };
 
-const getGames = async(_req, res) => {
+const getGames = async(req, res) => {
+  const { from, to } = req.query;
+
   const totalGames = toDecimal(await utils.get.totalGames());
+  if (!totalGames) return res.status(500).json(resError(73500));
+
+  const first = from || 0;
+  const last = Math.min(totalGames, to || totalGames);
 
   const requests = [];
-  for (let gameId = 0; gameId < totalGames; gameId++) {
-    requests.push(utils.get.game(gameId.toString()));
-  }
+  for (let id = first; id < last; id++) requests.push(utils.get.game(id));
+  const payload = await Promise.all(requests).catch(console.error);
 
-  const games = await Promise.all(requests).catch((error) => {
-    console.error(error);
-    return res.status(500).json(resError(73500));
-  });
-  for (const game of games) toGameModel(game);
+  const games = Array.from(payload, item => models.game(item));
 
   res.json(resSuccess({ games }));
 };
