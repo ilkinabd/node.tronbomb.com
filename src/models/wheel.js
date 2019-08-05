@@ -59,7 +59,7 @@ const initGame = (payload) => {
 
   const model = {
     finishBlock: toDecimal(finishBlock),
-    gameId: toDecimal(gameId),
+    index: toDecimal(gameId),
   };
 
   return model;
@@ -69,12 +69,12 @@ const takeBet = (payload) => {
   const { player, amount, sector, tokenId, betId, gameId } = payload;
 
   const model = {
-    player: toBase58(player),
-    amount: toAmount(tokenId, amount),
+    wallet: toBase58(player),
+    bet: toAmount(tokenId, amount),
     tokenId: toDecimal(tokenId),
     sector: toDecimal(sector),
     betId: toDecimal(betId),
-    gameId: toDecimal(gameId),
+    index: toDecimal(gameId),
   };
 
   return model;
@@ -85,7 +85,7 @@ const finishGame = (payload) => {
 
   const model = {
     result: toDecimal(result),
-    gameId: toDecimal(gameId),
+    index: toDecimal(gameId),
   };
 
   return model;
@@ -98,7 +98,7 @@ const playerWin = (payload) => {
     amount: toAmount(tokenId, amount),
     tokenId: toDecimal(tokenId),
     betId: toDecimal(betId),
-    gameId: toDecimal(gameId),
+    index: toDecimal(gameId),
   };
 
   return model;
