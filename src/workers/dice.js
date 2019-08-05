@@ -7,7 +7,7 @@ const takePart = async(blockNumber, chanel) => {
 
   for (const item of payload) {
     const event = models.takeBets(item.result);
-    chanel.emit('take-part', event);
+    chanel.emit('dice-take-part', event);
   }
 };
 
@@ -17,7 +17,7 @@ const finish = async(blockNumber, chanel) => {
 
   for (const item of payload) {
     const event = models.finishGame(item.result);
-    chanel.emit('finish', event);
+    chanel.emit('dice-finish', event);
   }
 };
 
@@ -27,7 +27,7 @@ const reward = async(blockNumber, chanel) => {
 
   for (const item of payload) {
     const event = models.playerWin(item.result);
-    chanel.emit('reward', event);
+    chanel.emit('dice-reward', event);
   }
 };
 
