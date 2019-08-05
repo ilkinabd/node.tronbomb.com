@@ -54,13 +54,13 @@ const takeBets = (payload) => {
   } = payload;
 
   const model = {
-    player: toBase58(player),
-    amount: toAmount(tokenId, amount),
+    wallet: toBase58(player),
+    bet: toAmount(tokenId, amount),
     number: toDecimal(number),
     roll: rollType(toDecimal(roll)),
     tokenId: toDecimal(tokenId),
     finishBlock: toDecimal(finishBlock),
-    gameId: toDecimal(gameId),
+    index: toDecimal(gameId),
   };
 
   return model;
@@ -71,7 +71,7 @@ const finishGame = (payload) => {
 
   const model = {
     result: toDecimal(result),
-    gameId: toDecimal(gameId),
+    index: toDecimal(gameId),
   };
 
   return model;
@@ -84,7 +84,7 @@ const playerWin = (payload) => {
     player: toBase58(player),
     amount: toAmount(tokenId, amount),
     tokenId: toDecimal(tokenId),
-    gameId: toDecimal(gameId),
+    index: toDecimal(gameId),
   };
 
   return model;
