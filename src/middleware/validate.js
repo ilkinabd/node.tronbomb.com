@@ -1,3 +1,5 @@
+const { MIN_WITHDRAW, MAX_WITHDRAW } = process.env;
+
 const Joi = require('@hapi/joi');
 
 const templates = {
@@ -61,6 +63,12 @@ const schemas = {
   blockHash: Joi.object().keys({
     block: templates.integer.required(),
     hash: templates.bytes.required(),
+  }),
+  walletWalletAmount: Joi.object().keys({
+    userWallet: templates.address.required(),
+    wallet: templates.address.required(),
+    amount: templates.number
+      .min(parseFloat(MIN_WITHDRAW)).max(parseFloat(MAX_WITHDRAW)).required(),
   }),
 };
 

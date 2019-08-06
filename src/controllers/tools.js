@@ -1,4 +1,5 @@
 const utils = require('@utils/withdraw');
+const { sendTRX, isAddress } = require('@utils/tron');
 const models = require('@models/tools');
 const { resSuccess, resError } = require('@utils/res-builder');
 
@@ -24,6 +25,18 @@ const request = async(req, res) => {
   res.json(resSuccess());
 };
 
+const withdraw = async(req, res) => {
+  const { userWallet, wallet, amount } = req.body;
+
+  if (!isAddress(wallet)) return res.status(422).json(resError(73402));
+
+  console.info(`Withdraw ${amount} from ${userWallet} to ${wallet}`);
+  const answer = await sendTRX(wallet, amount);
+  if (!answer || !answer.result) return res.status(500).json(resError(73500));
+
+  res.json(resSuccess({ txID: answer.transaction.txID }));
+};
+
 // Events
 
 const operation = async(req, res) => {
@@ -40,6 +53,7 @@ const operation = async(req, res) => {
 module.exports = {
   func: {
     request,
+    withdraw,
   },
   events: {
     withdraw: operation,

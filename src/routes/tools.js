@@ -6,8 +6,11 @@ const validate = require('@middleware/validate');
 
 // Functions
 
+router.route('/func/request')
+  .post(validate('code', false), controller.func.request);
+
 router.route('/func/withdraw')
-  .post(validate('code', false), controller.func.withdraw);
+  .post(validate('walletWalletAmount', false), controller.func.withdraw);
 
 // Events
 
