@@ -3,10 +3,11 @@ const { version } = process.env;
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const contracts = require('./src/routes/contracts');
-const portal = require('./src/routes/portal');
-const dice = require('./src/routes/dice');
-const wheel = require('./src/routes/wheel');
+const contracts = require('@routes/contracts');
+const portal = require('@routes/portal');
+const dice = require('@routes/dice');
+const wheel = require('@routes/wheel');
+const tools = require('@routes/tools');
 
 const app = express();
 
@@ -35,5 +36,6 @@ app.use('/contracts', contracts);
 app.use('/portal', portal);
 app.use('/dice', dice);
 app.use('/wheel', wheel);
+app.use('/tools', tools);
 
 module.exports = app;

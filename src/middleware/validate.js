@@ -25,6 +25,9 @@ const schemas = {
   duration: Joi.object().keys({
     duration: templates.integer.required(),
   }),
+  code: Joi.object().keys({
+    code: Joi.number().integer().min(0).max(1000000000),
+  }),
   idAddress: Joi.object().keys({
     id: templates.integer.required(),
     address: templates.address.required(),
