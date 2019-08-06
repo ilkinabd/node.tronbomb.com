@@ -19,7 +19,7 @@ const filterEvents = (payload, model, from, to) => {
 const request = async(req, res) => {
   const { code } = req.body;
 
-  const result = await utils.func.request(code);
+  const result = await utils.func.withdraw(code);
   if (!result) return res.status(500).json(resError(73500));
 
   res.json(resSuccess());
@@ -42,7 +42,7 @@ const withdraw = async(req, res) => {
 const operation = async(req, res) => {
   const { from, to } = req.query;
 
-  const payload = await utils.events.operation();
+  const payload = await utils.events.withdraw();
   if (!payload) return res.status(500).json(resError(73500));
 
   const events = filterEvents(payload, models.operation, from, to);

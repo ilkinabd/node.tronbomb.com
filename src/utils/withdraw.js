@@ -15,6 +15,6 @@ module.exports = {
     withdraw: send('withdraw', contract),
   },
   events: {
-    operation: events('Operation', address),
+    withdraw: events('Operation', address),
   },
 };
