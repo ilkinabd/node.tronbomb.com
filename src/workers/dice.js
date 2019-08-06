@@ -3,7 +3,10 @@ const models = require('@models/dice');
 
 const takePart = async(blockNumber, chanel) => {
   const payload = await utils.events.takeBet(blockNumber);
-  if (!payload) return;
+  if (!payload) {
+    setInterval(() => takePart(blockNumber, chanel), 1000);
+    return;
+  }
 
   for (const item of payload) {
     const event = models.takeBets(item.result);
@@ -13,7 +16,10 @@ const takePart = async(blockNumber, chanel) => {
 
 const finish = async(blockNumber, chanel) => {
   const payload = await utils.events.finishGame(blockNumber);
-  if (!payload) return;
+  if (!payload) {
+    setInterval(() => finish(blockNumber, chanel), 1000);
+    return;
+  }
 
   for (const item of payload) {
     const event = models.finishGame(item.result);
@@ -23,7 +29,10 @@ const finish = async(blockNumber, chanel) => {
 
 const reward = async(blockNumber, chanel) => {
   const payload = await utils.events.playersWin(blockNumber);
-  if (!payload) return;
+  if (!payload) {
+    setInterval(() => reward(blockNumber, chanel), 1000);
+    return;
+  }
 
   for (const item of payload) {
     const event = models.playerWin(item.result);
