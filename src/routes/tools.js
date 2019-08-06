@@ -9,4 +9,9 @@ const validate = require('@middleware/validate');
 router.route('/func/withdraw')
   .post(validate('code', false), controller.func.withdraw);
 
+// Events
+
+router.route('/events/withdraw')
+  .get(validate('fromTo'), controller.events.withdraw);
+
 module.exports = router;
