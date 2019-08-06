@@ -1,4 +1,4 @@
-const { PRIVATE_KEY, PROVIDER } = process.env;
+const { PRIVATE_KEY, REFERRAL_KEY, PROVIDER } = process.env;
 
 const TronWeb = require('tronweb');
 
@@ -42,6 +42,7 @@ const toBase58 = (address) => tronWeb.address.fromHex(address);
 const toDecimal = (amount) => tronWeb.toDecimal(amount);
 const toTRX = (amount) => parseFloat(tronWeb.fromSun(toDecimal(amount)));
 const toSun = (amount) => parseFloat(tronWeb.toSun(amount));
+const toHex = (address) => tronWeb.address.toHex(address);
 const isAddress = (address) => tronWeb.isAddress(address);
 const isNullAddress = (address) => (address === nullAddress);
 
@@ -50,6 +51,9 @@ const balance = async(address) => toTRX(await tronWeb.trx.getBalance(address));
 const currentBlock = async() =>
   (await tronWeb.trx.getCurrentBlock()).block_header.raw_data.number;
 const getBlock = (number) => tronWeb.trx.getBlock(number);
+
+const sendTRX = async(to, amount) =>
+  tronWeb.trx.sendTransaction(toHex(to), toSun(amount), REFERRAL_KEY);
 
 module.exports = {
   call,
@@ -65,4 +69,5 @@ module.exports = {
   balance,
   currentBlock,
   getBlock,
+  sendTRX,
 };
