@@ -3,7 +3,10 @@ const models = require('@models/wheel');
 
 const start = async(blockNumber, chanel) => {
   const payload = await utils.events.initGame(blockNumber);
-  if (!payload) return;
+  if (!payload) {
+    setInterval(() => start(blockNumber, chanel), 1000);
+    return;
+  }
 
   for (const item of payload) {
     const event = models.initGame(item.result);
@@ -13,7 +16,10 @@ const start = async(blockNumber, chanel) => {
 
 const takePart = async(blockNumber, chanel) => {
   const payload = await utils.events.takeBet(blockNumber);
-  if (!payload) return;
+  if (!payload) {
+    setInterval(() => takePart(blockNumber, chanel), 1000);
+    return;
+  }
 
   for (const item of payload) {
     const event = models.takeBet(item.result);
@@ -23,7 +29,10 @@ const takePart = async(blockNumber, chanel) => {
 
 const finish = async(blockNumber, chanel) => {
   const payload = await utils.events.finishGame(blockNumber);
-  if (!payload) return;
+  if (!payload) {
+    setInterval(() => finish(blockNumber, chanel), 1000);
+    return;
+  }
 
   for (const item of payload) {
     const event = models.finishGame(item.result);
@@ -33,7 +42,10 @@ const finish = async(blockNumber, chanel) => {
 
 const reward = async(blockNumber, chanel) => {
   const payload = await utils.events.playerWin(blockNumber);
-  if (!payload) return;
+  if (!payload) {
+    setInterval(() => reward(blockNumber, chanel), 1000);
+    return;
+  }
 
   for (const item of payload) {
     const event = models.playerWin(item.result);
