@@ -26,12 +26,12 @@ const request = async(req, res) => {
 };
 
 const withdraw = async(req, res) => {
-  const { userWallet, wallet, amount } = req.body;
+  const { wallet, to, amount } = req.body;
 
-  if (!isAddress(wallet)) return res.status(422).json(resError(73402));
+  if (!isAddress(to)) return res.status(422).json(resError(73402));
 
-  console.info(`Withdraw ${amount} from ${userWallet} to ${wallet}`);
-  const answer = await sendTRX(wallet, amount);
+  console.info(`Withdraw ${amount} from ${wallet} to ${to}`);
+  const answer = await sendTRX(to, amount);
   if (!answer || !answer.result) return res.status(500).json(resError(73500));
 
   res.json(resSuccess({ txID: answer.transaction.txID }));

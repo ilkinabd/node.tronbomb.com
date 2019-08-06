@@ -64,9 +64,9 @@ const schemas = {
     block: templates.integer.required(),
     hash: templates.bytes.required(),
   }),
-  walletWalletAmount: Joi.object().keys({
-    userWallet: templates.address.required(),
+  walletToAmount: Joi.object().keys({
     wallet: templates.address.required(),
+    to: templates.address.required(),
     amount: templates.number
       .min(parseFloat(MIN_WITHDRAW)).max(parseFloat(MAX_WITHDRAW)).required(),
   }),

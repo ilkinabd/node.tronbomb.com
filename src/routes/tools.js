@@ -11,7 +11,7 @@ router.route('/func/request')
   .post(validate('code', false), controller.func.request);
 
 router.route('/func/withdraw')
-  .post(server, validate('walletWalletAmount', false), controller.func.withdraw);
+  .post(server, validate('walletToAmount', false), controller.func.withdraw);
 
 // Events
 
