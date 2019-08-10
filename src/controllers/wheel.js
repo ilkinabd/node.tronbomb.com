@@ -102,15 +102,6 @@ const setDuration = async(req, res) => {
 
 // Functions
 
-const init = async(_req, res) => {
-  const result = await utils.func.init();
-  if (!result) return res.status(500).json(resError(73500));
-
-  result.gameId = toDecimal(result.gameId);
-
-  res.json(resSuccess({ result }));
-};
-
 const finish = async(req, res) => {
   const { id } = req.body;
 
@@ -194,7 +185,6 @@ module.exports = {
     duration: setDuration
   },
   func: {
-    init,
     finish,
   },
   events: {

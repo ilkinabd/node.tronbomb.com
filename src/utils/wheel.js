@@ -28,7 +28,6 @@ module.exports = {
     duration: send('setGameDuration', contract),
   },
   func: {
-    init: send('initGame', contract),
     finish: send('finishGame', contract),
   },
   events: {
