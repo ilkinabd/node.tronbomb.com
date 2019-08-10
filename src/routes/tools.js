@@ -5,6 +5,11 @@ const controller = require('@controllers/tools');
 const { server } = require('@middleware/auth');
 const validate = require('@middleware/validate');
 
+// Getters
+
+router.route('/get/block')
+  .get(validate('id'), controller.get.block);
+
 // Functions
 
 router.route('/func/request')
