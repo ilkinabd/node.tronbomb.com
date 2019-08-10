@@ -53,7 +53,7 @@ const schemas = {
   idAmountData: Joi.object().keys({
     id: templates.integer.required(),
     amount: templates.number.required(),
-    data: Joi.array().items(templates.bytes).min(2).required(),
+    data: Joi.array().items(templates.bytes).required(),
   }),
   addressBlockHash: Joi.object().keys({
     address: templates.address.required(),
