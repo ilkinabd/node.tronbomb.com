@@ -33,7 +33,7 @@ router.route('/set/duration')
 // Functions
 
 router.route('/func/finish')
-  .post(server, validate('id', false), controller.func.finish);
+  .post(server, controller.func.finish);
 
 // Events
 

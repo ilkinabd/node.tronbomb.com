@@ -102,10 +102,8 @@ const setDuration = async(req, res) => {
 
 // Functions
 
-const finish = async(req, res) => {
-  const { id } = req.body;
-
-  const result = await utils.func.finish(id);
+const finish = async(_req, res) => {
+  const result = await utils.func.finish();
   if (!result) return res.status(500).json(resError(73500));
 
   res.json(resSuccess());
