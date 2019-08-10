@@ -18,6 +18,8 @@ module.exports = {
     minBet: call('minBet', contract),
     maxBet: call('maxBet', contract),
     duration: call('gameDuration', contract),
+    startBlock: call('startBlock', contract),
+    processBets: call('processBets', contract),
     rng: call('wheelRNG', contract),
   },
   set: {

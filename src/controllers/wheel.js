@@ -49,8 +49,12 @@ const getParams = async(_req, res) => {
   const minBet = await utils.get.minBet();
   const maxBet = await utils.get.maxBet();
   const duration = await utils.get.duration();
+  const startBlock = await utils.get.startBlock();
+  const processBets = await utils.get.processBets();
 
-  const params = models.params({ portal, duration, minBet, maxBet });
+  const params = models.params({
+    portal, duration, minBet, maxBet, startBlock, processBets
+  });
 
   res.json(resSuccess({ params }));
 };

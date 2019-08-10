@@ -4,13 +4,15 @@ const toAmount = (tokenId, amount) =>
   ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
 
 const params = (payload) => {
-  const { portal, duration, minBet, maxBet } = payload;
+  const { portal, duration, minBet, maxBet, startBlock, processBets } = payload;
 
   const model = {
     portal: toBase58(portal),
     minBet: toTRX(minBet),
     maxBet: toTRX(maxBet),
     duration: toDecimal(duration),
+    startBlock: toDecimal(startBlock),
+    processBets: toDecimal(processBets),
   };
 
   return model;
