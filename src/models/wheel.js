@@ -48,13 +48,12 @@ const takeBet = (payload) => {
 };
 
 const playerWin = (payload) => {
-  const { amount, tokenId, betId, gameId } = payload;
+  const { amount, tokenId, betId } = payload;
 
   const model = {
     amount: toAmount(tokenId, amount),
     tokenId: toDecimal(tokenId),
-    betId: toDecimal(betId),
-    index: toDecimal(gameId),
+    index: toDecimal(betId),
   };
 
   return model;
