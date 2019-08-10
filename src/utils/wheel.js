@@ -14,7 +14,6 @@ module.exports = {
   get: {
     bet: call('bets', contract),
     totalBets: call('totalBets', contract),
-    gameBet: call('getGameBet', contract),
     portal: call('portal', contract),
     minBet: call('minBet', contract),
     maxBet: call('maxBet', contract),

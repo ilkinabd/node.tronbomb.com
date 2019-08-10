@@ -44,23 +44,6 @@ const getBets = async(req, res) => {
   res.json(resSuccess({ games }));
 };
 
-const getGameBets = async(req, res) => {
-  const { id } = req.query;
-
-  const betsCount = (await utils.get.game(id)).betsCount;
-  if (!betsCount) return res.status(500).json(resError(73500));
-
-  const requests = [];
-  for (let betId = 0; betId < betsCount; betId++) {
-    requests.push(utils.get.gameBet(betId, id));
-  }
-  const payload = await Promise.all(requests).catch(console.error);
-
-  const bets = Array.from(payload, item => models.bet(item));
-
-  res.json(resSuccess({ bets }));
-};
-
 const getParams = async(_req, res) => {
   const portal = await utils.get.portal();
   const minBet = await utils.get.minBet();
@@ -198,7 +181,6 @@ module.exports = {
   get: {
     bet: getBet,
     bets: getBets,
-    gameBets: getGameBets,
     params: getParams,
     rng: getRNG,
   },

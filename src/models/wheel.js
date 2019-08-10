@@ -3,29 +3,6 @@ const { toDecimal, toBase58, toTRX } = require('@utils/tron');
 const toAmount = (tokenId, amount) =>
   ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
 
-const game = (payload) => {
-  const { gameId, finishBlock, betsCount, result, status } = payload;
-
-  if (toDecimal(finishBlock) === 0) return null;
-
-  let statusType;
-  switch (status) {
-    case 0: statusType = 'empty'; break;
-    case 1: statusType = 'start'; break;
-    case 2: statusType = 'finish'; break;
-  }
-
-  const model = {
-    gameId: toDecimal(gameId),
-    finishBlock: toDecimal(finishBlock),
-    betsCount: toDecimal(betsCount),
-    result: (status === 0) ? null : result,
-    status: statusType,
-  };
-
-  return model;
-};
-
 const params = (payload) => {
   const { portal, duration, minBet, maxBet } = payload;
 
@@ -127,7 +104,6 @@ const changeDuration = (payload) => {
 };
 
 module.exports = {
-  game,
   params,
   bet,
   initGame,
