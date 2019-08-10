@@ -47,17 +47,6 @@ const takeBet = (payload) => {
   return model;
 };
 
-const finishGame = (payload) => {
-  const { result, gameId } = payload;
-
-  const model = {
-    result: toDecimal(result),
-    index: toDecimal(gameId),
-  };
-
-  return model;
-};
-
 const playerWin = (payload) => {
   const { amount, tokenId, betId, gameId } = payload;
 
@@ -96,7 +85,6 @@ module.exports = {
   params,
   bet,
   takeBet,
-  finishGame,
   playerWin,
   changeMinMaxBet,
   changeDuration,
