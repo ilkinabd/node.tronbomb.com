@@ -16,14 +16,14 @@ const filterEvents = (payload, model, from, to) => {
 
 // Getters
 
-const getGame = async(req, res) => {
+const getBet = async(req, res) => {
   const { id } = req.query;
 
-  const payload = await utils.get.game(id);
+  const payload = await utils.get.bet(id);
   if (!payload) return res.status(500).json(resError(73500));
-  const game = models.game(payload);
+  const bet = models.bet(payload);
 
-  res.json(resSuccess({ game }));
+  res.json(resSuccess({ bet }));
 };
 
 const getGames = async(req, res) => {
@@ -196,7 +196,7 @@ const changeParams = async(req, res) => {
 
 module.exports = {
   get: {
-    game: getGame,
+    bet: getBet,
     games: getGames,
     gameBets: getGameBets,
     params: getParams,

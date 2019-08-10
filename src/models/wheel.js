@@ -40,13 +40,14 @@ const params = (payload) => {
 };
 
 const bet = (payload) => {
-  const { player, amount, tokenId, sector } = payload;
+  const { player, amount, tokenId, sector, finishBlock } = payload;
 
   const model = {
     player: toBase58(player),
     amount: toAmount(tokenId, amount),
     tokenId,
     sector,
+    finishBlock: toDecimal(finishBlock),
   };
 
   return model;
