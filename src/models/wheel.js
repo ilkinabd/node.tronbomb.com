@@ -46,15 +46,15 @@ const initGame = (payload) => {
 };
 
 const takeBet = (payload) => {
-  const { player, amount, sector, tokenId, betId, gameId } = payload;
+  const { player, amount, tokenId, sector, finishBlock, betId } = payload;
 
   const model = {
     wallet: toBase58(player),
     bet: toAmount(tokenId, amount),
     tokenId: toDecimal(tokenId),
     sector: toDecimal(sector),
-    betId: toDecimal(betId),
-    index: toDecimal(gameId),
+    finishBlock: toDecimal(finishBlock),
+    index: toDecimal(betId),
   };
 
   return model;
