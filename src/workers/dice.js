@@ -14,19 +14,6 @@ const takePart = async(blockNumber, chanel) => {
   }
 };
 
-const finish = async(blockNumber, chanel) => {
-  const payload = await utils.events.finishGame(blockNumber);
-  if (!payload) {
-    setInterval(() => finish(blockNumber, chanel), 1000);
-    return;
-  }
-
-  for (const item of payload) {
-    const event = models.finishGame(item.result);
-    chanel.emit('dice-finish', event);
-  }
-};
-
 const reward = async(blockNumber, chanel) => {
   const payload = await utils.events.playersWin(blockNumber);
   if (!payload) {
@@ -42,6 +29,5 @@ const reward = async(blockNumber, chanel) => {
 
 module.exports = async(number, chanel) => {
   takePart(number, chanel);
-  finish(number, chanel);
   reward(number, chanel);
 };
