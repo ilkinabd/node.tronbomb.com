@@ -26,20 +26,20 @@ const getBet = async(req, res) => {
   res.json(resSuccess({ bet }));
 };
 
-const getGames = async(req, res) => {
+const getBets = async(req, res) => {
   const { from, to } = req.query;
 
-  const totalGames = toDecimal(await utils.get.totalGames());
-  if (!totalGames) return res.status(500).json(resError(73500));
+  const totalBets = toDecimal(await utils.get.totalBets());
+  if (!totalBets) return res.status(500).json(resError(73500));
 
   const first = from || 0;
-  const last = Math.min(totalGames, to || totalGames);
+  const last = Math.min(totalBets, to || totalBets);
 
   const requests = [];
-  for (let id = first; id < last; id++) requests.push(utils.get.game(id));
+  for (let id = first; id < last; id++) requests.push(utils.get.bet(id));
   const payload = await Promise.all(requests).catch(console.error);
 
-  const games = Array.from(payload, item => models.game(item));
+  const games = Array.from(payload, item => models.bet(item));
 
   res.json(resSuccess({ games }));
 };
@@ -197,7 +197,7 @@ const changeParams = async(req, res) => {
 module.exports = {
   get: {
     bet: getBet,
-    games: getGames,
+    bets: getBets,
     gameBets: getGameBets,
     params: getParams,
     rng: getRNG,

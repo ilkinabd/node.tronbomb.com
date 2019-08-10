@@ -13,7 +13,7 @@ const contract = async() => tronWeb.contract().at(await address);
 module.exports = {
   get: {
     bet: call('bets', contract),
-    totalGames: call('totalGames', contract),
+    totalBets: call('totalBets', contract),
     gameBet: call('getGameBet', contract),
     portal: call('portal', contract),
     minBet: call('minBet', contract),

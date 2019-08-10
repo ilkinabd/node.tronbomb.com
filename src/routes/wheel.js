@@ -10,8 +10,8 @@ const validate = require('@middleware/validate');
 router.route('/get/bet')
   .get(server, validate('id', true), controller.get.bet);
 
-router.route('/get/games')
-  .get(server, validate('fromTo', true), controller.get.games);
+router.route('/get/bets')
+  .get(server, validate('fromTo', true), controller.get.bets);
 
 router.route('/get/game_bets')
   .get(server, validate('id', true), controller.get.gameBets);
