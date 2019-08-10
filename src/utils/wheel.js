@@ -31,7 +31,6 @@ module.exports = {
     finish: send('finish', contract),
   },
   events: {
-    initGame: events('InitGame', address),
     takeBet: events('TakeBet', address),
     finishGame: events('FinishGame', address),
     playerWin: events('PlayerWin', address),

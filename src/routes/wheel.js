@@ -37,9 +37,6 @@ router.route('/func/finish')
 
 // Events
 
-router.route('/events/init_game')
-  .get(server, validate('fromTo', true), controller.events.initGame);
-
 router.route('/events/take_bet')
   .get(server, validate('fromTo', true), controller.events.takeBet);
 

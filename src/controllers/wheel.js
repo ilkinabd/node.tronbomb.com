@@ -111,17 +111,6 @@ const finish = async(_req, res) => {
 
 // Events
 
-const initGame = async(req, res) => {
-  const { from, to } = req.query;
-
-  const payload = await utils.events.initGame();
-  if (!payload) return res.status(500).json(resError(73500));
-
-  const events = filterEvents(payload, models.initGame, from, to);
-
-  res.json(resSuccess({ events }));
-};
-
 const takeBet = async(req, res) => {
   const { from, to } = req.query;
 
@@ -186,7 +175,6 @@ module.exports = {
     finish,
   },
   events: {
-    initGame,
     takeBet,
     finishGame,
     playerWin,
