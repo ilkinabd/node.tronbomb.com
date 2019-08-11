@@ -16,49 +16,32 @@ const filterEvents = (payload, model, from, to) => {
 
 // Getters
 
-const getGame = async(req, res) => {
+const getBet = async(req, res) => {
   const { id } = req.query;
 
-  const payload = await utils.get.game(id);
+  const payload = await utils.get.bet(id);
   if (!payload) return res.status(500).json(resError(73500));
-  const game = models.game(payload);
+  const bet = models.bet(payload);
 
-  res.json(resSuccess({ game }));
+  res.json(resSuccess({ bet }));
 };
 
-const getGames = async(req, res) => {
+const getBets = async(req, res) => {
   const { from, to } = req.query;
 
-  const totalGames = toDecimal(await utils.get.totalGames());
-  if (!totalGames) return res.status(500).json(resError(73500));
+  const totalBets = toDecimal(await utils.get.totalBets());
+  if (!totalBets) return res.status(500).json(resError(73500));
 
   const first = from || 0;
-  const last = Math.min(totalGames, to || totalGames);
+  const last = Math.min(totalBets, to || totalBets);
 
   const requests = [];
-  for (let id = first; id < last; id++) requests.push(utils.get.game(id));
+  for (let id = first; id < last; id++) requests.push(utils.get.bet(id));
   const payload = await Promise.all(requests).catch(console.error);
 
-  const games = Array.from(payload, item => models.game(item));
+  const games = Array.from(payload, item => models.bet(item));
 
   res.json(resSuccess({ games }));
-};
-
-const getGameBets = async(req, res) => {
-  const { id } = req.query;
-
-  const betsCount = (await utils.get.game(id)).betsCount;
-  if (!betsCount) return res.status(500).json(resError(73500));
-
-  const requests = [];
-  for (let betId = 0; betId < betsCount; betId++) {
-    requests.push(utils.get.gameBet(betId, id));
-  }
-  const payload = await Promise.all(requests).catch(console.error);
-
-  const bets = Array.from(payload, item => models.bet(item));
-
-  res.json(resSuccess({ bets }));
 };
 
 const getParams = async(_req, res) => {
@@ -66,8 +49,12 @@ const getParams = async(_req, res) => {
   const minBet = await utils.get.minBet();
   const maxBet = await utils.get.maxBet();
   const duration = await utils.get.duration();
+  const startBlock = await utils.get.startBlock();
+  const processBets = await utils.get.processBets();
 
-  const params = models.params({ portal, duration, minBet, maxBet });
+  const params = models.params({
+    portal, duration, minBet, maxBet, startBlock, processBets
+  });
 
   res.json(resSuccess({ params }));
 };
@@ -115,36 +102,14 @@ const setDuration = async(req, res) => {
 
 // Functions
 
-const init = async(_req, res) => {
-  const result = await utils.func.init();
-  if (!result) return res.status(500).json(resError(73500));
-
-  result.gameId = toDecimal(result.gameId);
-
-  res.json(resSuccess({ result }));
-};
-
-const finish = async(req, res) => {
-  const { id } = req.body;
-
-  const result = await utils.func.finish(id);
+const finish = async(_req, res) => {
+  const result = await utils.func.finish();
   if (!result) return res.status(500).json(resError(73500));
 
   res.json(resSuccess());
 };
 
 // Events
-
-const initGame = async(req, res) => {
-  const { from, to } = req.query;
-
-  const payload = await utils.events.initGame();
-  if (!payload) return res.status(500).json(resError(73500));
-
-  const events = filterEvents(payload, models.initGame, from, to);
-
-  res.json(resSuccess({ events }));
-};
 
 const takeBet = async(req, res) => {
   const { from, to } = req.query;
@@ -153,17 +118,6 @@ const takeBet = async(req, res) => {
   if (!payload) return res.status(500).json(resError(73500));
 
   const events = filterEvents(payload, models.takeBet, from, to);
-
-  res.json(resSuccess({ events }));
-};
-
-const finishGame = async(req, res) => {
-  const { from, to } = req.query;
-
-  const payload = await utils.events.finishGame();
-  if (!payload) return res.status(500).json(resError(73500));
-
-  const events = filterEvents(payload, models.finishGame, from, to);
 
   res.json(resSuccess({ events }));
 };
@@ -196,9 +150,8 @@ const changeParams = async(req, res) => {
 
 module.exports = {
   get: {
-    game: getGame,
-    games: getGames,
-    gameBets: getGameBets,
+    bet: getBet,
+    bets: getBets,
     params: getParams,
     rng: getRNG,
   },
@@ -208,13 +161,10 @@ module.exports = {
     duration: setDuration
   },
   func: {
-    init,
     finish,
   },
   events: {
-    initGame,
     takeBet,
-    finishGame,
     playerWin,
     changeParams,
   },

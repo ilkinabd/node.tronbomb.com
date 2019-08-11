@@ -1,5 +1,5 @@
 const utils = require('@utils/withdraw');
-const { sendTRX, isAddress } = require('@utils/tron');
+const { sendTRX, isAddress, getBlock } = require('@utils/tron');
 const models = require('@models/tools');
 const { resSuccess, resError } = require('@utils/res-builder');
 
@@ -12,6 +12,19 @@ const filterEvents = (payload, model, from, to) => {
   });
 
   return events;
+};
+
+// Getters
+
+const block = async(req, res) => {
+  const { id } = req.query;
+
+  try {
+    const hash = (await getBlock(id)).blockID;
+    res.json(resSuccess({ number: id, hash }));
+  } catch {
+    return res.status(500).json(resError(73500));
+  }
 };
 
 // Functions
@@ -51,6 +64,9 @@ const operation = async(req, res) => {
 };
 
 module.exports = {
+  get: {
+    block,
+  },
   func: {
     request,
     withdraw,

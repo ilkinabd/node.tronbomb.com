@@ -12,13 +12,14 @@ const contract = async() => tronWeb.contract().at(await address);
 
 module.exports = {
   get: {
-    game: call('games', contract),
-    totalGames: call('totalGames', contract),
-    gameBet: call('getGameBet', contract),
+    bet: call('bets', contract),
+    totalBets: call('totalBets', contract),
     portal: call('portal', contract),
     minBet: call('minBet', contract),
     maxBet: call('maxBet', contract),
     duration: call('gameDuration', contract),
+    startBlock: call('startBlock', contract),
+    processBets: call('processBets', contract),
     rng: call('wheelRNG', contract),
   },
   set: {
@@ -27,13 +28,10 @@ module.exports = {
     duration: send('setGameDuration', contract),
   },
   func: {
-    init: send('initGame', contract),
-    finish: send('finishGame', contract),
+    finish: send('finish', contract),
   },
   events: {
-    initGame: events('InitGame', address),
     takeBet: events('TakeBet', address),
-    finishGame: events('FinishGame', address),
     playerWin: events('PlayerWin', address),
     changeMinMaxBet: events('ChangeMinMaxBet', address),
     changeDuration: events('ChangeGameDuration', address),

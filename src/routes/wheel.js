@@ -7,14 +7,11 @@ const validate = require('@middleware/validate');
 
 // Getters
 
-router.route('/get/game')
-  .get(server, validate('id', true), controller.get.game);
+router.route('/get/bet')
+  .get(server, validate('id', true), controller.get.bet);
 
-router.route('/get/games')
-  .get(server, validate('fromTo', true), controller.get.games);
-
-router.route('/get/game_bets')
-  .get(server, validate('id', true), controller.get.gameBets);
+router.route('/get/bets')
+  .get(server, validate('fromTo', true), controller.get.bets);
 
 router.route('/get/params')
   .get(server, controller.get.params);
@@ -35,22 +32,13 @@ router.route('/set/duration')
 
 // Functions
 
-router.route('/func/init')
-  .post(server, controller.func.init);
-
 router.route('/func/finish')
-  .post(server, validate('id', false), controller.func.finish);
+  .post(server, controller.func.finish);
 
 // Events
 
-router.route('/events/init_game')
-  .get(server, validate('fromTo', true), controller.events.initGame);
-
 router.route('/events/take_bet')
   .get(server, validate('fromTo', true), controller.events.takeBet);
-
-router.route('/events/finish_game')
-  .get(server, validate('fromTo', true), controller.events.finishGame);
 
 router.route('/events/player_win')
   .get(server, validate('fromTo', true), controller.events.playerWin);

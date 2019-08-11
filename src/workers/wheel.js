@@ -1,25 +1,9 @@
 const utils = require('@utils/wheel');
 const models = require('@models/wheel');
 
-const start = async(blockNumber, chanel) => {
-  const payload = await utils.events.initGame(blockNumber);
-  if (!payload) {
-    setInterval(() => start(blockNumber, chanel), 1000);
-    return;
-  }
-
-  for (const item of payload) {
-    const event = models.initGame(item.result);
-    chanel.emit('wheel-start', event);
-  }
-};
-
 const takePart = async(blockNumber, chanel) => {
   const payload = await utils.events.takeBet(blockNumber);
-  if (!payload) {
-    setInterval(() => takePart(blockNumber, chanel), 1000);
-    return;
-  }
+  if (!payload) return setTimeout(() => takePart(blockNumber, chanel), 1000);
 
   for (const item of payload) {
     const event = models.takeBet(item.result);
@@ -27,25 +11,9 @@ const takePart = async(blockNumber, chanel) => {
   }
 };
 
-const finish = async(blockNumber, chanel) => {
-  const payload = await utils.events.finishGame(blockNumber);
-  if (!payload) {
-    setInterval(() => finish(blockNumber, chanel), 1000);
-    return;
-  }
-
-  for (const item of payload) {
-    const event = models.finishGame(item.result);
-    chanel.emit('wheel-finish', event);
-  }
-};
-
 const reward = async(blockNumber, chanel) => {
   const payload = await utils.events.playerWin(blockNumber);
-  if (!payload) {
-    setInterval(() => reward(blockNumber, chanel), 1000);
-    return;
-  }
+  if (!payload) return setTimeout(() => reward(blockNumber, chanel), 1000);
 
   for (const item of payload) {
     const event = models.playerWin(item.result);
@@ -54,8 +22,6 @@ const reward = async(blockNumber, chanel) => {
 };
 
 module.exports = (number, chanel) => {
-  start(number, chanel);
   takePart(number, chanel);
-  finish(number, chanel);
   reward(number, chanel);
 };
