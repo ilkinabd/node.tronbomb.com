@@ -1,7 +1,13 @@
-const { toTRX } = require('@utils/tron');
+const { toTRX, toDecimal } = require('@utils/tron');
 
 const templates = {
-  amount: toTRX
+  amount: toTRX,
+  name: (value) => (value),
+  symbol: (value) => (value),
+  decimal: toDecimal,
+  totalSupply: (value) => (value / 10 ** 6),
+  mintingFinished: (value) => (value),
+  totalBurned: (value) => (value / 10 ** 6),
 };
 
 const modelBuilder = (payload, keys) => {
@@ -13,4 +19,7 @@ const modelBuilder = (payload, keys) => {
 
 module.exports = {
   balance: (payload) => modelBuilder(payload, ['amount']),
+  mainParams: (payload) => modelBuilder(payload, [
+    'name', 'symbol', 'decimal', 'totalSupply', 'mintingFinished', 'totalBurned'
+  ]),
 };

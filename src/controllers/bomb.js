@@ -15,8 +15,26 @@ const balanceOf = async(req, res) => {
   successRes(res, model);
 };
 
+const mainParams = async(_req, res) => {
+  const requests = [];
+  const params = [
+    'name', 'symbol', 'decimal', 'totalSupply', 'mintingFinished', 'totalBurned'
+  ];
+
+  for (const param of params) requests.push(utils.get[param]());
+  const results = await Promise.all(requests).catch(console.error);
+  if (!results) return errorRes(res, 500, 73500);
+
+  const payload = {};
+  for (const i in params) payload[params[i]] = results[i];
+  const model = models.mainParams(payload);
+
+  successRes(res, model);
+};
+
 module.exports = {
   get: {
     balanceOf,
+    mainParams,
   },
 };
