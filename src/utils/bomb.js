@@ -13,6 +13,7 @@ const contract = async() => tronWeb.contract().at(await address);
 module.exports = {
   get: {
     balanceOf: call('balanceOf', contract),
+    allowance: call('allowance', contract),
     name: call('NAME', contract),
     symbol: call('SYMBOL', contract),
     decimal: call('DECIMAL', contract),

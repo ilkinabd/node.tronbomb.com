@@ -10,6 +10,9 @@ const validate = require('@middleware/validate');
 router.route('/get/balanceOf')
   .get(server, validate('address'), controller.get.balanceOf);
 
+router.route('/get/allowance')
+  .get(server, validate('addressSpender'), controller.get.allowance);
+
 router.route('/get/main_params')
   .get(server, controller.get.mainParams);
 

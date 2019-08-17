@@ -10,7 +10,7 @@ const balanceOf = async(req, res) => {
 
   const payload = await utils.get.balanceOf(address);
   if (!payload) return errorRes(res, 500, 73500);
-  const model = models.balance(payload);
+  const model = models.amount(payload);
 
   successRes(res, model);
 };
@@ -32,9 +32,23 @@ const mainParams = async(_req, res) => {
   successRes(res, model);
 };
 
+const allowance = async(req, res) => {
+  const { address, spender } = req.query;
+
+  if (!isAddress(address)) return errorRes(res, 403, 73403);
+  if (!isAddress(spender)) return errorRes(res, 403, 73403);
+
+  const payload = await utils.get.allowance(address, spender);
+  if (!payload) return errorRes(res, 500, 73500);
+  const model = models.amount(payload);
+
+  successRes(res, model);
+};
+
 module.exports = {
   get: {
     balanceOf,
     mainParams,
+    allowance,
   },
 };

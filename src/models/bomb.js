@@ -18,7 +18,7 @@ const modelBuilder = (payload, keys) => {
 };
 
 module.exports = {
-  balance: (payload) => modelBuilder(payload, ['amount']),
+  amount: (payload) => modelBuilder(payload, ['amount']),
   mainParams: (payload) => modelBuilder(payload, [
     'name', 'symbol', 'decimal', 'totalSupply', 'mintingFinished', 'totalBurned'
   ]),
