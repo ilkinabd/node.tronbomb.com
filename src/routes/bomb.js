@@ -87,4 +87,8 @@ router.route('/events/freeze')
 router.route('/events/freeze_again')
   .get(server, validate('events'), controller.events.freezeAgain);
 
+
+router.route('/events/mint')
+  .get(server, validate('events'), controller.events.mint);
+
 module.exports = router;

@@ -48,7 +48,10 @@ module.exports = {
   approvalEvent: (payload) => modelBuilder(payload, [
     'amount', 'wallet', 'spender'
   ]),
-  freezeEvents: (payload) => modelBuilder(payload, [
+  freezeEvent: (payload) => modelBuilder(payload, [
     'amount', 'finishTime', 'wallet'
+  ]),
+  mintEvent: (payload) => modelBuilder(payload, [
+    'amount', 'to'
   ]),
 };

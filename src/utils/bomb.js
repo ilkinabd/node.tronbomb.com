@@ -51,5 +51,6 @@ module.exports = {
     approval: events('Approval', address),
     freeze: events('Freeze', address),
     freezeAgain: events('FreezeAgain', address),
+    mint: events('Mint', address),
   },
 };
