@@ -78,4 +78,7 @@ router.route('/events/transfer')
 router.route('/events/burn')
   .get(server, validate('events'), controller.events.burn);
 
+router.route('/events/approval')
+  .get(server, validate('events'), controller.events.approval);
+
 module.exports = router;

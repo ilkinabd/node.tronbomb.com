@@ -16,6 +16,8 @@ const templates = {
   stakingHodler: toBase58,
   from: toBase58,
   to: toBase58,
+  wallet: toBase58,
+  spender: toBase58,
 };
 
 const modelBuilder = (payload, keys) => {
@@ -41,5 +43,8 @@ module.exports = {
   ]),
   burnEvent: (payload) => modelBuilder(payload, [
     'amount', 'from'
+  ]),
+  approvalEvent: (payload) => modelBuilder(payload, [
+    'amount', 'wallet', 'spender'
   ]),
 };

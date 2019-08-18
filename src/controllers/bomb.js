@@ -262,6 +262,16 @@ const burnEvent = async(req, res) => {
   successRes(res, { events });
 };
 
+const approvalEvent = async(req, res) => {
+  const { from, to } = req.query;
+
+  const payload = await utils.events.approval();
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.approvalEvent, from, to);
+
+  successRes(res, { events });
+};
+
 module.exports = {
   get: {
     balanceOf,
@@ -291,5 +301,6 @@ module.exports = {
   events: {
     transfer: transferEvents,
     burn: burnEvent,
+    approval: approvalEvent,
   },
 };

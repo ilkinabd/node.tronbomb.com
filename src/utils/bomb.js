@@ -48,5 +48,6 @@ module.exports = {
   events: {
     transfer: events('Transfer', address),
     burn: events('Burn', address),
+    approval: events('Approval', address),
   },
 };
