@@ -12,6 +12,7 @@ const contract = async() => tronWeb.contract().at(await address);
 
 module.exports = {
   get: {
+    address: () => address,
     balance: async() => balance(await address),
     mainStatus: call('mainStatus', contract),
     owner: call('owner', contract),

@@ -1,11 +1,15 @@
-const { toDecimal, toTRX, toBase58, isNullAddress } = require('@utils/tron');
+const { toDecimal, toTRX, toBase58 } = require('@utils/tron');
 
 const templates = {
   address: toBase58,
-  index: (value) => (value),
-  status: (value) => (value),
+  owner: toBase58,
   minBet: (value) => (value / 10 ** 6),
   maxBet: (value) => (value / 10 ** 6),
+  balanceBOMB: (value) => (value / 10 ** 6),
+  index: (value) => (value),
+  status: (value) => (value),
+  mainStatus: (value) => (value),
+  balanceTRX: (value) => (value),
 };
 
 const modelBuilder = (payload, keys) => {
@@ -14,8 +18,6 @@ const modelBuilder = (payload, keys) => {
 
   return model;
 };
-
-const address = payload => (isNullAddress(payload) ? null : toBase58(payload));
 
 const toAmount = (tokenId, amount) =>
   ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
@@ -79,7 +81,9 @@ module.exports = {
   tokenContract: (payload) => modelBuilder(payload, [
     'address', 'minBet', 'maxBet', 'index'
   ]),
-  address,
+  params: (payload) => modelBuilder(payload, [
+    'owner', 'mainStatus', 'balanceTRX', 'balanceBOMB', 'address'
+  ]),
   takeTRXBet,
   mainStatus,
   withdraw,

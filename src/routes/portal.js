@@ -13,14 +13,8 @@ router.route('/get/games')
 router.route('/get/tokens')
   .get(server, controller.get.tokens);
 
-router.route('/get/balance')
-  .get(server, controller.get.balance);
-
-router.route('/get/main_status')
-  .get(server, controller.get.mainStatus);
-
-router.route('/get/owner')
-  .get(server, controller.get.owner);
+router.route('/get/params')
+  .get(server, controller.get.params);
 
 // Setters
 

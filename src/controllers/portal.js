@@ -1,4 +1,5 @@
 const utils = require('@utils/portal');
+const bombUtils = require('@utils/bomb');
 const models = require('@models/portal');
 const { toSun, isAddress, isNullAddress } = require('@utils/tron');
 const {
@@ -56,27 +57,23 @@ const tokens = async(_req, res) => {
   successRes(res, { tokens });
 };
 
-const balance = async(_req, res) => {
-  const balance = await utils.get.balance();
-  if (balance === undefined) return res.status(500).json(resError(73500));
+const params = async(_req, res) => {
+  const requests = [];
+  const params = ['mainStatus', 'owner', 'address'];
+  for (const param of params) requests.push(utils.get[param]());
 
-  res.json(resSuccess({ balance }));
-};
+  const results = await Promise.all(requests).catch(console.error);
+  if (!results) return errorRes(res, 500, 73500);
 
-const getMainStatus = async(_req, res) => {
-  const mainStatus = await utils.get.mainStatus();
-  if (mainStatus === undefined) return res.status(500).json(resError(73500));
+  const payload = {};
+  for (const i in params) payload[params[i]] = results[i];
 
-  res.json(resSuccess({ mainStatus }));
-};
+  payload.balanceTRX = await utils.get.balance(results[2]);
+  payload.balanceBOMB = (await bombUtils.get.balanceOf(results[2])).amount;
 
-const getOwner = async(_req, res) => {
-  const payload = await utils.get.owner();
-  if (!payload) return res.status(500).json(resError(73500));
+  const model = models.params(payload);
 
-  const owner = models.address(payload);
-
-  res.json(resSuccess({ owner }));
+  successRes(res, model);
 };
 
 // Setters
@@ -211,9 +208,7 @@ module.exports = {
   get: {
     games,
     tokens,
-    balance,
-    mainStatus: getMainStatus,
-    owner: getOwner,
+    params,
   },
   set: {
     mainStatus: setMainStatus,
