@@ -91,7 +91,7 @@ const setSaleAgent = async(req, res) => {
   if (!isAddress(address)) return errorRes(res, 403, 73403);
 
   const result = await utils.set.setSaleAgent(address);
-  if (!result) return errorRes(res, 500, 73500);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
 
   successRes(res);
 };
