@@ -34,6 +34,7 @@ module.exports = {
   },
   func: {
     transfer: send('transfer', contract),
+    transferFrom: send('transferFrom', contract),
     approve: send('approve', contract),
     increaseApproval: send('increaseApproval', contract),
     decreaseApproval: send('decreaseApproval', contract),

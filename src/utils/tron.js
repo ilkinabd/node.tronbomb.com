@@ -27,9 +27,9 @@ const send = (method, contract) => async(...params) => {
     shouldPollResponse: true,
   }).catch((payload) => {
     console.error(payload);
-    const contractResult = payload.output.contractResult[0];
-    const error = toAscii(contractResult.slice(136, -10));
-    return { result: null, error };
+    const output = payload.output.contractResult[0];
+    const error = (output === '') ? 'FAILED.' : toAscii(output.slice(136, -10));
+    return { error };
   });
 
   return result;

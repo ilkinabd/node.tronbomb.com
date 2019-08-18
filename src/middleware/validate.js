@@ -82,6 +82,11 @@ const schemas = {
     to: templates.address.required(),
     amount: templates.number.required(),
   }),
+  transferFrom: Joi.object().keys({
+    from: templates.address.required(),
+    to: templates.address.required(),
+    amount: templates.number.required(),
+  }),
   approve: Joi.object().keys({
     spender: templates.address.required(),
     amount: templates.number.required(),

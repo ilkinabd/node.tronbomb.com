@@ -129,6 +129,16 @@ const transfer = async(req, res) => {
   successRes(res);
 };
 
+const transferFrom = async(req, res) => {
+  const { from, to } = req.body;
+  const amount = req.body.amount * 10 ** 6;
+
+  const result = await utils.func.transferFrom(from, to, amount);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
 const approve = async(req, res) => {
   const { spender } = req.body;
   const amount = req.body.amount * 10 ** 6;
@@ -174,6 +184,7 @@ module.exports = {
   },
   func: {
     transfer,
+    transferFrom,
     approve,
     increaseApproval,
     decreaseApproval,
