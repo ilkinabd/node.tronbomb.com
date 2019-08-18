@@ -7,6 +7,9 @@ const validate = require('@middleware/validate');
 
 // Getters
 
+router.route('/get/games')
+  .get(server, controller.get.games);
+
 router.route('/get/balance')
   .get(server, controller.get.balance);
 
@@ -18,12 +21,6 @@ router.route('/get/owner')
 
 router.route('/get/token')
   .get(server, validate('id', true), controller.get.token);
-
-router.route('/get/game')
-  .get(server, validate('id', true), controller.get.game);
-
-router.route('/get/game_status')
-  .get(server, validate('address', true), controller.get.gameStatus);
 
 // Setters
 

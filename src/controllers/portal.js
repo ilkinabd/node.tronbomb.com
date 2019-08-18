@@ -1,7 +1,9 @@
 const utils = require('@utils/portal');
 const models = require('@models/portal');
-const { toSun, isAddress } = require('@utils/tron');
-const { resSuccess, resError } = require('@utils/res-builder');
+const { toSun, isAddress, isNullAddress } = require('@utils/tron');
+const {
+  resSuccess, resError, successRes, errorRes
+} = require('@utils/res-builder');
 
 const filterEvents = (payload, model, from, to) => {
   const events = payload.filter(item => (
@@ -15,6 +17,25 @@ const filterEvents = (payload, model, from, to) => {
 };
 
 // Getters
+
+const games = async(_req, res) => {
+  const requests = [];
+  for (let i = 0; i < 10; i++) requests.push(utils.get.game(i));
+
+  const payload = await Promise.all(requests).catch(console.error);
+  if (!payload) return errorRes(res, 500, 73500);
+
+  const games = Array
+    .from(payload, (address, index) => ({ address, index }))
+    .filter(game => !isNullAddress(game.address));
+
+  for (const i in games) {
+    games[i].status = await utils.get.gameStatuses(games[i].address);
+    games[i] = models.contractParams(games[i]);
+  }
+
+  successRes(res, { games });
+};
 
 const balance = async(_req, res) => {
   const balance = await utils.get.balance();
@@ -48,28 +69,6 @@ const getToken = async(req, res) => {
   const token = models.address(payload);
 
   res.json(resSuccess({ token }));
-};
-
-const getGame = async(req, res) => {
-  const { id } = req.query;
-
-  const payload = await utils.get.game(id);
-  if (!payload) return res.status(500).json(resError(73500));
-
-  const game = models.address(payload);
-
-  res.json(resSuccess({ game }));
-};
-
-const getGameStatus = async(req, res) => {
-  const { address } = req.query;
-
-  if (!isAddress(address)) return res.status(422).json(resError(73402));
-
-  const gameStatus = await utils.get.gameStatus(address);
-  if (gameStatus === undefined) return res.status(500).json(resError(73500));
-
-  res.json(resSuccess({ gameStatus }));
 };
 
 // Setters
@@ -202,12 +201,11 @@ const rewardEvents = async(req, res) => {
 
 module.exports = {
   get: {
+    games,
     balance,
     mainStatus: getMainStatus,
     owner: getOwner,
     token: getToken,
-    game: getGame,
-    gameStatus: getGameStatus,
   },
   set: {
     mainStatus: setMainStatus,

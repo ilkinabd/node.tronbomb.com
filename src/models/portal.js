@@ -1,5 +1,18 @@
 const { toDecimal, toTRX, toBase58, isNullAddress } = require('@utils/tron');
 
+const templates = {
+  address: toBase58,
+  index: (value) => (value),
+  status: (value) => (value),
+};
+
+const modelBuilder = (payload, keys) => {
+  const model = {};
+  for (const key of keys) model[key] = templates[key](payload[key]);
+
+  return model;
+};
+
 const address = payload => (isNullAddress(payload) ? null : toBase58(payload));
 
 const toAmount = (tokenId, amount) =>
@@ -58,6 +71,9 @@ const reward = (payload) => {
 };
 
 module.exports = {
+  contractParams: (payload) => modelBuilder(payload, [
+    'address', 'index', 'status'
+  ]),
   address,
   takeTRXBet,
   mainStatus,

@@ -17,7 +17,7 @@ module.exports = {
     owner: call('owner', contract),
     token: call('tokens', contract),
     game: call('games', contract),
-    gameStatus: call('gamesStatuses', contract),
+    gameStatuses: call('gameStatuses', contract),
   },
   set: {
     mainStatus: send('setMainStatus', contract),
