@@ -78,6 +78,10 @@ const schemas = {
     period: templates.integer.required(),
     amount: templates.number.required(),
   }),
+  transfer: Joi.object().keys({
+    to: templates.address.required(),
+    amount: templates.number.required(),
+  }),
 };
 
 module.exports = (type, isQuery = true) => (req, res, next) => {

@@ -33,6 +33,7 @@ module.exports = {
     setStackingParams: send('setStackingParams', contract),
   },
   func: {
+    transfer: send('transfer', contract),
   },
   events: {
   },

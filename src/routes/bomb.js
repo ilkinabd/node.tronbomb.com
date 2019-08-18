@@ -2,7 +2,7 @@ const express = require('express');
 const router = new express.Router();
 
 const controller = require('@controllers/bomb');
-const { server } = require('@middleware/auth');
+const { server, admin } = require('@middleware/auth');
 const validate = require('@middleware/validate');
 
 // Getters
@@ -25,17 +25,20 @@ router.route('/get/stacking_params')
 // Setters
 
 router.route('/set/sale_agent')
-  .post(server, validate('address', false), controller.set.setSaleAgent);
+  .post(admin, validate('address', false), controller.set.setSaleAgent);
 
 router.route('/set/stacking_hodler')
-  .post(server, validate('address', false), controller.set.setStackingHodler);
+  .post(admin, validate('address', false), controller.set.setStackingHodler);
 
 router.route('/set/stacking_params').post(
-  server, validate('stackingParams', false),
+  admin, validate('stackingParams', false),
   controller.set.setStackingParams
 );
 
 // Functions
+
+router.route('/func/transfer')
+  .post(server, validate('transfer', false), controller.func.transfer);
 
 // Events
 
