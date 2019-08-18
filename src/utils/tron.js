@@ -28,7 +28,8 @@ const send = (method, contract) => async(...params) => {
   }).catch((payload) => {
     console.error(payload);
     const output = payload.output.contractResult[0];
-    const error = (output === '') ? 'FAILED.' : toAscii(output.slice(136, -10));
+    const message = output.slice(136, output.indexOf('2e') + 2);
+    const error = (!message) ? 'FAILED.' : toAscii(message);
     return { error };
   });
 

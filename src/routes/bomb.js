@@ -52,6 +52,12 @@ router.route('/func/increase_approval')
 router.route('/func/decrease_approval')
   .post(server, validate('approve', false), controller.func.decreaseApproval);
 
+router.route('/func/freeze')
+  .post(server, validate('stackingParams', false), controller.func.freeze);
+
+router.route('/func/freeze_again')
+  .post(server, validate('stackingParams', false), controller.func.freezeAgain);
+
 // Events
 
 module.exports = router;
