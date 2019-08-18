@@ -19,6 +19,9 @@ router.route('/get/main_params')
 router.route('/get/roles_params')
   .get(server, controller.get.rolesParams);
 
+router.route('/get/stacking_params')
+  .get(server, controller.get.stackingParams);
+
 // Setters
 
 // Functions

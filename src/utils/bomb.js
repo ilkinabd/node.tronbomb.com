@@ -23,6 +23,9 @@ module.exports = {
     owner: call('owner', contract),
     saleAgent: call('saleAgent', contract),
     newOwner: call('newOwner', contract),
+    minStackingPeriod: call('minStackingPeriod', contract),
+    minStackingAmount: call('minStackingAmount', contract),
+    stakingHodler: call('stakingHodler', contract),
   },
   set: {
   },

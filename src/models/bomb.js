@@ -1,7 +1,7 @@
-const { toTRX, toDecimal, isNullAddress, toBase58 } = require('@utils/tron');
+const { toDecimal, isNullAddress, toBase58 } = require('@utils/tron');
 
 const templates = {
-  amount: toTRX,
+  amount: (value) => (value / 10 ** 6),
   name: (value) => (value),
   symbol: (value) => (value),
   decimal: toDecimal,
@@ -11,6 +11,9 @@ const templates = {
   owner: toBase58,
   saleAgent: (value) => ((isNullAddress) ? null : toBase58(value)),
   newOwner: (value) => ((isNullAddress) ? null : toBase58(value)),
+  minStackingPeriod: (value) => toDecimal(value) / 3600,
+  minStackingAmount: (value) => (value / 10 ** 6),
+  stakingHodler: toBase58,
 };
 
 const modelBuilder = (payload, keys) => {
@@ -27,5 +30,8 @@ module.exports = {
   ]),
   rolesParams: (payload) => modelBuilder(payload, [
     'owner', 'saleAgent', 'newOwner'
+  ]),
+  stackingParams: (payload) => modelBuilder(payload, [
+    'minStackingPeriod', 'minStackingAmount', 'stakingHodler', 'amount'
   ]),
 };

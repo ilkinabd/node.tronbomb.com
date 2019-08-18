@@ -47,9 +47,7 @@ const mainParams = async(_req, res) => {
 
 const rolesParams = async(_req, res) => {
   const requests = [];
-  const params = [
-    'owner', 'saleAgent', 'newOwner'
-  ];
+  const params = ['owner', 'saleAgent', 'newOwner'];
 
   for (const param of params) requests.push(utils.get[param]());
   const results = await Promise.all(requests).catch(console.error);
@@ -62,11 +60,33 @@ const rolesParams = async(_req, res) => {
   successRes(res, model);
 };
 
+const stackingParams = async(_req, res) => {
+  const requests = [];
+  const params = [
+    'minStackingPeriod', 'minStackingAmount', 'stakingHodler'
+  ];
+
+  for (const param of params) requests.push(utils.get[param]());
+  const results = await Promise.all(requests).catch(console.error);
+  if (!results) return errorRes(res, 500, 73500);
+
+  const payload = {};
+  for (const i in params) payload[params[i]] = results[i];
+
+  const amount = (await utils.get.balanceOf(results[2])).amount;
+  payload.amount = amount;
+
+  const model = models.stackingParams(payload);
+
+  successRes(res, model);
+};
+
 module.exports = {
   get: {
     balanceOf,
     allowance,
     mainParams,
     rolesParams,
+    stackingParams,
   },
 };
