@@ -58,6 +58,12 @@ router.route('/func/freeze')
 router.route('/func/freeze_again')
   .post(server, validate('stackingParams', false), controller.func.freezeAgain);
 
+router.route('/func/mint')
+  .post(server, validate('transfer', false), controller.func.mint);
+
+router.route('/func/finish_minting')
+  .post(server, controller.func.finishMinting);
+
 // Events
 
 module.exports = router;

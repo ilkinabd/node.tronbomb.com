@@ -189,6 +189,23 @@ const freezeAgain = async(req, res) => {
   successRes(res);
 };
 
+const mint = async(req, res) => {
+  const { to } = req.body;
+  const amount = req.body.amount * 10 ** 6;
+
+  const result = await utils.func.mint(to, amount);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
+const finishMinting = async(_req, res) => {
+  const result = await utils.func.finishMinting();
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
 module.exports = {
   get: {
     balanceOf,
@@ -210,5 +227,7 @@ module.exports = {
     decreaseApproval,
     freeze,
     freezeAgain,
+    mint,
+    finishMinting,
   },
 };

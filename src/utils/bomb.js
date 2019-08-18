@@ -40,6 +40,8 @@ module.exports = {
     decreaseApproval: send('decreaseApproval', contract),
     freeze: send('freeze', contract),
     freezeAgain: send('freezeAgain', contract),
+    mint: send('mint', contract),
+    finishMinting: send('finishMinting', contract),
   },
   events: {
   },
