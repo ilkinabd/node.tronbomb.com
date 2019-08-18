@@ -117,6 +117,24 @@ const setStackingParams = async(req, res) => {
   successRes(res);
 };
 
+const transferOwnership = async(req, res) => {
+  const { address } = req.body;
+
+  if (!isAddress(address)) return errorRes(res, 403, 73403);
+
+  const result = await utils.set.transferOwnership(address);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
+const acceptOwnership = async(_req, res) => {
+  const result = await utils.set.acceptOwnership();
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
 // Functions
 
 const transfer = async(req, res) => {
@@ -218,6 +236,8 @@ module.exports = {
     setSaleAgent,
     setStackingHodler,
     setStackingParams,
+    transferOwnership,
+    acceptOwnership,
   },
   func: {
     transfer,

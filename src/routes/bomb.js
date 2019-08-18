@@ -35,6 +35,12 @@ router.route('/set/stacking_params').post(
   controller.set.setStackingParams
 );
 
+router.route('/set/transfer_ownership')
+  .post(admin, validate('address', false), controller.set.transferOwnership);
+
+router.route('/set/accept_ownership')
+  .post(admin, controller.set.acceptOwnership);
+
 // Functions
 
 router.route('/func/transfer')
@@ -62,7 +68,7 @@ router.route('/func/mint')
   .post(server, validate('transfer', false), controller.func.mint);
 
 router.route('/func/finish_minting')
-  .post(server, controller.func.finishMinting);
+  .post(admin, controller.func.finishMinting);
 
 // Events
 

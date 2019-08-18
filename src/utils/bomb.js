@@ -31,6 +31,8 @@ module.exports = {
     setSaleAgent: send('setSaleAgent', contract),
     setStackingHodler: send('setStackingHodler', contract),
     setStackingParams: send('setStackingParams', contract),
+    transferOwnership: send('transferOwnership', contract),
+    acceptOwnership: send('acceptOwnership', contract),
   },
   func: {
     transfer: send('transfer', contract),
