@@ -11,5 +11,5 @@ io.on('connection', ws);
 require('@workers/blocks')(io);
 
 server.listen(NODE_PORT, NODE_URL, () => {
-  console.info('Server started');
+  console.info(`Server started at ${NODE_URL}:${NODE_PORT}`);
 });
