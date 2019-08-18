@@ -18,6 +18,7 @@ const templates = {
   to: toBase58,
   wallet: toBase58,
   spender: toBase58,
+  finishTime: (value) => new Date(value * 1000),
 };
 
 const modelBuilder = (payload, keys) => {
@@ -46,5 +47,8 @@ module.exports = {
   ]),
   approvalEvent: (payload) => modelBuilder(payload, [
     'amount', 'wallet', 'spender'
+  ]),
+  freezeEvents: (payload) => modelBuilder(payload, [
+    'amount', 'finishTime', 'wallet'
   ]),
 };

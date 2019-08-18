@@ -272,6 +272,26 @@ const approvalEvent = async(req, res) => {
   successRes(res, { events });
 };
 
+const freezeEvents = async(req, res) => {
+  const { from, to } = req.query;
+
+  const payload = await utils.events.freeze();
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.freezeEvents, from, to);
+
+  successRes(res, { events });
+};
+
+const freezeAgainEvent = async(req, res) => {
+  const { from, to } = req.query;
+
+  const payload = await utils.events.freezeAgain();
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.freezeEvents, from, to);
+
+  successRes(res, { events });
+};
+
 module.exports = {
   get: {
     balanceOf,
@@ -302,5 +322,7 @@ module.exports = {
     transfer: transferEvents,
     burn: burnEvent,
     approval: approvalEvent,
+    freeze: freezeEvents,
+    freezeAgain: freezeAgainEvent,
   },
 };

@@ -49,5 +49,7 @@ module.exports = {
     transfer: events('Transfer', address),
     burn: events('Burn', address),
     approval: events('Approval', address),
+    freeze: events('Freeze', address),
+    freezeAgain: events('FreezeAgain', address),
   },
 };

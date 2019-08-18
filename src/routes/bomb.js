@@ -81,4 +81,10 @@ router.route('/events/burn')
 router.route('/events/approval')
   .get(server, validate('events'), controller.events.approval);
 
+router.route('/events/freeze')
+  .get(server, validate('events'), controller.events.freeze);
+
+router.route('/events/freeze_again')
+  .get(server, validate('events'), controller.events.freezeAgain);
+
 module.exports = router;
