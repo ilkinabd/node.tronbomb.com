@@ -87,8 +87,13 @@ router.route('/events/freeze')
 router.route('/events/freeze_again')
   .get(server, validate('events'), controller.events.freezeAgain);
 
-
 router.route('/events/mint')
   .get(server, validate('events'), controller.events.mint);
+
+router.route('/events/new_sale_agent')
+  .get(server, validate('events'), controller.events.newSaleAgent);
+
+router.route('/events/ownership_transferred')
+  .get(server, validate('events'), controller.events.ownershipTransferred);
 
 module.exports = router;

@@ -29,7 +29,9 @@ const modelBuilder = (payload, keys) => {
 };
 
 module.exports = {
-  amount: (payload) => modelBuilder(payload, ['amount']),
+  amount: (payload) => modelBuilder(payload, [
+    'amount'
+  ]),
   mainParams: (payload) => modelBuilder(payload, [
     'name', 'symbol', 'decimal', 'totalSupply', 'mintingFinished', 'totalBurned'
   ]),
@@ -53,5 +55,11 @@ module.exports = {
   ]),
   mintEvent: (payload) => modelBuilder(payload, [
     'amount', 'to'
+  ]),
+  newSaleAgentEvents: (payload) => modelBuilder(payload, [
+    'wallet'
+  ]),
+  ownershipEvents: (payload) => modelBuilder(payload, [
+    'from', 'to'
   ]),
 };

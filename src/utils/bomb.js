@@ -52,5 +52,7 @@ module.exports = {
     freeze: events('Freeze', address),
     freezeAgain: events('FreezeAgain', address),
     mint: events('Mint', address),
+    newSaleAgent: events('NewSaleAgent', address),
+    ownershipTransferred: events('OwnershipTransferred', address),
   },
 };

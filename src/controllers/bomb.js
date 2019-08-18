@@ -302,6 +302,26 @@ const mintEvents = async(req, res) => {
   successRes(res, { events });
 };
 
+const newSaleAgentEvents = async(req, res) => {
+  const { from, to } = req.query;
+
+  const payload = await utils.events.newSaleAgent();
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.newSaleAgentEvents, from, to);
+
+  successRes(res, { events });
+};
+
+const ownershipEvents = async(req, res) => {
+  const { from, to } = req.query;
+
+  const payload = await utils.events.ownershipTransferred();
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.ownershipEvents, from, to);
+
+  successRes(res, { events });
+};
+
 module.exports = {
   get: {
     balanceOf,
@@ -335,5 +355,7 @@ module.exports = {
     freeze: freezeEvents,
     freezeAgain: freezeAgainEvents,
     mint: mintEvents,
+    newSaleAgent: newSaleAgentEvents,
+    ownershipTransferred: ownershipEvents,
   },
 };
