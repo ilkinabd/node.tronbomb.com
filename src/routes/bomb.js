@@ -24,6 +24,9 @@ router.route('/get/stacking_params')
 
 // Setters
 
+router.route('/set/sale_agent')
+  .post(server, validate('address', false), controller.set.setSaleAgent);
+
 // Functions
 
 // Events

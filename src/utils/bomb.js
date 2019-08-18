@@ -3,7 +3,7 @@ const { PRIVATE_KEY, PROVIDER } = process.env;
 const TronWeb = require('tronweb');
 
 const db = require('@db');
-const { call } = require('@utils/tron');
+const { call, send } = require('@utils/tron');
 
 const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 
@@ -28,6 +28,7 @@ module.exports = {
     stakingHodler: call('stakingHodler', contract),
   },
   set: {
+    setSaleAgent: send('setSaleAgent', contract),
   },
   func: {
   },

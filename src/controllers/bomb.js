@@ -3,6 +3,8 @@ const models = require('@models/bomb');
 const { isAddress } = require('@utils/tron');
 const { successRes, errorRes } = require('@utils/res-builder');
 
+// Getters
+
 const balanceOf = async(req, res) => {
   const { address } = req.query;
 
@@ -81,6 +83,19 @@ const stackingParams = async(_req, res) => {
   successRes(res, model);
 };
 
+// Setters
+
+const setSaleAgent = async(req, res) => {
+  const { address } = req.body;
+
+  if (!isAddress(address)) return errorRes(res, 403, 73403);
+
+  const result = await utils.set.setSaleAgent(address);
+  if (!result) return errorRes(res, 500, 73500);
+
+  successRes(res);
+};
+
 module.exports = {
   get: {
     balanceOf,
@@ -89,4 +104,7 @@ module.exports = {
     rolesParams,
     stackingParams,
   },
+  set: {
+    setSaleAgent,
+  }
 };
