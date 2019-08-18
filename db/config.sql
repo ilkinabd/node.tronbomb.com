@@ -16,7 +16,7 @@ VALUES
   (DEFAULT, 'portal', 'TTF2udpEwuFtjd8YZjZm4mGCKfwc6KJsXY', NULL, 'Portal'),
   (DEFAULT, 'dice', 'TUoYPCJSPKuzvDmhGzSWPTokDKUfJbLtWi', NULL, 'Dice'),
   (DEFAULT, 'wheel', 'TE4Cerczq6YqNRpnLbamRy8Rw6eNZdp1Tr', NULL, 'Wheel'),
-  (DEFAULT, 'token', 'TAchv6odQC1PFPApdBJ1tNQ4uKTv2Yv4es', NULL, 'BOMB'),
+  (DEFAULT, 'token', 'TNDAPrBwFtLzdw6vgPDwYquyd56NypVKHR', NULL, 'BOMB'),
   (DEFAULT, 'withdraw', 'TFG1gZHC92QTYu1mLCGQA75xdQiq75n16Z', NULL, 'Withdraw');
 
 CREATE TABLE "sockets" (

@@ -1,11 +1,11 @@
 # Node
-v0.8.0 Aug 11, 2019
+v0.8.1 Aug 18, 2019
 
 Microservice for **TronBomb** smart contracts.
 
 ## Get Started
 
-0. Install **node** v10+, **yarn** and **postgres** 10+.
+0. Install **node** v10+, **yarn**, **pm2** and **postgres** 10+.
 1. Create database from config [db/config.sql](./db/config.sql).
 2. Create **process.yml** config file. Read **Config** part.
 3. Install packages and start.
