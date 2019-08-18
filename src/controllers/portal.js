@@ -102,25 +102,25 @@ const setToken = async(req, res) => {
 };
 
 const setGame = async(req, res) => {
-  const { id, address } = req.body;
+  const { index, address } = req.body;
 
-  if (!isAddress(address)) return res.status(422).json(resError(73402));
+  if (!isAddress(address)) return errorRes(res, 403, 73403);
 
-  const result = await utils.set.game(id, address);
-  if (!result) return res.status(500).json(resError(73500));
+  const result = await utils.set.game(index, address);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
 
-  res.json(resSuccess());
+  successRes(res);
 };
 
 const setGameStatus = async(req, res) => {
   const { address, status } = req.body;
 
-  if (!isAddress(address)) return res.status(422).json(resError(73402));
+  if (!isAddress(address)) return errorRes(res, 403, 73403);
 
   const result = await utils.set.gameStatus(address, status === 'true');
-  if (!result) return res.status(500).json(resError(73500));
+  if (result.error) return errorRes(res, 500, 73501, result.error);
 
-  res.json(resSuccess());
+  successRes(res);
 };
 
 // Functions

@@ -25,10 +25,10 @@ router.route('/set/token')
   .post(admin, validate('setToken', false), controller.set.token);
 
 router.route('/set/game')
-  .post(admin, validate('idAddress', false), controller.set.game);
+  .post(admin, validate('setGame', false), controller.set.game);
 
 router.route('/set/game_status')
-  .post(admin, validate('statusAddress', false), controller.set.gameStatus);
+  .post(admin, validate('setStatus', false), controller.set.gameStatus);
 
 // Functions
 

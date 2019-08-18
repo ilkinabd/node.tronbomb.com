@@ -34,14 +34,6 @@ const schemas = {
     address: templates.address.required(),
     spender: templates.address.required(),
   }),
-  idAddress: Joi.object().keys({
-    id: templates.integer.required(),
-    address: templates.address.required(),
-  }),
-  statusAddress: Joi.object().keys({
-    status: templates.status.required(),
-    address: templates.address.required(),
-  }),
   idAmount: Joi.object().keys({
     amount: templates.number.required(),
     id: templates.integer.required(),
@@ -97,6 +89,14 @@ const schemas = {
     maxBet: templates.number.min(Joi.ref('minBet')).required(),
     token: templates.address.required(),
   },
+  setGame: Joi.object().keys({
+    index: templates.integer.required(),
+    address: templates.address.required(),
+  }),
+  setStatus: Joi.object().keys({
+    address: templates.address.required(),
+    status: templates.status.required(),
+  }),
   events: Joi.object().keys({
     from: templates.integer,
     to: templates.integer.min(Joi.ref('from')),
