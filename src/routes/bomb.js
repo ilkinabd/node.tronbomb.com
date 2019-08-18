@@ -40,6 +40,15 @@ router.route('/set/stacking_params').post(
 router.route('/func/transfer')
   .post(server, validate('transfer', false), controller.func.transfer);
 
+router.route('/func/approve')
+  .post(server, validate('approve', false), controller.func.approve);
+
+router.route('/func/increase_approval')
+  .post(server, validate('approve', false), controller.func.increaseApproval);
+
+router.route('/func/decrease_approval')
+  .post(server, validate('approve', false), controller.func.decreaseApproval);
+
 // Events
 
 module.exports = router;

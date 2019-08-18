@@ -129,6 +129,36 @@ const transfer = async(req, res) => {
   successRes(res);
 };
 
+const approve = async(req, res) => {
+  const { spender } = req.body;
+  const amount = req.body.amount * 10 ** 6;
+
+  const result = await utils.func.approve(spender, amount);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
+const increaseApproval = async(req, res) => {
+  const { spender } = req.body;
+  const amount = req.body.amount * 10 ** 6;
+
+  const result = await utils.func.increaseApproval(spender, amount);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
+const decreaseApproval = async(req, res) => {
+  const { spender } = req.body;
+  const amount = req.body.amount * 10 ** 6;
+
+  const result = await utils.func.decreaseApproval(spender, amount);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
 module.exports = {
   get: {
     balanceOf,
@@ -144,5 +174,8 @@ module.exports = {
   },
   func: {
     transfer,
+    approve,
+    increaseApproval,
+    decreaseApproval,
   },
 };

@@ -82,6 +82,10 @@ const schemas = {
     to: templates.address.required(),
     amount: templates.number.required(),
   }),
+  approve: Joi.object().keys({
+    spender: templates.address.required(),
+    amount: templates.number.required(),
+  }),
 };
 
 module.exports = (type, isQuery = true) => (req, res, next) => {
