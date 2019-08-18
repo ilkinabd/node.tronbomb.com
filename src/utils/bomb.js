@@ -29,6 +29,8 @@ module.exports = {
   },
   set: {
     setSaleAgent: send('setSaleAgent', contract),
+    setStackingHodler: send('setStackingHodler', contract),
+    setStackingParams: send('setStackingParams', contract),
   },
   func: {
   },

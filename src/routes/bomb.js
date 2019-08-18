@@ -27,6 +27,14 @@ router.route('/get/stacking_params')
 router.route('/set/sale_agent')
   .post(server, validate('address', false), controller.set.setSaleAgent);
 
+router.route('/set/stacking_hodler')
+  .post(server, validate('address', false), controller.set.setStackingHodler);
+
+router.route('/set/stacking_params').post(
+  server, validate('stackingParams', false),
+  controller.set.setStackingParams
+);
+
 // Functions
 
 // Events

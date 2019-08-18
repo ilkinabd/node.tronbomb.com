@@ -74,6 +74,10 @@ const schemas = {
     amount: templates.number
       .min(parseFloat(MIN_WITHDRAW)).max(parseFloat(MAX_WITHDRAW)).required(),
   }),
+  stackingParams: Joi.object().keys({
+    period: templates.integer.required(),
+    amount: templates.number.required(),
+  }),
 };
 
 module.exports = (type, isQuery = true) => (req, res, next) => {

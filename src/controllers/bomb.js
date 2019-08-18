@@ -96,6 +96,27 @@ const setSaleAgent = async(req, res) => {
   successRes(res);
 };
 
+const setStackingHodler = async(req, res) => {
+  const { address } = req.body;
+
+  if (!isAddress(address)) return errorRes(res, 403, 73403);
+
+  const result = await utils.set.setStackingHodler(address);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
+const setStackingParams = async(req, res) => {
+  const period = req.body.period * 86400;
+  const amount = req.body.amount * 10 ** 6;
+
+  const result = await utils.set.setStackingParams(period, amount);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
 module.exports = {
   get: {
     balanceOf,
@@ -106,5 +127,7 @@ module.exports = {
   },
   set: {
     setSaleAgent,
+    setStackingHodler,
+    setStackingParams,
   }
 };
