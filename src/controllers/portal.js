@@ -31,10 +31,29 @@ const games = async(_req, res) => {
 
   for (const i in games) {
     games[i].status = await utils.get.gameStatuses(games[i].address);
-    games[i] = models.contractParams(games[i]);
+    games[i] = models.gameContract(games[i]);
   }
 
   successRes(res, { games });
+};
+
+const tokens = async(_req, res) => {
+  const requests = [];
+  for (let i = 0; i < 10; i++) requests.push(utils.get.token(i));
+
+  const payload = await Promise.all(requests).catch(console.error);
+  if (!payload) return errorRes(res, 500, 73500);
+
+  const tokens = Array
+    .from(payload, (data, index) => {
+      const { token, minBet, maxBet } = data;
+      return { address: token, minBet, maxBet, index };
+    })
+    .filter(obj => !isNullAddress(obj.address));
+
+  for (const i in tokens) tokens[i] = models.tokenContract(tokens[i]);
+
+  successRes(res, { tokens });
 };
 
 const balance = async(_req, res) => {
@@ -58,17 +77,6 @@ const getOwner = async(_req, res) => {
   const owner = models.address(payload);
 
   res.json(resSuccess({ owner }));
-};
-
-const getToken = async(req, res) => {
-  const { id } = req.query;
-
-  const payload = await utils.get.token(id);
-  if (!payload) return res.status(500).json(resError(73500));
-
-  const token = models.address(payload);
-
-  res.json(resSuccess({ token }));
 };
 
 // Setters
@@ -202,10 +210,10 @@ const rewardEvents = async(req, res) => {
 module.exports = {
   get: {
     games,
+    tokens,
     balance,
     mainStatus: getMainStatus,
     owner: getOwner,
-    token: getToken,
   },
   set: {
     mainStatus: setMainStatus,

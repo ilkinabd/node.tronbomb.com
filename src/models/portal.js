@@ -4,6 +4,8 @@ const templates = {
   address: toBase58,
   index: (value) => (value),
   status: (value) => (value),
+  minBet: (value) => (value / 10 ** 6),
+  maxBet: (value) => (value / 10 ** 6),
 };
 
 const modelBuilder = (payload, keys) => {
@@ -71,8 +73,11 @@ const reward = (payload) => {
 };
 
 module.exports = {
-  contractParams: (payload) => modelBuilder(payload, [
+  gameContract: (payload) => modelBuilder(payload, [
     'address', 'index', 'status'
+  ]),
+  tokenContract: (payload) => modelBuilder(payload, [
+    'address', 'minBet', 'maxBet', 'index'
   ]),
   address,
   takeTRXBet,
