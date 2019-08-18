@@ -20,6 +20,9 @@ module.exports = {
     totalSupply: call('totalSupply', contract),
     mintingFinished: call('mintingFinished', contract),
     totalBurned: call('totalBurned', contract),
+    owner: call('owner', contract),
+    saleAgent: call('saleAgent', contract),
+    newOwner: call('newOwner', contract),
   },
   set: {
   },

@@ -15,6 +15,19 @@ const balanceOf = async(req, res) => {
   successRes(res, model);
 };
 
+const allowance = async(req, res) => {
+  const { address, spender } = req.query;
+
+  if (!isAddress(address)) return errorRes(res, 403, 73403);
+  if (!isAddress(spender)) return errorRes(res, 403, 73403);
+
+  const payload = await utils.get.allowance(address, spender);
+  if (!payload) return errorRes(res, 500, 73500);
+  const model = models.amount(payload);
+
+  successRes(res, model);
+};
+
 const mainParams = async(_req, res) => {
   const requests = [];
   const params = [
@@ -32,15 +45,19 @@ const mainParams = async(_req, res) => {
   successRes(res, model);
 };
 
-const allowance = async(req, res) => {
-  const { address, spender } = req.query;
+const rolesParams = async(_req, res) => {
+  const requests = [];
+  const params = [
+    'owner', 'saleAgent', 'newOwner'
+  ];
 
-  if (!isAddress(address)) return errorRes(res, 403, 73403);
-  if (!isAddress(spender)) return errorRes(res, 403, 73403);
+  for (const param of params) requests.push(utils.get[param]());
+  const results = await Promise.all(requests).catch(console.error);
+  if (!results) return errorRes(res, 500, 73500);
 
-  const payload = await utils.get.allowance(address, spender);
-  if (!payload) return errorRes(res, 500, 73500);
-  const model = models.amount(payload);
+  const payload = {};
+  for (const i in params) payload[params[i]] = results[i];
+  const model = models.rolesParams(payload);
 
   successRes(res, model);
 };
@@ -48,7 +65,8 @@ const allowance = async(req, res) => {
 module.exports = {
   get: {
     balanceOf,
-    mainParams,
     allowance,
+    mainParams,
+    rolesParams,
   },
 };

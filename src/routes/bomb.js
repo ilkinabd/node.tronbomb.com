@@ -16,6 +16,9 @@ router.route('/get/allowance')
 router.route('/get/main_params')
   .get(server, controller.get.mainParams);
 
+router.route('/get/roles_params')
+  .get(server, controller.get.rolesParams);
+
 // Setters
 
 // Functions
