@@ -91,6 +91,12 @@ const schemas = {
     spender: templates.address.required(),
     amount: templates.number.required(),
   }),
+  setToken: {
+    index: templates.integer.required(),
+    minBet: templates.number.required(),
+    maxBet: templates.number.min(Joi.ref('minBet')).required(),
+    token: templates.address.required(),
+  },
   events: Joi.object().keys({
     from: templates.integer,
     to: templates.integer.min(Joi.ref('from')),

@@ -82,20 +82,23 @@ const setMainStatus = async(req, res) => {
   const { status } = req.body;
 
   const result = await utils.set.mainStatus(status === 'true');
-  if (!result) return res.status(500).json(resError(73500));
+  if (result.error) return errorRes(res, 500, 73501, result.error);
 
-  res.json(resSuccess());
+  successRes(res);
 };
 
 const setToken = async(req, res) => {
-  const { id, address } = req.body;
+  const { index, token } = req.body;
+  const minBet = req.body.minBet * 10 ** 6;
+  const maxBet = req.body.maxBet * 10 ** 6;
 
-  if (!isAddress(address)) return res.status(422).json(resError(73402));
+  if (!isAddress(token)) return errorRes(res, 403, 73403);
+  if (index === 0) return errorRes(res, 422, 73404);
 
-  const result = await utils.set.token(id, address);
-  if (!result) return res.status(500).json(resError(73500));
+  const result = await utils.set.token(index, minBet, maxBet, token);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
 
-  res.json(resSuccess());
+  successRes(res);
 };
 
 const setGame = async(req, res) => {

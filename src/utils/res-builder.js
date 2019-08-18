@@ -4,6 +4,7 @@ errors.set(73400, 'No token provided.');
 errors.set(73401, 'Wrong token.');
 errors.set(73402, 'Wrong address.');
 errors.set(73403, 'Invalid address provided.');
+errors.set(73404, '0 index is TRX.');
 errors.set(73500, 'Internal server error.');
 errors.set(73501, 'REVERT opcode executed.');
 

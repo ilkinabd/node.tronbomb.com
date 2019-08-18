@@ -22,7 +22,7 @@ router.route('/set/main_status')
   .post(admin, validate('status', false), controller.set.mainStatus);
 
 router.route('/set/token')
-  .post(admin, validate('idAddress', false), controller.set.token);
+  .post(admin, validate('setToken', false), controller.set.token);
 
 router.route('/set/game')
   .post(admin, validate('idAddress', false), controller.set.game);
