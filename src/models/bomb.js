@@ -14,6 +14,8 @@ const templates = {
   minStackingPeriod: (value) => toDecimal(value) / 3600,
   minStackingAmount: (value) => (value / 10 ** 6),
   stakingHodler: toBase58,
+  from: toBase58,
+  to: toBase58,
 };
 
 const modelBuilder = (payload, keys) => {
@@ -33,5 +35,11 @@ module.exports = {
   ]),
   stackingParams: (payload) => modelBuilder(payload, [
     'minStackingPeriod', 'minStackingAmount', 'stakingHodler', 'amount'
+  ]),
+  transferEvent: (payload) => modelBuilder(payload, [
+    'amount', 'from', 'to'
+  ]),
+  burnEvent: (payload) => modelBuilder(payload, [
+    'amount', 'from'
   ]),
 };

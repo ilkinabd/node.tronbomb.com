@@ -3,6 +3,22 @@ const models = require('@models/bomb');
 const { isAddress } = require('@utils/tron');
 const { successRes, errorRes } = require('@utils/res-builder');
 
+const filterEvents = (payload, model, from, to) => {
+  const events = payload.filter(item => (
+    (from || 0) <= item.timestamp && item.timestamp <= (to || Infinity)
+  )).map(item => {
+    item.data = model(item.result);
+
+    delete item.result;
+    delete item.contract;
+    delete item.resourceNode;
+
+    return item;
+  });
+
+  return events;
+};
+
 // Getters
 
 const balanceOf = async(req, res) => {
@@ -224,6 +240,28 @@ const finishMinting = async(_req, res) => {
   successRes(res);
 };
 
+// Events
+
+const transferEvents = async(req, res) => {
+  const { from, to } = req.query;
+
+  const payload = await utils.events.transfer();
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.transferEvent, from, to);
+
+  successRes(res, { events });
+};
+
+const burnEvent = async(req, res) => {
+  const { from, to } = req.query;
+
+  const payload = await utils.events.burn();
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.burnEvent, from, to);
+
+  successRes(res, { events });
+};
+
 module.exports = {
   get: {
     balanceOf,
@@ -249,5 +287,9 @@ module.exports = {
     freezeAgain,
     mint,
     finishMinting,
+  },
+  events: {
+    transfer: transferEvents,
+    burn: burnEvent,
   },
 };

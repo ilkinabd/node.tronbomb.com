@@ -3,7 +3,7 @@ const { PRIVATE_KEY, PROVIDER } = process.env;
 const TronWeb = require('tronweb');
 
 const db = require('@db');
-const { call, send } = require('@utils/tron');
+const { call, send, events } = require('@utils/tron');
 
 const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 
@@ -46,5 +46,7 @@ module.exports = {
     finishMinting: send('finishMinting', contract),
   },
   events: {
+    transfer: events('Transfer', address),
+    burn: events('Burn', address),
   },
 };

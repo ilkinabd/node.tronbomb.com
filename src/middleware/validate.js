@@ -91,6 +91,10 @@ const schemas = {
     spender: templates.address.required(),
     amount: templates.number.required(),
   }),
+  events: Joi.object().keys({
+    from: templates.integer,
+    to: templates.integer.min(Joi.ref('from')),
+  }),
 };
 
 module.exports = (type, isQuery = true) => (req, res, next) => {

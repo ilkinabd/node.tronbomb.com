@@ -72,4 +72,10 @@ router.route('/func/finish_minting')
 
 // Events
 
+router.route('/events/transfer')
+  .get(server, validate('events'), controller.events.transfer);
+
+router.route('/events/burn')
+  .get(server, validate('events'), controller.events.burn);
+
 module.exports = router;
