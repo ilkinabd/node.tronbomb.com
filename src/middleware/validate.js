@@ -30,6 +30,10 @@ const schemas = {
   code: Joi.object().keys({
     code: Joi.number().integer().min(0).max(1000000000),
   }),
+  addressSpender: Joi.object().keys({
+    address: templates.address.required(),
+    spender: templates.address.required(),
+  }),
   idAddress: Joi.object().keys({
     id: templates.integer.required(),
     address: templates.address.required(),
@@ -69,6 +73,27 @@ const schemas = {
     to: templates.address.required(),
     amount: templates.number
       .min(parseFloat(MIN_WITHDRAW)).max(parseFloat(MAX_WITHDRAW)).required(),
+  }),
+  stackingParams: Joi.object().keys({
+    period: templates.integer.required(),
+    amount: templates.number.required(),
+  }),
+  transfer: Joi.object().keys({
+    to: templates.address.required(),
+    amount: templates.number.required(),
+  }),
+  transferFrom: Joi.object().keys({
+    from: templates.address.required(),
+    to: templates.address.required(),
+    amount: templates.number.required(),
+  }),
+  approve: Joi.object().keys({
+    spender: templates.address.required(),
+    amount: templates.number.required(),
+  }),
+  events: Joi.object().keys({
+    from: templates.integer,
+    to: templates.integer.min(Joi.ref('from')),
   }),
 };
 

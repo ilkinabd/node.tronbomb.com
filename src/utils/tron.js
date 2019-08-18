@@ -5,6 +5,16 @@ const TronWeb = require('tronweb');
 const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 const nullAddress = '410000000000000000000000000000000000000000';
 
+const toBase58 = tronWeb.address.fromHex;
+const toDecimal = tronWeb.toDecimal;
+const toAscii = tronWeb.toAscii;
+const toHex = tronWeb.address.toHex;
+const getBlock = tronWeb.trx.getBlock;
+const isAddress = tronWeb.isAddress;
+const isNullAddress = (address) => (address === nullAddress);
+const toTRX = (amount) => parseFloat(tronWeb.fromSun(toDecimal(amount)));
+const toSun = (amount) => parseFloat(tronWeb.toSun(amount));
+
 const call = (variable, contract) => async(...params) => {
   const result = await (await contract())[variable](...params).call()
     .catch(console.error);
@@ -15,7 +25,13 @@ const call = (variable, contract) => async(...params) => {
 const send = (method, contract) => async(...params) => {
   const result = await (await contract())[method](...params).send({
     shouldPollResponse: true,
-  }).catch(console.error);
+  }).catch((payload) => {
+    console.error(payload);
+    const output = payload.output.contractResult[0];
+    const message = output.slice(136, output.indexOf('2e') + 2);
+    const error = (!message) ? 'FAILED.' : toAscii(message);
+    return { error };
+  });
 
   return result;
 };
@@ -38,19 +54,10 @@ const events = (eventName, address) => async(blockNumber) => {
   return events;
 };
 
-const toBase58 = (address) => tronWeb.address.fromHex(address);
-const toDecimal = (amount) => tronWeb.toDecimal(amount);
-const toTRX = (amount) => parseFloat(tronWeb.fromSun(toDecimal(amount)));
-const toSun = (amount) => parseFloat(tronWeb.toSun(amount));
-const toHex = (address) => tronWeb.address.toHex(address);
-const isAddress = (address) => tronWeb.isAddress(address);
-const isNullAddress = (address) => (address === nullAddress);
-
 const balance = async(address) => toTRX(await tronWeb.trx.getBalance(address));
 
 const currentBlock = async() =>
   (await tronWeb.trx.getCurrentBlock()).block_header.raw_data.number;
-const getBlock = (number) => tronWeb.trx.getBlock(number);
 
 const sendTRX = async(to, amount) =>
   tronWeb.trx.sendTransaction(toHex(to), toSun(amount), REFERRAL_KEY);
