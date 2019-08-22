@@ -50,7 +50,7 @@ const tokens = async(_req, res) => {
       const { token, minBet, maxBet } = data;
       return { address: token, minBet, maxBet, index };
     })
-    .filter(obj => !isNullAddress(obj.address));
+    .filter(obj => (!isNullAddress(obj.address) || obj.index === 0));
 
   for (const i in tokens) tokens[i] = models.tokenContract(tokens[i]);
 
@@ -125,15 +125,15 @@ const setGameStatus = async(req, res) => {
 
 // Functions
 
-const takeTRXBet = async(req, res) => {
-  const { amount, id, data } = req.body;
+const takeBet = async(req, res) => {
+  const { amount, gameId, data } = req.body;
 
-  const payload = await utils.func.takeTRXBet(toSun(amount), id, data);
-  if (!payload) return res.status(500).json(resError(73500));
+  const result = await utils.func.takeBet(toSun(amount), gameId, data);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
 
-  const result = models.takeTRXBet(payload);
+  const model = models.takeBet(result);
 
-  res.json(resSuccess({ result }));
+  successRes(res, model);
 };
 
 const withdraw = async(req, res) => {
@@ -220,7 +220,7 @@ module.exports = {
     gameStatus: setGameStatus,
   },
   func: {
-    takeTRXBet,
+    takeBet,
     withdraw,
   },
   events: {

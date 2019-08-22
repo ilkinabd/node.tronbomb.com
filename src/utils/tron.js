@@ -40,7 +40,13 @@ const payable = (method, contract) => async(amount, ...params) => {
   const result = await (await contract())[method](...params).send({
     shouldPollResponse: true,
     callValue: amount,
-  }).catch(console.error);
+  }).catch((payload) => {
+    console.error(payload);
+    const output = payload.output.contractResult[0];
+    const message = output.slice(136, output.indexOf('2e') + 2);
+    const error = (!message) ? 'FAILED.' : toAscii(message);
+    return { error };
+  });
 
   return result;
 };

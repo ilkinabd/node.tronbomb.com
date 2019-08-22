@@ -27,7 +27,7 @@ module.exports = {
     gameStatus: send('setGameStatus', contract),
   },
   func: {
-    takeTRXBet: payable('takeTRXBet', contract),
+    takeBet: payable('takeBet', contract),
     withdraw: send('withdraw', contract),
   },
   events: {

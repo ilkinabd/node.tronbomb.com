@@ -32,8 +32,8 @@ router.route('/set/game_status')
 
 // Functions
 
-router.route('/func/take_trx_bet')
-  .post(server, validate('idAmountData', false), controller.func.takeTRXBet);
+router.route('/func/take_bet')
+  .post(server, validate('takeBet', false), controller.func.takeBet);
 
 router.route('/func/withdraw')
   .post(admin, validate('idAmount', false), controller.func.withdraw);

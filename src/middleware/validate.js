@@ -46,11 +46,6 @@ const schemas = {
     min: templates.number.required(),
     max: templates.number.min(Joi.ref('min')).required(),
   }),
-  idAmountData: Joi.object().keys({
-    id: templates.integer.required(),
-    amount: templates.number.required(),
-    data: Joi.array().items(templates.bytes).required(),
-  }),
   addressBlockHash: Joi.object().keys({
     address: templates.address.required(),
     block: templates.integer.required(),
@@ -96,6 +91,11 @@ const schemas = {
   setStatus: Joi.object().keys({
     address: templates.address.required(),
     status: templates.status.required(),
+  }),
+  takeBet: Joi.object().keys({
+    gameId: templates.integer.required(),
+    amount: templates.number.required(),
+    data: Joi.array().items(templates.bytes).required(),
   }),
   events: Joi.object().keys({
     from: templates.integer,
