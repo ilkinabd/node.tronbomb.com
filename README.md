@@ -1,5 +1,5 @@
 # Node
-v0.8.1 Aug 18, 2019
+v0.8.2 Aug 23, 2019
 
 Microservice for **TronBomb** smart contracts.
 
