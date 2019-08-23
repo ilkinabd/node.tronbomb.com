@@ -27,21 +27,6 @@ const modelBuilder = (payload, keys) => {
 const toAmount = (tokenId, amount) =>
   ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
 
-const takeBet = (payload) => {
-  const { player, amount, tokenId, sector, finishBlock, betId } = payload;
-
-  const model = {
-    wallet: toBase58(player),
-    bet: toAmount(tokenId, amount),
-    tokenId: toDecimal(tokenId),
-    sector: toDecimal(sector),
-    finishBlock: toDecimal(finishBlock),
-    index: toDecimal(betId),
-  };
-
-  return model;
-};
-
 const playerWin = (payload) => {
   const { amount, tokenId, betId } = payload;
 
@@ -84,7 +69,9 @@ module.exports = {
     'startBlock', 'owner', 'address'
   ]),
   rng: (payload) => modelBuilder(payload, ['result']),
-  takeBet,
+  takeBet: (payload) => modelBuilder(payload, [
+    'wallet', 'bet', 'tokenId', 'finishBlock', 'sector', 'index'
+  ]),
   playerWin,
   changeMinMaxBet,
   changeDuration,
