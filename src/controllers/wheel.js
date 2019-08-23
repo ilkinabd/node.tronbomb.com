@@ -37,7 +37,7 @@ const getBets = async(req, res) => {
   const { from, to } = req.query;
 
   const totalBets = toDecimal(await utils.get.totalBets());
-  if (!totalBets) return res.status(500).json(resError(73500));
+  if (!totalBets) return errorRes(res, 500, 73500);
 
   const first = from || 0;
   const last = Math.min(totalBets, to || totalBets);
@@ -48,7 +48,7 @@ const getBets = async(req, res) => {
 
   const games = Array.from(payload, item => models.bet(item));
 
-  res.json(resSuccess({ games }));
+  successRes(res, { games });
 };
 
 const getParams = async(_req, res) => {
