@@ -5,15 +5,13 @@ const controller = require('@controllers/tools');
 const { server } = require('@middleware/auth');
 const validate = require('@middleware/validate');
 
-router.route('/get_contracts')
+router.route('/contracts')
   .get(server, controller.getContracts);
 
-router.route('/get/block')
+router.route('/block')
   .get(validate('index'), controller.block);
 
-// Functions
-
-router.route('/func/withdraw')
-  .post(server, validate('walletToAmount', false), controller.func.withdraw);
+router.route('/withdraw')
+  .post(server, validate('transfer', false), controller.withdraw);
 
 module.exports = router;
