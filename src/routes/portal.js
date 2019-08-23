@@ -47,7 +47,7 @@ router.route('/events/withdraw')
   .get(server, validate('events'), controller.events.withdraw);
 
 router.route('/events/main_status')
-  .get(server, validate('fromTo', true), controller.events.mainStatus);
+  .get(server, validate('events'), controller.events.mainStatus);
 
 router.route('/events/token')
   .get(server, validate('fromTo', true), controller.events.token);

@@ -1,4 +1,4 @@
-const { toDecimal, toTRX, toBase58 } = require('@utils/tron');
+const { toDecimal, toBase58 } = require('@utils/tron');
 
 const templates = {
   address: toBase58,
@@ -15,23 +15,13 @@ const templates = {
   index: toDecimal,
   tokenId: toDecimal,
   status: (value) => (value),
-  mainStatus: (value) => (value),
+  mainStatus: JSON.parse,
   balanceTRX: (value) => (value),
 };
 
 const modelBuilder = (payload, keys) => {
   const model = {};
   for (const key of keys) model[key] = templates[key](payload[key]);
-
-  return model;
-};
-
-const mainStatus = (payload) => {
-  const { mainStatus } = payload;
-
-  const model = {
-    mainStatus: mainStatus === 'true',
-  };
 
   return model;
 };
@@ -61,6 +51,6 @@ module.exports = {
   withdraw: (payload) => modelBuilder(payload, [
     'amount', 'tokenId'
   ]),
-  mainStatus,
+  mainStatus: (payload) => modelBuilder(payload, ['mainStatus']),
   contract,
 };

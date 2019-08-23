@@ -169,11 +169,10 @@ const mainStatusEvents = async(req, res) => {
   const { from, to } = req.query;
 
   const payload = await utils.events.mainStatus();
-  if (!payload) return res.status(500).json(resError(73500));
-
+  if (!payload) return errorRes(res, 500, 73500);
   const events = filterEvents(payload, models.mainStatus, from, to);
 
-  res.json(resSuccess({ events }));
+  successRes(res, { events });
 };
 
 const tokenEvents = async(req, res) => {
