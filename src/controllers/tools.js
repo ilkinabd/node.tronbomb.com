@@ -1,5 +1,12 @@
+const db = require('@db');
+
 const { sendTRX, isAddress, getBlock } = require('@utils/tron');
-const { resSuccess, resError } = require('@utils/res-builder');
+const { successRes, resSuccess, resError } = require('@utils/res-builder');
+
+const getContracts = async(_req, res) => {
+  const contracts = await db.contracts.getAll();
+  successRes(res, { contracts });
+};
 
 // Getters
 
@@ -27,6 +34,7 @@ const withdraw = async(req, res) => {
 };
 
 module.exports = {
+  getContracts,
   get: {
     block,
   },

@@ -5,6 +5,9 @@ const controller = require('@controllers/tools');
 const { server } = require('@middleware/auth');
 const validate = require('@middleware/validate');
 
+router.route('/get_contracts')
+  .get(server, controller.getContracts);
+
 // Getters
 
 router.route('/get/block')

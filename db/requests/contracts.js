@@ -5,6 +5,6 @@ module.exports = {
       WHERE "type" = $type`,
 
   'get-all': `
-      SELECT "type", "address", "index", "title"
+      SELECT "type", "address", "title"
       FROM "contracts";`,
 };
