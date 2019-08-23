@@ -71,11 +71,12 @@ const getParams = async(_req, res) => {
 const setPortal = async(req, res) => {
   const { address } = req.body;
 
-  if (!isAddress(address)) return res.status(422).json(resError(73402));
-  const result = await utils.set.portal(address);
-  if (!result) return res.status(500).json(resError(73500));
+  if (!isAddress(address)) return errorRes(res, 422, 73402);
 
-  res.json(resSuccess());
+  const result = await utils.set.portal(address);
+  if (!result) return errorRes(res, 500, 73500);
+
+  successRes(res);
 };
 
 const setRTP = async(req, res) => {

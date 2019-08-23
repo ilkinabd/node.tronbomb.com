@@ -20,7 +20,7 @@ module.exports = {
     owner: call('owner', contract),
   },
   set: {
-    portal: send('setPortalAddress', contract),
+    portal: send('setPortal', contract),
     rtp: send('setRTP', contract),
     bet: send('setMinMaxBet', contract),
   },
