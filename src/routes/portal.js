@@ -49,10 +49,4 @@ router.route('/events/withdraw')
 router.route('/events/main_status')
   .get(server, validate('events'), controller.events.mainStatus);
 
-router.route('/events/token')
-  .get(server, validate('fromTo', true), controller.events.token);
-
-router.route('/events/game')
-  .get(server, validate('fromTo', true), controller.events.game);
-
 module.exports = router;

@@ -26,16 +26,6 @@ const modelBuilder = (payload, keys) => {
   return model;
 };
 
-const contract = (payload) => {
-  const { contractAddress } = payload;
-
-  const model = {
-    contractAddress: toBase58(contractAddress),
-  };
-
-  return model;
-};
-
 module.exports = {
   gameContract: (payload) => modelBuilder(payload, [
     'address', 'index', 'status'
@@ -52,5 +42,4 @@ module.exports = {
     'amount', 'tokenId'
   ]),
   mainStatus: (payload) => modelBuilder(payload, ['mainStatus']),
-  contract,
 };

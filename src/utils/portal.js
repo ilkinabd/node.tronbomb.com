@@ -39,8 +39,5 @@ module.exports = {
     payReward: events('PayReward', address),
     withdraw: events('Withdraw', address),
     mainStatus: events('SetMainStatus', address),
-    token: events('SetToken', address),
-    game: events('SetGame', address),
-    gamesStatus: events('SetGameStatus', address),
   },
 };

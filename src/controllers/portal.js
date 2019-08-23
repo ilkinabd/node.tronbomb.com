@@ -2,9 +2,7 @@ const utils = require('@utils/portal');
 const bombUtils = require('@utils/bomb');
 const models = require('@models/portal');
 const { toSun, isAddress, isNullAddress } = require('@utils/tron');
-const {
-  resSuccess, resError, successRes, errorRes
-} = require('@utils/res-builder');
+const { successRes, errorRes } = require('@utils/res-builder');
 
 const filterEvents = (payload, model, from, to) => {
   const events = payload.filter(item => (
@@ -175,33 +173,6 @@ const mainStatusEvents = async(req, res) => {
   successRes(res, { events });
 };
 
-const tokenEvents = async(req, res) => {
-  const { from, to } = req.query;
-
-  const payload = await utils.events.token();
-  if (!payload) return res.status(500).json(resError(73500));
-
-  const events = filterEvents(payload, models.contract, from, to);
-
-  res.json(resSuccess({ events }));
-};
-
-const gameEvents = async(req, res) => {
-  const { from, to } = req.query;
-
-  const gamesPayload = await utils.events.game();
-  if (!gamesPayload) return res.status(500).json(resError(73500));
-  const games = filterEvents(gamesPayload, models.contract, from, to);
-
-  const statusesPayload = await utils.events.gamesStatus();
-  if (!statusesPayload) return res.status(500).json(resError(73500));
-  const statuses = filterEvents(statusesPayload, models.mainStatus, from, to);
-
-  const events = games.concat(statuses);
-
-  res.json(resSuccess({ events }));
-};
-
 module.exports = {
   get: {
     games,
@@ -222,7 +193,5 @@ module.exports = {
     payReward,
     withdraw: withdrawEvents,
     mainStatus: mainStatusEvents,
-    token: tokenEvents,
-    game: gameEvents,
   },
 };
