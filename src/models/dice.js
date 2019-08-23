@@ -5,6 +5,7 @@ const templates = {
   finishBlock: toDecimal,
   tokenId: toDecimal,
   totalGames: toDecimal,
+  number: toDecimal,
   wallet: toBase58,
   portal: toBase58,
   owner: toBase58,
@@ -12,8 +13,7 @@ const templates = {
   bet: (value) => (value / 10 ** 6),
   rtp: (value) => (value / 10 ** 3),
   state: (value) => [null, 'start', 'finish'][value],
-  number: (value) => (value),
-  roll: (value) => (value),
+  roll: (value) => ['under', 'over', 'exact'][value],
   result: (value) => (value),
 };
 
@@ -24,36 +24,8 @@ const modelBuilder = (payload, keys) => {
   return model;
 };
 
-const rollType = (index) => {
-  let roll;
-  switch (index) {
-    case 0: roll = 'under'; break;
-    case 1: roll = 'over'; break;
-    case 2: roll = 'exact'; break;
-  }
-  return roll;
-};
-
 const toAmount = (tokenId, amount) =>
   ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
-
-const takeBets = (payload) => {
-  const {
-    player, amount, number, roll, tokenId, finishBlock, gameId
-  } = payload;
-
-  const model = {
-    wallet: toBase58(player),
-    bet: toAmount(tokenId, amount),
-    number: toDecimal(number),
-    roll: rollType(toDecimal(roll)),
-    tokenId: toDecimal(tokenId),
-    finishBlock: toDecimal(finishBlock),
-    index: toDecimal(gameId),
-  };
-
-  return model;
-};
 
 const finishGame = (payload) => {
   const { result, gameId } = payload;
@@ -109,7 +81,9 @@ module.exports = {
     'portal', 'owner', 'totalGames', 'rtp', 'address'
   ]),
   rng: (payload) => modelBuilder(payload, ['result']),
-  takeBets,
+  payReward: (payload) => modelBuilder(payload, [
+    'wallet', 'bet', 'number', 'roll', 'tokenId', 'finishBlock', 'index'
+  ]),
   finishGame,
   playerWin,
   changeRTP,

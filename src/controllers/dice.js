@@ -9,7 +9,12 @@ const filterEvents = (payload, model, from, to) => {
   const events = payload.filter(item => (
     (from || 0) <= item.timestamp && item.timestamp <= (to || Infinity)
   )).map(item => {
-    item.result = model(item.result);
+    item.data = model(item.result);
+
+    delete item.result;
+    delete item.contract;
+    delete item.resourceNode;
+
     return item;
   });
 
@@ -112,15 +117,14 @@ const finishGame = async(req, res) => {
 
 // Events
 
-const takeBetEvents = async(req, res) => {
+const takeBet = async(req, res) => {
   const { from, to } = req.query;
 
   const payload = await utils.events.takeBet();
-  if (!payload) return res.status(500).json(resError(73500));
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.payReward, from, to);
 
-  const events = filterEvents(payload, models.takeBets, from, to);
-
-  res.json(resSuccess({ events }));
+  successRes(res, { events });
 };
 
 const finishGameEvents = async(req, res) => {
@@ -175,7 +179,7 @@ module.exports = {
     finishGame,
   },
   events: {
-    takeBet: takeBetEvents,
+    takeBet,
     finishGame: finishGameEvents,
     playersWin: playersWinEvents,
     changeParams: changeParamsEvents,
