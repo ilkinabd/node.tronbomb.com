@@ -89,15 +89,6 @@ const setRTP = async(req, res) => {
   successRes(res);
 };
 
-const setBet = async(req, res) => {
-  const { min, max } = req.body;
-
-  const result = await utils.set.bet(toSun(min), toSun(max));
-  if (!result) return res.status(500).json(resError(73500));
-
-  res.json(resSuccess());
-};
-
 // Functions
 
 const rng = async(req, res) => {
@@ -178,7 +169,6 @@ module.exports = {
   set: {
     portal: setPortal,
     rtp: setRTP,
-    bet: setBet,
   },
   func: {
     rng,

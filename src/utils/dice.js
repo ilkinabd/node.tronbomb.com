@@ -22,7 +22,6 @@ module.exports = {
   set: {
     portal: send('setPortal', contract),
     rtp: send('setRTP', contract),
-    bet: send('setMinMaxBet', contract),
   },
   func: {
     rng: call('rng', contract),

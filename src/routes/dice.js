@@ -24,9 +24,6 @@ router.route('/set/portal')
 router.route('/set/rtp')
   .post(server, validate('rtp', false), controller.set.rtp);
 
-router.route('/set/bet')
-  .post(server, validate('bet', false), controller.set.bet);
-
 // Functions
 
 router.route('/func/rng')
