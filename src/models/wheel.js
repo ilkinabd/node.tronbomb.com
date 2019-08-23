@@ -1,90 +1,43 @@
-const { toDecimal, toBase58, toTRX } = require('@utils/tron');
+const { toDecimal, toBase58 } = require('@utils/tron');
 
-const toAmount = (tokenId, amount) =>
-  ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
-
-const params = (payload) => {
-  const { portal, duration, minBet, maxBet, startBlock, processBets } = payload;
-
-  const model = {
-    portal: toBase58(portal),
-    minBet: toTRX(minBet),
-    maxBet: toTRX(maxBet),
-    duration: toDecimal(duration),
-    startBlock: toDecimal(startBlock),
-    processBets: toDecimal(processBets),
-  };
-
-  return model;
+const templates = {
+  index: toDecimal,
+  tokenId: toDecimal,
+  sector: toDecimal,
+  totalBets: toDecimal,
+  processedBets: toDecimal,
+  duration: toDecimal,
+  startBlock: toDecimal,
+  finishBlock: toDecimal,
+  result: toDecimal,
+  wallet: toBase58,
+  portal: toBase58,
+  owner: toBase58,
+  address: toBase58,
+  bet: (value) => (value / 10 ** 6),
+  prize: (value) => (value / 10 ** 6),
 };
 
-const bet = (payload) => {
-  const { player, amount, tokenId, sector, finishBlock } = payload;
-
-  const model = {
-    player: toBase58(player),
-    amount: toAmount(tokenId, amount),
-    tokenId,
-    sector,
-    finishBlock: toDecimal(finishBlock),
-  };
-
-  return model;
-};
-
-const takeBet = (payload) => {
-  const { player, amount, tokenId, sector, finishBlock, betId } = payload;
-
-  const model = {
-    wallet: toBase58(player),
-    bet: toAmount(tokenId, amount),
-    tokenId: toDecimal(tokenId),
-    sector: toDecimal(sector),
-    finishBlock: toDecimal(finishBlock),
-    index: toDecimal(betId),
-  };
-
-  return model;
-};
-
-const playerWin = (payload) => {
-  const { amount, tokenId, betId } = payload;
-
-  const model = {
-    amount: toAmount(tokenId, amount),
-    tokenId: toDecimal(tokenId),
-    index: toDecimal(betId),
-  };
-
-  return model;
-};
-
-const changeMinMaxBet = (payload) => {
-  const { minBet, maxBet } = payload;
-
-  const model = {
-    minBet: toTRX(minBet),
-    maxBet: toTRX(maxBet),
-  };
-
-  return model;
-};
-
-const changeDuration = (payload) => {
-  const { gameDuration } = payload;
-
-  const model = {
-    gameDuration: toDecimal(gameDuration),
-  };
+const modelBuilder = (payload, keys) => {
+  const model = {};
+  for (const key of keys) model[key] = templates[key](payload[key]);
 
   return model;
 };
 
 module.exports = {
-  params,
-  bet,
-  takeBet,
-  playerWin,
-  changeMinMaxBet,
-  changeDuration,
+  bet: (payload) => modelBuilder(payload, [
+    'wallet', 'bet', 'tokenId', 'finishBlock', 'sector', 'index'
+  ]),
+  params: (payload) => modelBuilder(payload, [
+    'portal', 'totalBets', 'processedBets', 'duration',
+    'startBlock', 'owner', 'address'
+  ]),
+  rng: (payload) => modelBuilder(payload, ['result']),
+  takeBet: (payload) => modelBuilder(payload, [
+    'wallet', 'bet', 'tokenId', 'finishBlock', 'sector', 'index'
+  ]),
+  playerWin: (payload) => modelBuilder(payload, [
+    'wallet', 'prize', 'tokenId', 'index'
+  ]),
 };

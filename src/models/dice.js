@@ -11,7 +11,6 @@ const templates = {
   portal: toBase58,
   owner: toBase58,
   address: toBase58,
-  player: toBase58,
   bet: (value) => (value / 10 ** 6),
   prize: (value) => (value / 10 ** 6),
   rtp: (value) => (value / 10 ** 3),
@@ -40,7 +39,7 @@ module.exports = {
   ]),
   finishGame: (payload) => modelBuilder(payload, ['result', 'index']),
   playerWin: (payload) => modelBuilder(payload, [
-    'player', 'prize', 'tokenId', 'index'
+    'wallet', 'prize', 'tokenId', 'index'
   ]),
   setRTP: (payload) => modelBuilder(payload, ['rtp']),
 };

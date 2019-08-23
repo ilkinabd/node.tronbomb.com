@@ -27,8 +27,8 @@ const schemas = {
   rtp: Joi.object().keys({
     rtp: templates.rtp.required(),
   }),
-  duration: Joi.object().keys({
-    duration: templates.integer.required(),
+  value: Joi.object().keys({
+    value: templates.integer.required(),
   }),
   code: Joi.object().keys({
     code: Joi.number().integer().min(0).max(1000000000),
@@ -57,7 +57,7 @@ const schemas = {
     block: templates.integer.required(),
     hash: templates.bytes.required(),
   }),
-  blockHash: Joi.object().keys({
+  wheelRNG: Joi.object().keys({
     block: templates.integer.required(),
     hash: templates.bytes.required(),
   }),
