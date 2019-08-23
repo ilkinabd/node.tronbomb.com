@@ -10,7 +10,12 @@ const filterEvents = (payload, model, from, to) => {
   const events = payload.filter(item => (
     (from || 0) <= item.timestamp && item.timestamp <= (to || Infinity)
   )).map(item => {
-    item.result = model(item.result);
+    item.data = model(item.result);
+
+    delete item.result;
+    delete item.contract;
+    delete item.resourceNode;
+
     return item;
   });
 
@@ -140,6 +145,16 @@ const withdraw = async(req, res) => {
 
 // Events
 
+const payReward = async(req, res) => {
+  const { from, to } = req.query;
+
+  const payload = await utils.events.payReward();
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.payReward, from, to);
+
+  successRes(res, { events });
+};
+
 const mainStatusEvents = async(req, res) => {
   const { from, to } = req.query;
 
@@ -189,17 +204,6 @@ const gameEvents = async(req, res) => {
   res.json(resSuccess({ events }));
 };
 
-const rewardEvents = async(req, res) => {
-  const { from, to } = req.query;
-
-  const payload = await utils.events.reward();
-  if (!payload) return res.status(500).json(resError(73500));
-
-  const events = filterEvents(payload, models.reward, from, to);
-
-  res.json(resSuccess({ events }));
-};
-
 module.exports = {
   get: {
     games,
@@ -217,10 +221,10 @@ module.exports = {
     withdraw,
   },
   events: {
+    payReward,
     mainStatus: mainStatusEvents,
     withdraw: withdrawEvents,
     token: tokenEvents,
     game: gameEvents,
-    reward: rewardEvents,
   },
 };

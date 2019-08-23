@@ -4,12 +4,15 @@ const templates = {
   address: toBase58,
   owner: toBase58,
   BOMBHodler: toBase58,
+  to: toBase58,
   minTRXBet: (value) => (value / 10 ** 6),
   maxTRXBet: (value) => (value / 10 ** 6),
   minBOMBBet: (value) => (value / 10 ** 6),
   maxBOMBBet: (value) => (value / 10 ** 6),
   balanceBOMB: (value) => (value / 10 ** 6),
+  prize: (value) => (value / 10 ** 6),
   index: toDecimal,
+  tokenId: toDecimal,
   status: (value) => (value),
   mainStatus: (value) => (value),
   balanceTRX: (value) => (value),
@@ -56,17 +59,6 @@ const contract = (payload) => {
   return model;
 };
 
-const reward = (payload) => {
-  const { reward, tokenId, to } = payload;
-
-  const model = {
-    reward: toAmount(tokenId, reward),
-    to: toBase58(to),
-  };
-
-  return model;
-};
-
 module.exports = {
   gameContract: (payload) => modelBuilder(payload, [
     'address', 'index', 'status'
@@ -76,8 +68,10 @@ module.exports = {
     'minTRXBet', 'maxTRXBet', 'minBOMBBet', 'maxBOMBBet', 'address'
   ]),
   takeBet: (payload) => modelBuilder(payload, ['index']),
+  payReward: (payload) => modelBuilder(payload, [
+    'to', 'prize', 'tokenId'
+  ]),
   mainStatus,
   withdraw,
   contract,
-  reward,
 };

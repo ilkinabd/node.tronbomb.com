@@ -36,11 +36,11 @@ module.exports = {
     withdraw: send('withdraw', contract),
   },
   events: {
+    payReward: events('PayReward', address),
     mainStatus: events('ChangeMainStatus', address),
     withdraw: events('Withdraw', address),
     token: events('SetToken', address),
     game: events('SetGame', address),
     gamesStatus: events('SetGameStatus', address),
-    reward: events('PayReward', address),
   },
 };

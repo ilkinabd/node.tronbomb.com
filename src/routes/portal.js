@@ -40,6 +40,9 @@ router.route('/func/withdraw')
 
 // Events
 
+router.route('/events/pay_reward')
+  .get(server, validate('events'), controller.events.payReward);
+
 router.route('/events/main_status')
   .get(server, validate('fromTo', true), controller.events.mainStatus);
 
@@ -51,8 +54,5 @@ router.route('/events/token')
 
 router.route('/events/game')
   .get(server, validate('fromTo', true), controller.events.game);
-
-router.route('/events/reward')
-  .get(server, validate('fromTo', true), controller.events.reward);
 
 module.exports = router;
