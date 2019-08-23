@@ -1,13 +1,18 @@
 const utils = require('@utils/dice');
 const models = require('@models/dice');
-const { toDecimal, toSun, isAddress } = require('@utils/tron');
-const { resSuccess, resError } = require('@utils/res-builder');
+const { toDecimal, isAddress } = require('@utils/tron');
+const { successRes, errorRes } = require('@utils/res-builder');
 
 const filterEvents = (payload, model, from, to) => {
   const events = payload.filter(item => (
     (from || 0) <= item.timestamp && item.timestamp <= (to || Infinity)
   )).map(item => {
-    item.result = model(item.result);
+    item.data = model(item.result);
+
+    delete item.result;
+    delete item.contract;
+    delete item.resourceNode;
+
     return item;
   });
 
@@ -17,20 +22,25 @@ const filterEvents = (payload, model, from, to) => {
 // Getters
 
 const getGame = async(req, res) => {
-  const { id } = req.query;
+  const { index } = req.query;
 
-  const payload = await utils.get.game(id);
-  if (!payload) return res.status(500).json(resError(73500));
-  const game = models.game(payload);
+  const totalGames = toDecimal(await utils.get.totalGames());
+  if (!totalGames) return errorRes(res, 500, 73500);
 
-  res.json(resSuccess({ game }));
+  if (index >= totalGames) return errorRes(res, 422, 73405);
+
+  const payload = await utils.get.game(index);
+  if (!payload) return errorRes(res, 500, 73500);
+  const model = models.game(payload);
+
+  successRes(res, model);
 };
 
 const getGames = async(req, res) => {
   const { from, to } = req.query;
 
   const totalGames = toDecimal(await utils.get.totalGames());
-  if (!totalGames) return res.status(500).json(resError(73500));
+  if (!totalGames) return errorRes(res, 500, 73500);
 
   const first = from || 0;
   const last = Math.min(totalGames, to || totalGames);
@@ -41,30 +51,22 @@ const getGames = async(req, res) => {
 
   const games = Array.from(payload, item => models.game(item));
 
-  res.json(resSuccess({ games }));
+  successRes(res, { games });
 };
 
 const getParams = async(_req, res) => {
-  const portal = await utils.get.portal();
-  const rtp = await utils.get.rtp();
-  const rtpDivider = await utils.get.rtpDivider();
-  const minBet = await utils.get.minBet();
-  const maxBet = await utils.get.maxBet();
+  const requests = [];
+  const params = ['portal', 'totalGames', 'rtp', 'owner', 'address'];
 
-  const params = models.params({ portal, rtp, rtpDivider, minBet, maxBet });
+  for (const param of params) requests.push(utils.get[param]());
+  const results = await Promise.all(requests).catch(console.error);
+  if (!results) return errorRes(res, 500, 73500);
 
-  res.json(resSuccess({ params }));
-};
+  const payload = {};
+  for (const i in params) payload[params[i]] = results[i];
+  const model = models.params(payload);
 
-const getRNG = async(req, res) => {
-  const { address, block, hash } = req.query;
-
-  const payload = await utils.get.rng(address, block, hash);
-  if (!payload) return res.status(500).json(resError(73500));
-
-  const random = payload.result;
-
-  res.json(resSuccess({ random }));
+  successRes(res, model);
 };
 
 // Setters
@@ -72,91 +74,85 @@ const getRNG = async(req, res) => {
 const setPortal = async(req, res) => {
   const { address } = req.body;
 
-  if (!isAddress(address)) return res.status(422).json(resError(73402));
-  const result = await utils.set.portal(address);
-  if (!result) return res.status(500).json(resError(73500));
+  if (!isAddress(address)) return errorRes(res, 422, 73402);
 
-  res.json(resSuccess());
+  const result = await utils.set.portal(address);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
 };
 
 const setRTP = async(req, res) => {
   const { rtp } = req.body;
 
-  const divider = 10000;
-  const result = await utils.set.rtp(Math.floor(rtp * divider), divider);
-  if (!result) return res.status(500).json(resError(73500));
+  const decimal = 10 ** 3;
+  const result = await utils.set.rtp(Math.floor(rtp * decimal));
+  if (result.error) return errorRes(res, 500, 73501, result.error);
 
-  res.json(resSuccess());
-};
-
-const setBet = async(req, res) => {
-  const { min, max } = req.body;
-
-  const result = await utils.set.bet(toSun(min), toSun(max));
-  if (!result) return res.status(500).json(resError(73500));
-
-  res.json(resSuccess());
+  successRes(res);
 };
 
 // Functions
 
+const rng = async(req, res) => {
+  const { address, block, hash } = req.query;
+
+  const payload = await utils.func.rng(address, block, hash);
+  if (!payload) return errorRes(res, 500, 73500);
+  const model = models.rng(payload);
+
+  successRes(res, model);
+};
+
 const finishGame = async(req, res) => {
-  const { id } = req.body;
+  const { index, hash } = req.body;
 
-  const result = await utils.func.finishGame(id);
-  if (!result) return res.status(500).json(resError(73500));
+  const result = await utils.func.finishGame(index, hash);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
 
-  res.json(resSuccess());
+  successRes(res);
 };
 
 // Events
 
-const takeBetEvents = async(req, res) => {
+const takeBet = async(req, res) => {
   const { from, to } = req.query;
 
   const payload = await utils.events.takeBet();
-  if (!payload) return res.status(500).json(resError(73500));
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.takeBet, from, to);
 
-  const events = filterEvents(payload, models.takeBets, from, to);
-
-  res.json(resSuccess({ events }));
+  successRes(res, { events });
 };
 
 const finishGameEvents = async(req, res) => {
   const { from, to } = req.query;
 
   const payload = await utils.events.finishGame();
-  if (!payload) return res.status(500).json(resError(73500));
-
+  if (!payload) return errorRes(res, 500, 73500);
   const events = filterEvents(payload, models.finishGame, from, to);
 
-  res.json(resSuccess({ events }));
+  successRes(res, { events });
 };
 
-const playersWinEvents = async(req, res) => {
+const playersWin = async(req, res) => {
   const { from, to } = req.query;
 
   const payload = await utils.events.playersWin();
-  if (!payload) return res.status(500).json(resError(73500));
-
+  if (!payload) return errorRes(res, 500, 73500);
   const events = filterEvents(payload, models.playerWin, from, to);
 
-  res.json(resSuccess({ events }));
+  successRes(res, { events });
 };
 
-const changeParamsEvents = async(req, res) => {
+const setRTPEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  const rtpPayload = await utils.events.changeRTP();
-  if (!rtpPayload) return res.status(500).json(resError(73500));
-  const rtp = filterEvents(rtpPayload, models.changeRTP, from, to);
+  const payload = await utils.events.setRTP();
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.setRTP, from, to);
 
-  const betPayload = await utils.events.changeMinMaxBet();
-  if (!betPayload) return res.status(500).json(resError(73500));
-  const bet = filterEvents(betPayload, models.changeMinMaxBet, from, to);
-
-  const events = rtp.concat(bet);
-  res.json(resSuccess({ events }));
+  successRes(res, { events });
 };
 
 module.exports = {
@@ -164,20 +160,19 @@ module.exports = {
     game: getGame,
     games: getGames,
     params: getParams,
-    rng: getRNG,
   },
   set: {
     portal: setPortal,
     rtp: setRTP,
-    bet: setBet,
   },
   func: {
+    rng,
     finishGame,
   },
   events: {
-    takeBet: takeBetEvents,
+    takeBet,
     finishGame: finishGameEvents,
-    playersWin: playersWinEvents,
-    changeParams: changeParamsEvents,
+    playersWin,
+    setRTP: setRTPEvents,
   },
 };

@@ -15,6 +15,9 @@ const schemas = {
   id: Joi.object().keys({
     id: templates.integer.required(),
   }),
+  index: Joi.object().keys({
+    index: templates.integer.required(),
+  }),
   address: Joi.object().keys({
     address: templates.address.required(),
   }),
@@ -45,7 +48,11 @@ const schemas = {
     min: templates.number.required(),
     max: templates.number.min(Joi.ref('min')).required(),
   }),
-  addressBlockHash: Joi.object().keys({
+  finishGame: Joi.object().keys({
+    index: templates.integer.required(),
+    hash: templates.bytes.required(),
+  }),
+  diceRNG: Joi.object().keys({
     address: templates.address.required(),
     block: templates.integer.required(),
     hash: templates.bytes.required(),
