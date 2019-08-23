@@ -19,13 +19,13 @@ router.route('/set/main_status')
   .post(admin, validate('status', false), controller.set.mainStatus);
 
 router.route('/set/bet_params')
-  .post(admin, validate('setBetParams', false), controller.set.betParams);
+  .post(admin, validate('betParams', false), controller.set.betParams);
 
 router.route('/set/game')
-  .post(admin, validate('setGame', false), controller.set.game);
+  .post(admin, validate('game', false), controller.set.game);
 
 router.route('/set/game_status')
-  .post(admin, validate('setStatus', false), controller.set.gameStatus);
+  .post(admin, validate('gameStatus', false), controller.set.gameStatus);
 
 // Functions
 

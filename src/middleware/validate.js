@@ -12,9 +12,6 @@ const templates = {
 };
 
 const schemas = {
-  id: Joi.object().keys({
-    id: templates.integer.required(),
-  }),
   index: Joi.object().keys({
     index: templates.integer.required(),
   }),
@@ -30,23 +27,16 @@ const schemas = {
   value: Joi.object().keys({
     value: templates.integer.required(),
   }),
-  code: Joi.object().keys({
-    code: Joi.number().integer().min(0).max(1000000000),
-  }),
   amount: Joi.object().keys({
     amount: templates.number.required(),
   }),
-  addressSpender: Joi.object().keys({
+  allowance: Joi.object().keys({
     address: templates.address.required(),
     spender: templates.address.required(),
   }),
   fromTo: Joi.object().keys({
     from: templates.integer,
     to: templates.integer.min(Joi.ref('from')),
-  }),
-  bet: Joi.object().keys({
-    min: templates.number.required(),
-    max: templates.number.min(Joi.ref('min')).required(),
   }),
   finishGame: Joi.object().keys({
     index: templates.integer.required(),
@@ -60,12 +50,6 @@ const schemas = {
   wheelRNG: Joi.object().keys({
     block: templates.integer.required(),
     hash: templates.bytes.required(),
-  }),
-  walletToAmount: Joi.object().keys({
-    wallet: templates.address.required(),
-    to: templates.address.required(),
-    amount: templates.number
-      .min(parseFloat(MIN_WITHDRAW)).max(parseFloat(MAX_WITHDRAW)).required(),
   }),
   stackingParams: Joi.object().keys({
     period: templates.integer.required(),
@@ -84,16 +68,16 @@ const schemas = {
     spender: templates.address.required(),
     amount: templates.number.required(),
   }),
-  setBetParams: {
+  betParams: {
     index: templates.integer.required(),
     minBet: templates.number.required(),
     maxBet: templates.number.min(Joi.ref('minBet')).required(),
   },
-  setGame: Joi.object().keys({
+  game: Joi.object().keys({
     index: templates.integer.required(),
     address: templates.address.required(),
   }),
-  setStatus: Joi.object().keys({
+  gameStatus: Joi.object().keys({
     address: templates.address.required(),
     status: templates.status.required(),
   }),
