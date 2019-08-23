@@ -82,11 +82,11 @@ const setPortal = async(req, res) => {
 const setRTP = async(req, res) => {
   const { rtp } = req.body;
 
-  const divider = 10000;
-  const result = await utils.set.rtp(Math.floor(rtp * divider), divider);
-  if (!result) return res.status(500).json(resError(73500));
+  const decimal = 10 ** 3;
+  const result = await utils.set.rtp(Math.floor(rtp * decimal));
+  if (!result) return errorRes(res, 500, 73500);
 
-  res.json(resSuccess());
+  successRes(res);
 };
 
 const setBet = async(req, res) => {
