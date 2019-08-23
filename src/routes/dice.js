@@ -30,7 +30,7 @@ router.route('/func/rng')
   .get(server, validate('diceRNG'), controller.func.rng);
 
 router.route('/func/finish_game')
-  .post(server, validate('id', false), controller.func.finishGame);
+  .post(server, validate('finishGame', false), controller.func.finishGame);
 
 // Events
 

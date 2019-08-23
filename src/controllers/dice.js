@@ -1,6 +1,6 @@
 const utils = require('@utils/dice');
 const models = require('@models/dice');
-const { toDecimal, toSun, isAddress } = require('@utils/tron');
+const { toDecimal, isAddress } = require('@utils/tron');
 const {
   resSuccess, resError, successRes, errorRes
 } = require('@utils/res-builder');
@@ -74,7 +74,7 @@ const setPortal = async(req, res) => {
   if (!isAddress(address)) return errorRes(res, 422, 73402);
 
   const result = await utils.set.portal(address);
-  if (!result) return errorRes(res, 500, 73500);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
 
   successRes(res);
 };
@@ -84,7 +84,7 @@ const setRTP = async(req, res) => {
 
   const decimal = 10 ** 3;
   const result = await utils.set.rtp(Math.floor(rtp * decimal));
-  if (!result) return errorRes(res, 500, 73500);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
 
   successRes(res);
 };
@@ -102,12 +102,12 @@ const rng = async(req, res) => {
 };
 
 const finishGame = async(req, res) => {
-  const { id } = req.body;
+  const { index, hash } = req.body;
 
-  const result = await utils.func.finishGame(id);
-  if (!result) return res.status(500).json(resError(73500));
+  const result = await utils.func.finishGame(index, hash);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
 
-  res.json(resSuccess());
+  successRes(res);
 };
 
 // Events
