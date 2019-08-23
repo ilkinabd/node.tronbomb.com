@@ -52,15 +52,18 @@ const getGames = async(req, res) => {
 };
 
 const getParams = async(_req, res) => {
-  const portal = await utils.get.portal();
-  const rtp = await utils.get.rtp();
-  const rtpDivider = await utils.get.rtpDivider();
-  const minBet = await utils.get.minBet();
-  const maxBet = await utils.get.maxBet();
+  const requests = [];
+  const params = ['portal', 'totalGames', 'rtp', 'owner', 'address'];
 
-  const params = models.params({ portal, rtp, rtpDivider, minBet, maxBet });
+  for (const param of params) requests.push(utils.get[param]());
+  const results = await Promise.all(requests).catch(console.error);
+  if (!results) return errorRes(res, 500, 73500);
 
-  res.json(resSuccess({ params }));
+  const payload = {};
+  for (const i in params) payload[params[i]] = results[i];
+  const model = models.params(payload);
+
+  successRes(res, model);
 };
 
 const getRNG = async(req, res) => {

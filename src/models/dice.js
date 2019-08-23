@@ -3,13 +3,18 @@ const { toBase58, toDecimal, toTRX } = require('@utils/tron');
 const templates = {
   index: toDecimal,
   finishBlock: toDecimal,
-  wallet: toBase58,
-  bet: (value) => (value / 10 ** 6),
   tokenId: toDecimal,
+  totalGames: toDecimal,
+  wallet: toBase58,
+  portal: toBase58,
+  owner: toBase58,
+  address: toBase58,
+  bet: (value) => (value / 10 ** 6),
+  rtp: (value) => (value / 10 ** 3),
+  state: (value) => [null, 'start', 'finish'][value],
   number: (value) => (value),
   roll: (value) => (value),
   result: (value) => (value),
-  state: (value) => [null, 'start', 'finish'][value],
 };
 
 const modelBuilder = (payload, keys) => {
@@ -31,19 +36,6 @@ const rollType = (index) => {
 
 const toAmount = (tokenId, amount) =>
   ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
-
-const params = (payload) => {
-  const { portal, rtp, rtpDivider, minBet, maxBet } = payload;
-
-  const model = {
-    portal: toBase58(portal),
-    rtp: rtp / rtpDivider,
-    minBet: toTRX(minBet),
-    maxBet: toTRX(maxBet),
-  };
-
-  return model;
-};
 
 const takeBets = (payload) => {
   const {
@@ -113,7 +105,9 @@ module.exports = {
     'index', 'finishBlock', 'wallet', 'bet',
     'tokenId', 'number', 'roll', 'result', 'state'
   ]),
-  params,
+  params: (payload) => modelBuilder(payload, [
+    'portal', 'owner', 'totalGames', 'rtp', 'address'
+  ]),
   takeBets,
   finishGame,
   playerWin,
