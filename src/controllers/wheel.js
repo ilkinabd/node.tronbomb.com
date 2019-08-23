@@ -1,7 +1,9 @@
 const utils = require('@utils/wheel');
 const models = require('@models/wheel');
 const { toSun, isAddress, toDecimal } = require('@utils/tron');
-const { resSuccess, resError } = require('@utils/res-builder');
+const {
+  resSuccess, resError, successRes, errorRes
+} = require('@utils/res-builder');
 
 const filterEvents = (payload, model, from, to) => {
   const events = payload.filter(item => (
@@ -17,13 +19,18 @@ const filterEvents = (payload, model, from, to) => {
 // Getters
 
 const getBet = async(req, res) => {
-  const { id } = req.query;
+  const { index } = req.query;
 
-  const payload = await utils.get.bet(id);
-  if (!payload) return res.status(500).json(resError(73500));
-  const bet = models.bet(payload);
+  const totalBets = toDecimal(await utils.get.totalBets());
+  if (!totalBets) return errorRes(res, 500, 73500);
 
-  res.json(resSuccess({ bet }));
+  if (index >= totalBets) return errorRes(res, 422, 73406);
+
+  const payload = await utils.get.bet(index);
+  if (!payload) return errorRes(res, 500, 73500);
+  const model = models.bet(payload);
+
+  successRes(res, model);
 };
 
 const getBets = async(req, res) => {

@@ -6,6 +6,7 @@ errors.set(73402, 'Wrong address.');
 errors.set(73403, 'Invalid address provided.');
 errors.set(73404, '0 index is TRX.');
 errors.set(73405, 'Game does not exist.');
+errors.set(73406, 'Bet does not exist.');
 errors.set(73500, 'Internal server error.');
 errors.set(73501, 'REVERT opcode executed.');
 
