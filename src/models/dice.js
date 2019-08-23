@@ -108,6 +108,7 @@ module.exports = {
   params: (payload) => modelBuilder(payload, [
     'portal', 'owner', 'totalGames', 'rtp', 'address'
   ]),
+  rng: (payload) => modelBuilder(payload, ['result']),
   takeBets,
   finishGame,
   playerWin,

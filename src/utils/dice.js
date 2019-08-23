@@ -18,7 +18,6 @@ module.exports = {
     portal: call('portal', contract),
     rtp: call('rtp', contract),
     owner: call('owner', contract),
-    rng: call('diceRNG', contract),
   },
   set: {
     portal: send('setPortalAddress', contract),
@@ -26,6 +25,7 @@ module.exports = {
     bet: send('setMinMaxBet', contract),
   },
   func: {
+    rng: call('rng', contract),
     finishGame: send('finishGame', contract),
   },
   events: {

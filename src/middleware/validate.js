@@ -48,7 +48,7 @@ const schemas = {
     min: templates.number.required(),
     max: templates.number.min(Joi.ref('min')).required(),
   }),
-  addressBlockHash: Joi.object().keys({
+  diceRNG: Joi.object().keys({
     address: templates.address.required(),
     block: templates.integer.required(),
     hash: templates.bytes.required(),

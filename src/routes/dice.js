@@ -11,13 +11,10 @@ router.route('/get/game')
   .get(server, validate('index'), controller.get.game);
 
 router.route('/get/games')
-  .get(server, validate('fromTo', true), controller.get.games);
+  .get(server, validate('fromTo'), controller.get.games);
 
 router.route('/get/params')
   .get(server, controller.get.params);
-
-router.route('/get/rng')
-  .get(server, validate('addressBlockHash', true), controller.get.rng);
 
 // Setters
 
@@ -31,6 +28,9 @@ router.route('/set/bet')
   .post(server, validate('bet', false), controller.set.bet);
 
 // Functions
+
+router.route('/func/rng')
+  .get(server, validate('diceRNG'), controller.func.rng);
 
 router.route('/func/finish_game')
   .post(server, validate('id', false), controller.func.finishGame);

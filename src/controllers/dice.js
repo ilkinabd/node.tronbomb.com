@@ -66,17 +66,6 @@ const getParams = async(_req, res) => {
   successRes(res, model);
 };
 
-const getRNG = async(req, res) => {
-  const { address, block, hash } = req.query;
-
-  const payload = await utils.get.rng(address, block, hash);
-  if (!payload) return res.status(500).json(resError(73500));
-
-  const random = payload.result;
-
-  res.json(resSuccess({ random }));
-};
-
 // Setters
 
 const setPortal = async(req, res) => {
@@ -109,6 +98,16 @@ const setBet = async(req, res) => {
 };
 
 // Functions
+
+const rng = async(req, res) => {
+  const { address, block, hash } = req.query;
+
+  const payload = await utils.func.rng(address, block, hash);
+  if (!payload) return errorRes(res, 500, 73500);
+  const model = models.rng(payload);
+
+  successRes(res, model);
+};
 
 const finishGame = async(req, res) => {
   const { id } = req.body;
@@ -174,7 +173,6 @@ module.exports = {
     game: getGame,
     games: getGames,
     params: getParams,
-    rng: getRNG,
   },
   set: {
     portal: setPortal,
@@ -182,6 +180,7 @@ module.exports = {
     bet: setBet,
   },
   func: {
+    rng,
     finishGame,
   },
   events: {
