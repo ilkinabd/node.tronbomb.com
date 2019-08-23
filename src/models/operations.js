@@ -3,6 +3,9 @@ const { toBase58 } = require('@utils/tron');
 const templates = {
   owner: toBase58,
   address: toBase58,
+  wallet: toBase58,
+  to: toBase58,
+  amount: (value) => (value / 10 ** 6),
 };
 
 const modelBuilder = (payload, keys) => {
@@ -14,4 +17,5 @@ const modelBuilder = (payload, keys) => {
 
 module.exports = {
   params: (payload) => modelBuilder(payload, ['owner', 'address']),
+  withdraw: (payload) => modelBuilder(payload, ['wallet', 'to', 'amount']),
 };
