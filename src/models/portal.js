@@ -3,8 +3,11 @@ const { toDecimal, toTRX, toBase58 } = require('@utils/tron');
 const templates = {
   address: toBase58,
   owner: toBase58,
-  minBet: (value) => (value / 10 ** 6),
-  maxBet: (value) => (value / 10 ** 6),
+  BOMBHodler: toBase58,
+  minTRXBet: (value) => (value / 10 ** 6),
+  maxTRXBet: (value) => (value / 10 ** 6),
+  minBOMBBet: (value) => (value / 10 ** 6),
+  maxBOMBBet: (value) => (value / 10 ** 6),
   balanceBOMB: (value) => (value / 10 ** 6),
   index: toDecimal,
   status: (value) => (value),
@@ -68,11 +71,9 @@ module.exports = {
   gameContract: (payload) => modelBuilder(payload, [
     'address', 'index', 'status'
   ]),
-  tokenContract: (payload) => modelBuilder(payload, [
-    'address', 'minBet', 'maxBet', 'index'
-  ]),
   params: (payload) => modelBuilder(payload, [
-    'owner', 'mainStatus', 'balanceTRX', 'balanceBOMB', 'address'
+    'owner', 'mainStatus', 'balanceTRX', 'BOMBHodler', 'balanceBOMB',
+    'minTRXBet', 'maxTRXBet', 'minBOMBBet', 'maxBOMBBet', 'address'
   ]),
   takeBet: (payload) => modelBuilder(payload, ['index']),
   mainStatus,

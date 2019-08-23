@@ -38,28 +38,12 @@ const games = async(_req, res) => {
   successRes(res, { games });
 };
 
-const tokens = async(_req, res) => {
-  const requests = [];
-  for (let i = 0; i < 10; i++) requests.push(utils.get.token(i));
-
-  const payload = await Promise.all(requests).catch(console.error);
-  if (!payload) return errorRes(res, 500, 73500);
-
-  const tokens = Array
-    .from(payload, (data, index) => {
-      const { token, minBet, maxBet } = data;
-      return { address: token, minBet, maxBet, index };
-    })
-    .filter(obj => (!isNullAddress(obj.address) || obj.index === 0));
-
-  for (const i in tokens) tokens[i] = models.tokenContract(tokens[i]);
-
-  successRes(res, { tokens });
-};
-
 const params = async(_req, res) => {
   const requests = [];
-  const params = ['mainStatus', 'owner', 'address'];
+  const params = [
+    'mainStatus', 'owner', 'address', 'BOMBHodler',
+    'minTRXBet', 'maxTRXBet', 'minBOMBBet', 'maxBOMBBet'
+  ];
   for (const param of params) requests.push(utils.get[param]());
 
   const results = await Promise.all(requests).catch(console.error);
@@ -69,7 +53,7 @@ const params = async(_req, res) => {
   for (const i in params) payload[params[i]] = results[i];
 
   payload.balanceTRX = await utils.get.balance(results[2]);
-  payload.balanceBOMB = (await bombUtils.get.balanceOf(results[2])).amount;
+  payload.balanceBOMB = (await bombUtils.get.balanceOf(results[3])).amount;
 
   const model = models.params(payload);
 
@@ -87,15 +71,12 @@ const setMainStatus = async(req, res) => {
   successRes(res);
 };
 
-const setToken = async(req, res) => {
-  const { index, token } = req.body;
+const setBetParams = async(req, res) => {
+  const { index } = req.body;
   const minBet = req.body.minBet * 10 ** 6;
   const maxBet = req.body.maxBet * 10 ** 6;
 
-  if (!isAddress(token)) return errorRes(res, 403, 73403);
-  if (index === 0) return errorRes(res, 422, 73404);
-
-  const result = await utils.set.token(index, minBet, maxBet, token);
+  const result = await utils.set.betParams(index, minBet, maxBet);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
   successRes(res);
@@ -126,9 +107,21 @@ const setGameStatus = async(req, res) => {
 // Functions
 
 const takeBet = async(req, res) => {
-  const { amount, gameId, data } = req.body;
+  const { bet, gameId, data } = req.body;
 
-  const result = await utils.func.takeBet(toSun(amount), gameId, data);
+  const result = await utils.func.takeBet(toSun(bet), gameId, data);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  const model = models.takeBet(result);
+
+  successRes(res, model);
+};
+
+const takeBOMBBet = async(req, res) => {
+  const { gameId, data } = req.body;
+  const bet = req.body.bet * 10 ** 6;
+
+  const result = await utils.func.takeBOMBBet(gameId, bet, data);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
   const model = models.takeBet(result);
@@ -210,17 +203,17 @@ const rewardEvents = async(req, res) => {
 module.exports = {
   get: {
     games,
-    tokens,
     params,
   },
   set: {
     mainStatus: setMainStatus,
-    token: setToken,
+    betParams: setBetParams,
     game: setGame,
     gameStatus: setGameStatus,
   },
   func: {
     takeBet,
+    takeBOMBBet,
     withdraw,
   },
   events: {

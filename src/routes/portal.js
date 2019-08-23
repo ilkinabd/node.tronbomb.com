@@ -10,9 +10,6 @@ const validate = require('@middleware/validate');
 router.route('/get/games')
   .get(server, controller.get.games);
 
-router.route('/get/tokens')
-  .get(server, controller.get.tokens);
-
 router.route('/get/params')
   .get(server, controller.get.params);
 
@@ -21,8 +18,8 @@ router.route('/get/params')
 router.route('/set/main_status')
   .post(admin, validate('status', false), controller.set.mainStatus);
 
-router.route('/set/token')
-  .post(admin, validate('setToken', false), controller.set.token);
+router.route('/set/bet_params')
+  .post(admin, validate('setBetParams', false), controller.set.betParams);
 
 router.route('/set/game')
   .post(admin, validate('setGame', false), controller.set.game);
@@ -34,6 +31,9 @@ router.route('/set/game_status')
 
 router.route('/func/take_bet')
   .post(server, validate('takeBet', false), controller.func.takeBet);
+
+router.route('/func/take_bomb_bet')
+  .post(server, validate('takeBOMBBet', false), controller.func.takeBOMBBet);
 
 router.route('/func/withdraw')
   .post(admin, validate('idAmount', false), controller.func.withdraw);

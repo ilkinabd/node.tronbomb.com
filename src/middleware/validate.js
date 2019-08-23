@@ -78,11 +78,10 @@ const schemas = {
     spender: templates.address.required(),
     amount: templates.number.required(),
   }),
-  setToken: {
+  setBetParams: {
     index: templates.integer.required(),
     minBet: templates.number.required(),
     maxBet: templates.number.min(Joi.ref('minBet')).required(),
-    token: templates.address.required(),
   },
   setGame: Joi.object().keys({
     index: templates.integer.required(),
@@ -94,7 +93,12 @@ const schemas = {
   }),
   takeBet: Joi.object().keys({
     gameId: templates.integer.required(),
-    amount: templates.number.required(),
+    bet: templates.number.required(),
+    data: Joi.array().items(templates.bytes).required(),
+  }),
+  takeBOMBBet: Joi.object().keys({
+    gameId: templates.integer.required(),
+    bet: templates.number.required(),
     data: Joi.array().items(templates.bytes).required(),
   }),
   events: Joi.object().keys({

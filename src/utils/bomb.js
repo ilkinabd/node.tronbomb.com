@@ -7,7 +7,7 @@ const { call, send, events } = require('@utils/tron');
 
 const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 
-const address = db.contracts.get({ type: 'token' });
+const address = db.contracts.get({ type: 'portal' });
 const contract = async() => tronWeb.contract().at(await address);
 
 module.exports = {
