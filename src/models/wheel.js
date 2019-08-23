@@ -25,27 +25,6 @@ const modelBuilder = (payload, keys) => {
   return model;
 };
 
-const changeMinMaxBet = (payload) => {
-  const { minBet, maxBet } = payload;
-
-  const model = {
-    minBet: toTRX(minBet),
-    maxBet: toTRX(maxBet),
-  };
-
-  return model;
-};
-
-const changeDuration = (payload) => {
-  const { gameDuration } = payload;
-
-  const model = {
-    gameDuration: toDecimal(gameDuration),
-  };
-
-  return model;
-};
-
 module.exports = {
   bet: (payload) => modelBuilder(payload, [
     'wallet', 'bet', 'tokenId', 'finishBlock', 'sector', 'index'
@@ -61,6 +40,4 @@ module.exports = {
   playerWin: (payload) => modelBuilder(payload, [
     'wallet', 'prize', 'tokenId', 'index'
   ]),
-  changeMinMaxBet,
-  changeDuration,
 };

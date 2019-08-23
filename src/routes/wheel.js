@@ -40,7 +40,4 @@ router.route('/events/take_bet')
 router.route('/events/player_win')
   .get(server, validate('events'), controller.events.playerWin);
 
-router.route('/events/change_params')
-  .get(server, validate('fromTo', true), controller.events.changeParams);
-
 module.exports = router;

@@ -34,7 +34,5 @@ module.exports = {
   events: {
     takeBet: events('TakeBet', address),
     playerWin: events('PlayerWin', address),
-    changeMinMaxBet: events('ChangeMinMaxBet', address),
-    changeDuration: events('ChangeGameDuration', address),
   },
 };

@@ -1,9 +1,7 @@
 const utils = require('@utils/wheel');
 const models = require('@models/wheel');
 const { isAddress, toDecimal } = require('@utils/tron');
-const {
-  resSuccess, resError, successRes, errorRes
-} = require('@utils/res-builder');
+const { successRes, errorRes } = require('@utils/res-builder');
 
 const filterEvents = (payload, model, from, to) => {
   const events = payload.filter(item => (
@@ -137,21 +135,6 @@ const playerWin = async(req, res) => {
   successRes(res, { events });
 };
 
-const changeParams = async(req, res) => {
-  const { from, to } = req.query;
-
-  const betPayload = await utils.events.changeMinMaxBet();
-  if (!betPayload) return res.status(500).json(resError(73500));
-  const bet = filterEvents(betPayload, models.changeMinMaxBet, from, to);
-
-  const durPayload = await utils.events.changeDuration();
-  if (!durPayload) return res.status(500).json(resError(73500));
-  const duration = filterEvents(durPayload, models.changeDuration, from, to);
-
-  const events = bet.concat(duration);
-  res.json(resSuccess({ events }));
-};
-
 module.exports = {
   get: {
     bet: getBet,
@@ -169,6 +152,5 @@ module.exports = {
   events: {
     takeBet,
     playerWin,
-    changeParams,
   },
 };
