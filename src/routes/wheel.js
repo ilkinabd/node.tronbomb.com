@@ -11,13 +11,10 @@ router.route('/get/bet')
   .get(server, validate('index'), controller.get.bet);
 
 router.route('/get/bets')
-  .get(server, validate('fromTo', true), controller.get.bets);
+  .get(server, validate('fromTo'), controller.get.bets);
 
 router.route('/get/params')
   .get(server, controller.get.params);
-
-router.route('/get/rng')
-  .get(server, validate('blockHash', true), controller.get.rng);
 
 // Setters
 
@@ -31,6 +28,9 @@ router.route('/set/duration')
   .post(server, validate('duration', false), controller.set.duration);
 
 // Functions
+
+router.route('/func/rng')
+  .get(server, validate('wheelRNG'), controller.func.rng);
 
 router.route('/func/finish')
   .post(server, controller.func.finish);

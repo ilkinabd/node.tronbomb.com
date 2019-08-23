@@ -57,7 +57,7 @@ const schemas = {
     block: templates.integer.required(),
     hash: templates.bytes.required(),
   }),
-  blockHash: Joi.object().keys({
+  wheelRNG: Joi.object().keys({
     block: templates.integer.required(),
     hash: templates.bytes.required(),
   }),

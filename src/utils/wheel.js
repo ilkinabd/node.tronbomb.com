@@ -21,7 +21,6 @@ module.exports = {
     duration: call('gameDuration', contract),
     startBlock: call('startBlock', contract),
     processedBets: call('processedBets', contract),
-    rng: call('wheelRNG', contract),
     owner: call('owner', contract),
   },
   set: {
@@ -30,6 +29,7 @@ module.exports = {
     duration: send('setGameDuration', contract),
   },
   func: {
+    rng: call('rng', contract),
     finish: send('finish', contract),
   },
   events: {

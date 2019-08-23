@@ -9,6 +9,7 @@ const templates = {
   duration: toDecimal,
   startBlock: toDecimal,
   finishBlock: toDecimal,
+  result: toDecimal,
   wallet: toBase58,
   portal: toBase58,
   owner: toBase58,
@@ -82,6 +83,7 @@ module.exports = {
     'portal', 'totalBets', 'processedBets', 'duration',
     'startBlock', 'owner', 'address'
   ]),
+  rng: (payload) => modelBuilder(payload, ['result']),
   takeBet,
   playerWin,
   changeMinMaxBet,

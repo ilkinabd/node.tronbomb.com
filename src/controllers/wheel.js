@@ -69,17 +69,6 @@ const getParams = async(_req, res) => {
   successRes(res, model);
 };
 
-const getRNG = async(req, res) => {
-  const { block, hash } = req.query;
-
-  const payload = await utils.get.rng(block, hash);
-  if (!payload) return res.status(500).json(resError(73500));
-
-  const random = payload.result;
-
-  res.json(resSuccess({ random }));
-};
-
 // Setters
 
 const setPortal = async(req, res) => {
@@ -111,6 +100,16 @@ const setDuration = async(req, res) => {
 };
 
 // Functions
+
+const rng = async(req, res) => {
+  const { block, hash } = req.query;
+
+  const payload = await utils.func.rng(block, hash);
+  if (!payload) return errorRes(res, 500, 73500);
+  const model = models.rng(payload);
+
+  successRes(res, model);
+};
 
 const finish = async(_req, res) => {
   const result = await utils.func.finish();
@@ -163,7 +162,6 @@ module.exports = {
     bet: getBet,
     bets: getBets,
     params: getParams,
-    rng: getRNG,
   },
   set: {
     portal: setPortal,
@@ -171,6 +169,7 @@ module.exports = {
     duration: setDuration
   },
   func: {
+    rng,
     finish,
   },
   events: {
