@@ -35,7 +35,7 @@ module.exports = {
     'portal', 'owner', 'totalGames', 'rtp', 'address'
   ]),
   rng: (payload) => modelBuilder(payload, ['result']),
-  payReward: (payload) => modelBuilder(payload, [
+  takeBet: (payload) => modelBuilder(payload, [
     'wallet', 'bet', 'number', 'roll', 'tokenId', 'finishBlock', 'index'
   ]),
   finishGame: (payload) => modelBuilder(payload, ['result', 'index']),

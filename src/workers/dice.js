@@ -1,19 +1,19 @@
 const utils = require('@utils/dice');
 const models = require('@models/dice');
 
-const takePart = async(blockNumber, chanel) => {
-  const payload = await utils.events.takeBet(blockNumber);
-  if (!payload) return setTimeout(() => takePart(blockNumber, chanel), 1000);
+const takePart = async(block, chanel) => {
+  const payload = await utils.events.takeBet(block);
+  if (!payload) return setTimeout(() => takePart(block, chanel), 1000);
 
   for (const item of payload) {
-    const event = models.takeBets(item.result);
+    const event = models.takeBet(item.result);
     chanel.emit('dice-take-part', event);
   }
 };
 
-const reward = async(blockNumber, chanel) => {
-  const payload = await utils.events.playersWin(blockNumber);
-  if (!payload) return setTimeout(() => reward(blockNumber, chanel), 1000);
+const reward = async(block, chanel) => {
+  const payload = await utils.events.playersWin(block);
+  if (!payload) return setTimeout(() => reward(block, chanel), 1000);
 
   for (const item of payload) {
     const event = models.playerWin(item.result);
@@ -21,7 +21,7 @@ const reward = async(blockNumber, chanel) => {
   }
 };
 
-module.exports = async(number, chanel) => {
-  takePart(number, chanel);
-  reward(number, chanel);
+module.exports = async(block, chanel) => {
+  takePart(block, chanel);
+  reward(block, chanel);
 };

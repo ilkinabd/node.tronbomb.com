@@ -120,7 +120,7 @@ const takeBet = async(req, res) => {
 
   const payload = await utils.events.takeBet();
   if (!payload) return errorRes(res, 500, 73500);
-  const events = filterEvents(payload, models.payReward, from, to);
+  const events = filterEvents(payload, models.takeBet, from, to);
 
   successRes(res, { events });
 };
