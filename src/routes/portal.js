@@ -36,7 +36,7 @@ router.route('/func/take_bomb_bet')
   .post(server, validate('takeBOMBBet', false), controller.func.takeBOMBBet);
 
 router.route('/func/withdraw')
-  .post(admin, validate('idAmount', false), controller.func.withdraw);
+  .post(admin, validate('amount', false), controller.func.withdraw);
 
 // Events
 

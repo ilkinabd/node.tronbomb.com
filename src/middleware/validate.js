@@ -30,13 +30,12 @@ const schemas = {
   code: Joi.object().keys({
     code: Joi.number().integer().min(0).max(1000000000),
   }),
+  amount: Joi.object().keys({
+    amount: templates.number.required(),
+  }),
   addressSpender: Joi.object().keys({
     address: templates.address.required(),
     spender: templates.address.required(),
-  }),
-  idAmount: Joi.object().keys({
-    amount: templates.number.required(),
-    id: templates.integer.required(),
   }),
   fromTo: Joi.object().keys({
     from: templates.integer,

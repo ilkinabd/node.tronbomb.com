@@ -130,12 +130,12 @@ const takeBOMBBet = async(req, res) => {
 };
 
 const withdraw = async(req, res) => {
-  const { amount, id } = req.body;
+  const { amount } = req.body;
 
-  const result = await utils.func.withdraw(toSun(amount), id);
-  if (!result) return res.status(500).json(resError(73500));
+  const result = await utils.func.withdraw(toSun(amount));
+  if (result.error) return errorRes(res, 500, 73501, result.error);
 
-  res.json(resSuccess());
+  successRes(res);
 };
 
 // Events
