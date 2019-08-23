@@ -1,5 +1,3 @@
-const { MIN_WITHDRAW, MAX_WITHDRAW } = process.env;
-
 const Joi = require('@hapi/joi');
 
 const templates = {
