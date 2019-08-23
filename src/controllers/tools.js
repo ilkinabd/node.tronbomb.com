@@ -1,77 +1,38 @@
-const utils = require('@utils/withdraw');
+const db = require('@db');
+
 const { sendTRX, isAddress, getBlock } = require('@utils/tron');
-const models = require('@models/tools');
-const { resSuccess, resError } = require('@utils/res-builder');
+const { successRes, errorRes } = require('@utils/res-builder');
 
-const filterEvents = (payload, model, from, to) => {
-  const events = payload.filter(item => (
-    (from || 0) <= item.timestamp && item.timestamp <= (to || Infinity)
-  )).map(item => {
-    item.result = model(item.result);
-    return item;
-  });
-
-  return events;
+const getContracts = async(_req, res) => {
+  const contracts = await db.contracts.getAll();
+  successRes(res, { contracts });
 };
 
-// Getters
-
 const block = async(req, res) => {
-  const { id } = req.query;
+  const { index } = req.query;
 
   try {
-    const hash = (await getBlock(id)).blockID;
-    res.json(resSuccess({ number: id, hash }));
+    const hash = (await getBlock(index)).blockID;
+    successRes(res, { number: index, hash: `0x${hash}` });
   } catch {
-    return res.status(500).json(resError(73500));
+    errorRes(res, 500, 73500);
   }
 };
 
-// Functions
-
-const request = async(req, res) => {
-  const { code } = req.body;
-
-  const result = await utils.func.withdraw(code);
-  if (!result) return res.status(500).json(resError(73500));
-
-  res.json(resSuccess());
-};
-
 const withdraw = async(req, res) => {
-  const { wallet, to, amount } = req.body;
+  const { to, amount } = req.body;
 
-  if (!isAddress(to)) return res.status(422).json(resError(73402));
+  if (!isAddress(to)) return errorRes(res, 422, 73402);
 
-  console.info(`Withdraw ${amount} from ${wallet} to ${to}`);
+  console.info(`Withdraw ${amount} to ${to}`);
   const answer = await sendTRX(to, amount);
-  if (!answer || !answer.result) return res.status(500).json(resError(73500));
+  if (!answer || !answer.result) errorRes(res, 500, 73500);
 
-  res.json(resSuccess({ txID: answer.transaction.txID }));
-};
-
-// Events
-
-const operation = async(req, res) => {
-  const { from, to } = req.query;
-
-  const payload = await utils.events.withdraw();
-  if (!payload) return res.status(500).json(resError(73500));
-
-  const events = filterEvents(payload, models.operation, from, to);
-
-  res.json(resSuccess({ events }));
+  successRes(res, { txID: answer.transaction.txID });
 };
 
 module.exports = {
-  get: {
-    block,
-  },
-  func: {
-    request,
-    withdraw,
-  },
-  events: {
-    withdraw: operation,
-  },
+  getContracts,
+  block,
+  withdraw,
 };

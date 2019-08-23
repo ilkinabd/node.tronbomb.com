@@ -88,7 +88,7 @@ const setBetParams = async(req, res) => {
 const setGame = async(req, res) => {
   const { index, address } = req.body;
 
-  if (!isAddress(address)) return errorRes(res, 403, 73403);
+  if (!isAddress(address)) return errorRes(res, 403, 73402);
 
   const result = await utils.set.game(index, address);
   if (result.error) return errorRes(res, 500, 73501, result.error);
@@ -99,7 +99,7 @@ const setGame = async(req, res) => {
 const setGameStatus = async(req, res) => {
   const { address, status } = req.body;
 
-  if (!isAddress(address)) return errorRes(res, 403, 73403);
+  if (!isAddress(address)) return errorRes(res, 403, 73402);
 
   const result = await utils.set.gameStatus(address, status === 'true');
   if (result.error) return errorRes(res, 500, 73501, result.error);

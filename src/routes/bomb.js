@@ -11,7 +11,7 @@ router.route('/get/balanceOf')
   .get(server, validate('address'), controller.get.balanceOf);
 
 router.route('/get/allowance')
-  .get(server, validate('addressSpender'), controller.get.allowance);
+  .get(server, validate('allowance'), controller.get.allowance);
 
 router.route('/get/main_params')
   .get(server, controller.get.mainParams);

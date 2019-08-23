@@ -24,7 +24,7 @@ const filterEvents = (payload, model, from, to) => {
 const balanceOf = async(req, res) => {
   const { address } = req.query;
 
-  if (!isAddress(address)) return errorRes(res, 403, 73403);
+  if (!isAddress(address)) return errorRes(res, 403, 73402);
 
   const payload = await utils.get.balanceOf(address);
   if (!payload) return errorRes(res, 500, 73500);
@@ -36,8 +36,8 @@ const balanceOf = async(req, res) => {
 const allowance = async(req, res) => {
   const { address, spender } = req.query;
 
-  if (!isAddress(address)) return errorRes(res, 403, 73403);
-  if (!isAddress(spender)) return errorRes(res, 403, 73403);
+  if (!isAddress(address)) return errorRes(res, 403, 73402);
+  if (!isAddress(spender)) return errorRes(res, 403, 73402);
 
   const payload = await utils.get.allowance(address, spender);
   if (!payload) return errorRes(res, 500, 73500);
@@ -104,7 +104,7 @@ const stackingParams = async(_req, res) => {
 const setSaleAgent = async(req, res) => {
   const { address } = req.body;
 
-  if (!isAddress(address)) return errorRes(res, 403, 73403);
+  if (!isAddress(address)) return errorRes(res, 403, 73402);
 
   const result = await utils.set.setSaleAgent(address);
   if (result.error) return errorRes(res, 500, 73501, result.error);
@@ -115,7 +115,7 @@ const setSaleAgent = async(req, res) => {
 const setStackingHodler = async(req, res) => {
   const { address } = req.body;
 
-  if (!isAddress(address)) return errorRes(res, 403, 73403);
+  if (!isAddress(address)) return errorRes(res, 403, 73402);
 
   const result = await utils.set.setStackingHodler(address);
   if (result.error) return errorRes(res, 500, 73501, result.error);
@@ -136,7 +136,7 @@ const setStackingParams = async(req, res) => {
 const transferOwnership = async(req, res) => {
   const { address } = req.body;
 
-  if (!isAddress(address)) return errorRes(res, 403, 73403);
+  if (!isAddress(address)) return errorRes(res, 403, 73402);
 
   const result = await utils.set.transferOwnership(address);
   if (result.error) return errorRes(res, 500, 73501, result.error);
