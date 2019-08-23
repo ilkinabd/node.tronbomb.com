@@ -1,23 +1,23 @@
 const db = require('@db');
 
 const { sendTRX, isAddress, getBlock } = require('@utils/tron');
-const { successRes, resSuccess, resError } = require('@utils/res-builder');
+const {
+  successRes, errorRes, resSuccess, resError
+} = require('@utils/res-builder');
 
 const getContracts = async(_req, res) => {
   const contracts = await db.contracts.getAll();
   successRes(res, { contracts });
 };
 
-// Getters
-
 const block = async(req, res) => {
-  const { id } = req.query;
+  const { index } = req.query;
 
   try {
-    const hash = (await getBlock(id)).blockID;
-    res.json(resSuccess({ number: id, hash }));
+    const hash = (await getBlock(index)).blockID;
+    successRes(res, { number: index, hash: `0x${hash}` });
   } catch {
-    return res.status(500).json(resError(73500));
+    errorRes(res, 500, 73500);
   }
 };
 
@@ -35,9 +35,7 @@ const withdraw = async(req, res) => {
 
 module.exports = {
   getContracts,
-  get: {
-    block,
-  },
+  block,
   func: {
     withdraw,
   },
