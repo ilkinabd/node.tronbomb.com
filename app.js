@@ -9,6 +9,7 @@ const bomb = require('@routes/bomb');
 const portal = require('@routes/portal');
 const dice = require('@routes/dice');
 const wheel = require('@routes/wheel');
+const operations = require('@routes/operations');
 const tools = require('@routes/tools');
 
 const app = express();
@@ -38,6 +39,7 @@ app.use('/bomb', bomb);
 app.use('/portal', portal);
 app.use('/dice', dice);
 app.use('/wheel', wheel);
+app.use('/operations', operations);
 app.use('/tools', tools);
 
 module.exports = app;
