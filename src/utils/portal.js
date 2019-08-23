@@ -12,29 +12,32 @@ const contract = async() => tronWeb.contract().at(await address);
 
 module.exports = {
   get: {
+    address: () => address,
     balance: async() => balance(await address),
     mainStatus: call('mainStatus', contract),
     owner: call('owner', contract),
-    token: call('tokens', contract),
     game: call('games', contract),
-    gameStatus: call('gamesStatuses', contract),
+    gameStatuses: call('gameStatuses', contract),
+    BOMBHodler: call('BOMBHodler', contract),
+    minTRXBet: call('minTRXBet', contract),
+    maxTRXBet: call('maxTRXBet', contract),
+    minBOMBBet: call('minBOMBBet', contract),
+    maxBOMBBet: call('maxBOMBBet', contract),
   },
   set: {
     mainStatus: send('setMainStatus', contract),
-    token: send('setToken', contract),
+    betParams: send('setBetParams', contract),
     game: send('setGame', contract),
     gameStatus: send('setGameStatus', contract),
   },
   func: {
-    takeTRXBet: payable('takeTRXBet', contract),
+    takeBet: payable('takeBet', contract),
+    takeBOMBBet: send('takeBOMBBet', contract),
     withdraw: send('withdraw', contract),
   },
   events: {
-    mainStatus: events('ChangeMainStatus', address),
+    payReward: events('PayReward', address),
     withdraw: events('Withdraw', address),
-    token: events('SetToken', address),
-    game: events('SetGame', address),
-    gamesStatus: events('SetGameStatus', address),
-    reward: events('PayReward', address),
+    mainStatus: events('SetMainStatus', address),
   },
 };

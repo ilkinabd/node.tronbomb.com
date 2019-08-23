@@ -30,21 +30,12 @@ const schemas = {
   code: Joi.object().keys({
     code: Joi.number().integer().min(0).max(1000000000),
   }),
+  amount: Joi.object().keys({
+    amount: templates.number.required(),
+  }),
   addressSpender: Joi.object().keys({
     address: templates.address.required(),
     spender: templates.address.required(),
-  }),
-  idAddress: Joi.object().keys({
-    id: templates.integer.required(),
-    address: templates.address.required(),
-  }),
-  statusAddress: Joi.object().keys({
-    status: templates.status.required(),
-    address: templates.address.required(),
-  }),
-  idAmount: Joi.object().keys({
-    amount: templates.number.required(),
-    id: templates.integer.required(),
   }),
   fromTo: Joi.object().keys({
     from: templates.integer,
@@ -53,11 +44,6 @@ const schemas = {
   bet: Joi.object().keys({
     min: templates.number.required(),
     max: templates.number.min(Joi.ref('min')).required(),
-  }),
-  idAmountData: Joi.object().keys({
-    id: templates.integer.required(),
-    amount: templates.number.required(),
-    data: Joi.array().items(templates.bytes).required(),
   }),
   addressBlockHash: Joi.object().keys({
     address: templates.address.required(),
@@ -90,6 +76,29 @@ const schemas = {
   approve: Joi.object().keys({
     spender: templates.address.required(),
     amount: templates.number.required(),
+  }),
+  setBetParams: {
+    index: templates.integer.required(),
+    minBet: templates.number.required(),
+    maxBet: templates.number.min(Joi.ref('minBet')).required(),
+  },
+  setGame: Joi.object().keys({
+    index: templates.integer.required(),
+    address: templates.address.required(),
+  }),
+  setStatus: Joi.object().keys({
+    address: templates.address.required(),
+    status: templates.status.required(),
+  }),
+  takeBet: Joi.object().keys({
+    gameId: templates.integer.required(),
+    bet: templates.number.required(),
+    data: Joi.array().items(templates.bytes).required(),
+  }),
+  takeBOMBBet: Joi.object().keys({
+    gameId: templates.integer.required(),
+    bet: templates.number.required(),
+    data: Joi.array().items(templates.bytes).required(),
   }),
   events: Joi.object().keys({
     from: templates.integer,

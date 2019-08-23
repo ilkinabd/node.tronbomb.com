@@ -7,61 +7,46 @@ const validate = require('@middleware/validate');
 
 // Getters
 
-router.route('/get/balance')
-  .get(server, controller.get.balance);
+router.route('/get/games')
+  .get(server, controller.get.games);
 
-router.route('/get/main_status')
-  .get(server, controller.get.mainStatus);
-
-router.route('/get/owner')
-  .get(server, controller.get.owner);
-
-router.route('/get/token')
-  .get(server, validate('id', true), controller.get.token);
-
-router.route('/get/game')
-  .get(server, validate('id', true), controller.get.game);
-
-router.route('/get/game_status')
-  .get(server, validate('address', true), controller.get.gameStatus);
+router.route('/get/params')
+  .get(server, controller.get.params);
 
 // Setters
 
 router.route('/set/main_status')
   .post(admin, validate('status', false), controller.set.mainStatus);
 
-router.route('/set/token')
-  .post(admin, validate('idAddress', false), controller.set.token);
+router.route('/set/bet_params')
+  .post(admin, validate('setBetParams', false), controller.set.betParams);
 
 router.route('/set/game')
-  .post(admin, validate('idAddress', false), controller.set.game);
+  .post(admin, validate('setGame', false), controller.set.game);
 
 router.route('/set/game_status')
-  .post(admin, validate('statusAddress', false), controller.set.gameStatus);
+  .post(admin, validate('setStatus', false), controller.set.gameStatus);
 
 // Functions
 
-router.route('/func/take_trx_bet')
-  .post(server, validate('idAmountData', false), controller.func.takeTRXBet);
+router.route('/func/take_bet')
+  .post(server, validate('takeBet', false), controller.func.takeBet);
+
+router.route('/func/take_bomb_bet')
+  .post(server, validate('takeBOMBBet', false), controller.func.takeBOMBBet);
 
 router.route('/func/withdraw')
-  .post(admin, validate('idAmount', false), controller.func.withdraw);
+  .post(admin, validate('amount', false), controller.func.withdraw);
 
 // Events
 
-router.route('/events/main_status')
-  .get(server, validate('fromTo', true), controller.events.mainStatus);
+router.route('/events/pay_reward')
+  .get(server, validate('events'), controller.events.payReward);
 
 router.route('/events/withdraw')
-  .get(server, validate('fromTo', true), controller.events.withdraw);
+  .get(server, validate('events'), controller.events.withdraw);
 
-router.route('/events/token')
-  .get(server, validate('fromTo', true), controller.events.token);
-
-router.route('/events/game')
-  .get(server, validate('fromTo', true), controller.events.game);
-
-router.route('/events/reward')
-  .get(server, validate('fromTo', true), controller.events.reward);
+router.route('/events/main_status')
+  .get(server, validate('events'), controller.events.mainStatus);
 
 module.exports = router;
