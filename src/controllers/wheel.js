@@ -1,6 +1,6 @@
 const utils = require('@utils/wheel');
 const models = require('@models/wheel');
-const { toSun, isAddress, toDecimal } = require('@utils/tron');
+const { isAddress, toDecimal } = require('@utils/tron');
 const {
   resSuccess, resError, successRes, errorRes
 } = require('@utils/res-builder');
@@ -91,15 +91,6 @@ const setPortal = async(req, res) => {
   successRes(res);
 };
 
-const setBet = async(req, res) => {
-  const { min, max } = req.body;
-
-  const result = await utils.set.bet(toSun(min), toSun(max));
-  if (!result) return res.status(500).json(resError(73500));
-
-  res.json(resSuccess());
-};
-
 // Functions
 
 const rng = async(req, res) => {
@@ -165,9 +156,8 @@ module.exports = {
     params: getParams,
   },
   set: {
+    duration: setDuration,
     portal: setPortal,
-    bet: setBet,
-    duration: setDuration
   },
   func: {
     rng,

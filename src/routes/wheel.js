@@ -24,9 +24,6 @@ router.route('/set/duration')
 router.route('/set/portal')
   .post(server, validate('address', false), controller.set.portal);
 
-router.route('/set/bet')
-  .post(server, validate('bet', false), controller.set.bet);
-
 // Functions
 
 router.route('/func/rng')
