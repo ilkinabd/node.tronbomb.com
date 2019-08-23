@@ -15,26 +15,12 @@ const templates = {
   owner: toBase58,
   address: toBase58,
   bet: (value) => (value / 10 ** 6),
+  prize: (value) => (value / 10 ** 6),
 };
 
 const modelBuilder = (payload, keys) => {
   const model = {};
   for (const key of keys) model[key] = templates[key](payload[key]);
-
-  return model;
-};
-
-const toAmount = (tokenId, amount) =>
-  ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
-
-const playerWin = (payload) => {
-  const { amount, tokenId, betId } = payload;
-
-  const model = {
-    amount: toAmount(tokenId, amount),
-    tokenId: toDecimal(tokenId),
-    index: toDecimal(betId),
-  };
 
   return model;
 };
@@ -72,7 +58,9 @@ module.exports = {
   takeBet: (payload) => modelBuilder(payload, [
     'wallet', 'bet', 'tokenId', 'finishBlock', 'sector', 'index'
   ]),
-  playerWin,
+  playerWin: (payload) => modelBuilder(payload, [
+    'wallet', 'prize', 'tokenId', 'index'
+  ]),
   changeMinMaxBet,
   changeDuration,
 };

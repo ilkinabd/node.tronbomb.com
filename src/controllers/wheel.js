@@ -131,11 +131,10 @@ const playerWin = async(req, res) => {
   const { from, to } = req.query;
 
   const payload = await utils.events.playerWin();
-  if (!payload) return res.status(500).json(resError(73500));
-
+  if (!payload) return errorRes(res, 500, 73500);
   const events = filterEvents(payload, models.playerWin, from, to);
 
-  res.json(resSuccess({ events }));
+  successRes(res, { events });
 };
 
 const changeParams = async(req, res) => {
