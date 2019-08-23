@@ -1,5 +1,24 @@
 const { toBase58, toDecimal, toTRX } = require('@utils/tron');
 
+const templates = {
+  index: toDecimal,
+  finishBlock: toDecimal,
+  wallet: toBase58,
+  bet: (value) => (value / 10 ** 6),
+  tokenId: toDecimal,
+  number: (value) => (value),
+  roll: (value) => (value),
+  result: (value) => (value),
+  state: (value) => [null, 'start', 'finish'][value],
+};
+
+const modelBuilder = (payload, keys) => {
+  const model = {};
+  for (const key of keys) model[key] = templates[key](payload[key]);
+
+  return model;
+};
+
 const rollType = (index) => {
   let roll;
   switch (index) {
@@ -12,28 +31,6 @@ const rollType = (index) => {
 
 const toAmount = (tokenId, amount) =>
   ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
-
-const game = (payload) => {
-  const {
-    gameId, finishBlock, player, amount, tokenId, number, roll, result, status
-  } = payload;
-
-  if (toDecimal(finishBlock) === 0) return null;
-
-  const model = {
-    gameId: toDecimal(gameId),
-    finishBlock: toDecimal(finishBlock),
-    player: toBase58(player),
-    amount: toAmount(tokenId, amount),
-    tokenId,
-    number,
-    roll: rollType(roll),
-    result: (status === 0) ? null : result,
-    status: (status === 0) ? 'start' : 'finish',
-  };
-
-  return model;
-};
 
 const params = (payload) => {
   const { portal, rtp, rtpDivider, minBet, maxBet } = payload;
@@ -112,7 +109,10 @@ const changeMinMaxBet = (payload) => {
 };
 
 module.exports = {
-  game,
+  game: (payload) => modelBuilder(payload, [
+    'index', 'finishBlock', 'wallet', 'bet',
+    'tokenId', 'number', 'roll', 'result', 'state'
+  ]),
   params,
   takeBets,
   finishGame,

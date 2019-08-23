@@ -1,7 +1,9 @@
 const utils = require('@utils/dice');
 const models = require('@models/dice');
 const { toDecimal, toSun, isAddress } = require('@utils/tron');
-const { resSuccess, resError } = require('@utils/res-builder');
+const {
+  resSuccess, resError, successRes, errorRes
+} = require('@utils/res-builder');
 
 const filterEvents = (payload, model, from, to) => {
   const events = payload.filter(item => (
@@ -17,13 +19,18 @@ const filterEvents = (payload, model, from, to) => {
 // Getters
 
 const getGame = async(req, res) => {
-  const { id } = req.query;
+  const { index } = req.query;
 
-  const payload = await utils.get.game(id);
-  if (!payload) return res.status(500).json(resError(73500));
-  const game = models.game(payload);
+  const totalGames = toDecimal(await utils.get.totalGames());
+  if (!totalGames) return errorRes(res, 500, 73500);
 
-  res.json(resSuccess({ game }));
+  if (index >= totalGames) return errorRes(res, 422, 73405);
+
+  const payload = await utils.get.game(index);
+  if (!payload) return errorRes(res, 500, 73500);
+  const model = models.game(payload);
+
+  successRes(res, model);
 };
 
 const getGames = async(req, res) => {

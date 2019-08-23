@@ -15,6 +15,9 @@ const schemas = {
   id: Joi.object().keys({
     id: templates.integer.required(),
   }),
+  index: Joi.object().keys({
+    index: templates.integer.required(),
+  }),
   address: Joi.object().keys({
     address: templates.address.required(),
   }),

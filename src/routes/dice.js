@@ -8,7 +8,7 @@ const validate = require('@middleware/validate');
 // Getters
 
 router.route('/get/game')
-  .get(server, validate('id'), controller.get.game);
+  .get(server, validate('index'), controller.get.game);
 
 router.route('/get/games')
   .get(server, validate('fromTo', true), controller.get.games);
