@@ -4,8 +4,15 @@ const templates = {
   index: toDecimal,
   tokenId: toDecimal,
   sector: toDecimal,
+  totalBets: toDecimal,
+  processedBets: toDecimal,
+  duration: toDecimal,
+  startBlock: toDecimal,
   finishBlock: toDecimal,
   wallet: toBase58,
+  portal: toBase58,
+  owner: toBase58,
+  address: toBase58,
   bet: (value) => (value / 10 ** 6),
 };
 
@@ -18,21 +25,6 @@ const modelBuilder = (payload, keys) => {
 
 const toAmount = (tokenId, amount) =>
   ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
-
-const params = (payload) => {
-  const { portal, duration, minBet, maxBet, startBlock, processBets } = payload;
-
-  const model = {
-    portal: toBase58(portal),
-    minBet: toTRX(minBet),
-    maxBet: toTRX(maxBet),
-    duration: toDecimal(duration),
-    startBlock: toDecimal(startBlock),
-    processBets: toDecimal(processBets),
-  };
-
-  return model;
-};
 
 const takeBet = (payload) => {
   const { player, amount, tokenId, sector, finishBlock, betId } = payload;
@@ -86,7 +78,10 @@ module.exports = {
   bet: (payload) => modelBuilder(payload, [
     'wallet', 'bet', 'tokenId', 'finishBlock', 'sector', 'index'
   ]),
-  params,
+  params: (payload) => modelBuilder(payload, [
+    'portal', 'totalBets', 'processedBets', 'duration',
+    'startBlock', 'owner', 'address'
+  ]),
   takeBet,
   playerWin,
   changeMinMaxBet,
