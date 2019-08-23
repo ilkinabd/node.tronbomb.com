@@ -43,11 +43,11 @@ router.route('/func/withdraw')
 router.route('/events/pay_reward')
   .get(server, validate('events'), controller.events.payReward);
 
+router.route('/events/withdraw')
+  .get(server, validate('events'), controller.events.withdraw);
+
 router.route('/events/main_status')
   .get(server, validate('fromTo', true), controller.events.mainStatus);
-
-router.route('/events/withdraw')
-  .get(server, validate('fromTo', true), controller.events.withdraw);
 
 router.route('/events/token')
   .get(server, validate('fromTo', true), controller.events.token);

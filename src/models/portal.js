@@ -11,6 +11,7 @@ const templates = {
   maxBOMBBet: (value) => (value / 10 ** 6),
   balanceBOMB: (value) => (value / 10 ** 6),
   prize: (value) => (value / 10 ** 6),
+  amount: (value) => (value / 10 ** 6),
   index: toDecimal,
   tokenId: toDecimal,
   status: (value) => (value),
@@ -25,25 +26,11 @@ const modelBuilder = (payload, keys) => {
   return model;
 };
 
-const toAmount = (tokenId, amount) =>
-  ((toDecimal(tokenId) === 0) ? toTRX(amount) : toDecimal(amount));
-
 const mainStatus = (payload) => {
   const { mainStatus } = payload;
 
   const model = {
     mainStatus: mainStatus === 'true',
-  };
-
-  return model;
-};
-
-const withdraw = (payload) => {
-  const { amount, tokenId } = payload;
-
-  const model = {
-    amount: toAmount(tokenId, amount),
-    tokenId: toDecimal(tokenId),
   };
 
   return model;
@@ -71,7 +58,9 @@ module.exports = {
   payReward: (payload) => modelBuilder(payload, [
     'to', 'prize', 'tokenId'
   ]),
+  withdraw: (payload) => modelBuilder(payload, [
+    'amount', 'tokenId'
+  ]),
   mainStatus,
-  withdraw,
   contract,
 };

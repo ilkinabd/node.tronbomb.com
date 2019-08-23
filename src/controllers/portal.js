@@ -155,6 +155,16 @@ const payReward = async(req, res) => {
   successRes(res, { events });
 };
 
+const withdrawEvents = async(req, res) => {
+  const { from, to } = req.query;
+
+  const payload = await utils.events.withdraw();
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.withdraw, from, to);
+
+  successRes(res, { events });
+};
+
 const mainStatusEvents = async(req, res) => {
   const { from, to } = req.query;
 
@@ -162,17 +172,6 @@ const mainStatusEvents = async(req, res) => {
   if (!payload) return res.status(500).json(resError(73500));
 
   const events = filterEvents(payload, models.mainStatus, from, to);
-
-  res.json(resSuccess({ events }));
-};
-
-const withdrawEvents = async(req, res) => {
-  const { from, to } = req.query;
-
-  const payload = await utils.events.withdraw();
-  if (!payload) return res.status(500).json(resError(73500));
-
-  const events = filterEvents(payload, models.withdraw, from, to);
 
   res.json(resSuccess({ events }));
 };
@@ -222,8 +221,8 @@ module.exports = {
   },
   events: {
     payReward,
-    mainStatus: mainStatusEvents,
     withdraw: withdrawEvents,
+    mainStatus: mainStatusEvents,
     token: tokenEvents,
     game: gameEvents,
   },
