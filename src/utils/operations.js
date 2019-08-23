@@ -3,7 +3,7 @@ const { PRIVATE_KEY, PROVIDER } = process.env;
 const TronWeb = require('tronweb');
 
 const db = require('@db');
-const { call, payable } = require('@utils/tron');
+const { call, send, payable } = require('@utils/tron');
 
 const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
 
@@ -17,5 +17,7 @@ module.exports = {
   },
   func: {
     withdraw: payable('withdraw', contract),
+    referralProfit: send('withdrawReferralProfit', contract),
+    dividends: send('withdrawDividends', contract),
   },
 };

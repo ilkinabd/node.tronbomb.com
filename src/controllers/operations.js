@@ -31,11 +31,31 @@ const withdraw = async(req, res) => {
   successRes(res);
 };
 
+const referralProfit = async(req, res) => {
+  const { to, amount } = req.body;
+
+  const result = await utils.func.referralProfit(to, toSun(amount));
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
+const dividends = async(req, res) => {
+  const { to, amount } = req.body;
+
+  const result = await utils.func.dividends(to, toSun(amount));
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
 module.exports = {
   get: {
     params: getParams,
   },
   func: {
     withdraw,
+    referralProfit,
+    dividends,
   },
 };
