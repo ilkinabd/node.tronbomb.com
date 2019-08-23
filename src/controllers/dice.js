@@ -1,9 +1,7 @@
 const utils = require('@utils/dice');
 const models = require('@models/dice');
 const { toDecimal, isAddress } = require('@utils/tron');
-const {
-  resSuccess, resError, successRes, errorRes
-} = require('@utils/res-builder');
+const { successRes, errorRes } = require('@utils/res-builder');
 
 const filterEvents = (payload, model, from, to) => {
   const events = payload.filter(item => (
@@ -147,19 +145,14 @@ const playersWin = async(req, res) => {
   successRes(res, { events });
 };
 
-const changeParamsEvents = async(req, res) => {
+const setRTPEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  const rtpPayload = await utils.events.changeRTP();
-  if (!rtpPayload) return res.status(500).json(resError(73500));
-  const rtp = filterEvents(rtpPayload, models.changeRTP, from, to);
+  const payload = await utils.events.setRTP();
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.setRTP, from, to);
 
-  const betPayload = await utils.events.changeMinMaxBet();
-  if (!betPayload) return res.status(500).json(resError(73500));
-  const bet = filterEvents(betPayload, models.changeMinMaxBet, from, to);
-
-  const events = rtp.concat(bet);
-  res.json(resSuccess({ events }));
+  successRes(res, { events });
 };
 
 module.exports = {
@@ -180,6 +173,6 @@ module.exports = {
     takeBet,
     finishGame: finishGameEvents,
     playersWin,
-    changeParams: changeParamsEvents,
+    setRTP: setRTPEvents,
   },
 };

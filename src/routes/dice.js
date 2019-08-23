@@ -41,9 +41,9 @@ router.route('/events/finish_game')
   .get(server, validate('events'), controller.events.finishGame);
 
 router.route('/events/players_win')
-  .get(server, validate('fromTo', true), controller.events.playersWin);
+  .get(server, validate('events'), controller.events.playersWin);
 
-router.route('/events/change_params')
-  .get(server, validate('fromTo', true), controller.events.changeParams);
+router.route('/events/set_rtp')
+  .get(server, validate('events'), controller.events.setRTP);
 
 module.exports = router;

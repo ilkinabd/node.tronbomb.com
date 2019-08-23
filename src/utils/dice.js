@@ -31,7 +31,6 @@ module.exports = {
     takeBet: events('TakeBet', address),
     finishGame: events('FinishGame', address),
     playersWin: events('PlayerWin', address),
-    changeRTP: events('ChangeRTP', address),
-    changeMinMaxBet: events('ChangeMinMaxBet', address),
+    setRTP: events('SetRTP', address),
   },
 };

@@ -1,4 +1,4 @@
-const { toBase58, toDecimal, toTRX } = require('@utils/tron');
+const { toBase58, toDecimal } = require('@utils/tron');
 
 const templates = {
   index: toDecimal,
@@ -26,27 +26,6 @@ const modelBuilder = (payload, keys) => {
   return model;
 };
 
-const changeRTP = (payload) => {
-  const { rtp, rtpDivider } = payload;
-
-  const model = {
-    rtp: rtp / rtpDivider,
-  };
-
-  return model;
-};
-
-const changeMinMaxBet = (payload) => {
-  const { minBet, maxBet } = payload;
-
-  const model = {
-    minBet: toTRX(minBet),
-    maxBet: toTRX(maxBet),
-  };
-
-  return model;
-};
-
 module.exports = {
   game: (payload) => modelBuilder(payload, [
     'index', 'finishBlock', 'wallet', 'bet',
@@ -63,6 +42,5 @@ module.exports = {
   playerWin: (payload) => modelBuilder(payload, [
     'player', 'prize', 'tokenId', 'index'
   ]),
-  changeRTP,
-  changeMinMaxBet,
+  setRTP: (payload) => modelBuilder(payload, ['rtp']),
 };
