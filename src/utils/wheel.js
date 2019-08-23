@@ -24,9 +24,9 @@ module.exports = {
     owner: call('owner', contract),
   },
   set: {
-    portal: send('setPortalAddress', contract),
-    bet: send('setMinMaxBet', contract),
     duration: send('setGameDuration', contract),
+    portal: send('setPortal', contract),
+    bet: send('setMinMaxBet', contract),
   },
   func: {
     rng: call('rng', contract),
