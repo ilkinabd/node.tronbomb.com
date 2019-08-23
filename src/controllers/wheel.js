@@ -71,6 +71,15 @@ const getParams = async(_req, res) => {
 
 // Setters
 
+const setDuration = async(req, res) => {
+  const { value } = req.body;
+
+  const result = await utils.set.duration(value);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
 const setPortal = async(req, res) => {
   const { address } = req.body;
 
@@ -85,15 +94,6 @@ const setBet = async(req, res) => {
   const { min, max } = req.body;
 
   const result = await utils.set.bet(toSun(min), toSun(max));
-  if (!result) return res.status(500).json(resError(73500));
-
-  res.json(resSuccess());
-};
-
-const setDuration = async(req, res) => {
-  const { duration } = req.body;
-
-  const result = await utils.set.duration(duration);
   if (!result) return res.status(500).json(resError(73500));
 
   res.json(resSuccess());

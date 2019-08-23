@@ -18,14 +18,14 @@ router.route('/get/params')
 
 // Setters
 
+router.route('/set/duration')
+  .post(server, validate('value', false), controller.set.duration);
+
 router.route('/set/portal')
   .post(server, validate('address', false), controller.set.portal);
 
 router.route('/set/bet')
   .post(server, validate('bet', false), controller.set.bet);
-
-router.route('/set/duration')
-  .post(server, validate('duration', false), controller.set.duration);
 
 // Functions
 
