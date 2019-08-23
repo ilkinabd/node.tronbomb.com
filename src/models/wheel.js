@@ -1,4 +1,4 @@
-const { toDecimal, toBase58, toTRX } = require('@utils/tron');
+const { toDecimal, toBase58 } = require('@utils/tron');
 
 const templates = {
   index: toDecimal,
