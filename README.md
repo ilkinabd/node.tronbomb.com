@@ -1,5 +1,5 @@
 # Node
-v0.8.7 Aug 24, 2019
+v0.8.8 Aug 24, 2019
 
 Microservice for **TronBomb** smart contracts.
 
@@ -49,10 +49,11 @@ env:
   PG_PASS         : pass1234                        // Postgres password
   PG_DB           : tron_bomb_node                  // Postgres database
   PRIVATE_KEY     : 123456789...abcdef              // Main wallet private key
-  REFERRAL_KEY    : 123456789...abcdef              // Referral hodler wallet private key
   PROVIDER        : https://api.shasta.trongrid.io  // TRON provider
   TOKEN           : 123456789abcdef                 // Server auth token
   ADMIN_TOKEN     : 123456789abcdef                 // Admin auth token
+  IV              : 123456789...abcdef              // IV for private key encrypt
+  SECRET          : 123456789abcdef                 // TOP SECRET
 ```
 
 Powered by 2019 © MaxieMind for © TronBomb.
