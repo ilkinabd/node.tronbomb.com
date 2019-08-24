@@ -7,7 +7,8 @@ const burn = async(block, chanel) => {
 
   for (const item of payload) {
     const event = models.burnEvent(item.result);
-    chanel.emit('burn', event);
+    event.hash = item.transaction;
+    chanel.emit('bomb-burn', event);
   }
 };
 
