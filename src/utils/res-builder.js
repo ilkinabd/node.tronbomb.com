@@ -5,6 +5,7 @@ errors.set(73401, 'Wrong token.');
 errors.set(73402, 'Invalid address provided.');
 errors.set(73405, 'Game does not exist.');
 errors.set(73406, 'Bet does not exist.');
+errors.set(73407, 'Invalid fund provided.');
 errors.set(73500, 'Internal server error.');
 errors.set(73501, 'REVERT opcode executed.');
 

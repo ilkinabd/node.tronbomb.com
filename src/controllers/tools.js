@@ -1,6 +1,7 @@
 const db = require('@db');
 
-const { sendTRX, isAddress, getBlock } = require('@utils/tron');
+const bombUtils = require('@utils/bomb');
+const { sendTRX, balance, isAddress, getBlock } = require('@utils/tron');
 const { successRes, errorRes } = require('@utils/res-builder');
 
 const getContracts = async(_req, res) => {
@@ -19,6 +20,19 @@ const block = async(req, res) => {
   }
 };
 
+const fundBalance = async(req, res) => {
+  const { type } = req.query;
+
+  const { address } = await db.funds.get({ type });
+  if (!address) return errorRes(res, 422, 73407);
+
+  const balanceTRX = await balance(address);
+  const payload = await bombUtils.get.balanceOf(address);
+  const balanceBOMB = payload.amount / 10 ** 6;
+
+  successRes(res, { address, balanceTRX, balanceBOMB });
+};
+
 const withdraw = async(req, res) => {
   const { to, amount } = req.body;
 
@@ -34,5 +48,6 @@ const withdraw = async(req, res) => {
 module.exports = {
   getContracts,
   block,
+  fundBalance,
   withdraw,
 };
