@@ -16,3 +16,25 @@ CREATE TABLE "sockets" (
 
   PRIMARY KEY("socket_id")
 );
+
+CREATE TYPE FUND_TYPE AS ENUM (
+  'dividends',
+  'ad',
+  'random jackpot',
+  'bet amount jackpot',
+  'technical',
+  'referral rewards',
+  'team',
+  'auction'
+);
+
+CREATE TABLE "funds" (
+  "id"            SERIAL       NOT NULL,
+  "type"          FUND_TYPE    NOT NULL,
+  "address"       CHAR(34)     NOT NULL,
+  "encrypted_key" VARCHAR(256) NOT NULL,
+
+  PRIMARY KEY("id"),
+  UNIQUE("type"),
+  UNIQUE("address")
+);
