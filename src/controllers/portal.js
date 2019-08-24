@@ -107,6 +107,17 @@ const setGameStatus = async(req, res) => {
   successRes(res);
 };
 
+const setBOMBHodler = async(req, res) => {
+  const { address } = req.body;
+
+  if (!isAddress(address)) return errorRes(res, 422, 73402);
+
+  const result = await utils.set.bombHodler(address);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
 // Functions
 
 const takeBet = async(req, res) => {
@@ -181,6 +192,7 @@ module.exports = {
   set: {
     mainStatus: setMainStatus,
     betParams: setBetParams,
+    bombHodler: setBOMBHodler,
     game: setGame,
     gameStatus: setGameStatus,
   },

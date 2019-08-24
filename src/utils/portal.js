@@ -27,6 +27,7 @@ module.exports = {
   set: {
     mainStatus: send('setMainStatus', contract),
     betParams: send('setBetParams', contract),
+    bombHodler: send('setBOMBHodler', contract),
     game: send('setGame', contract),
     gameStatus: send('setGameStatus', contract),
   },

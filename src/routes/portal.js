@@ -21,6 +21,9 @@ router.route('/set/main_status')
 router.route('/set/bet_params')
   .post(admin, validate('betParams', false), controller.set.betParams);
 
+router.route('/set/bomb_hodler')
+  .post(admin, validate('address', false), controller.set.bombHodler);
+
 router.route('/set/game')
   .post(admin, validate('game', false), controller.set.game);
 
