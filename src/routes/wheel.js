@@ -2,7 +2,7 @@ const express = require('express');
 const router = new express.Router();
 
 const controller = require('@controllers/wheel');
-const { server } = require('@middleware/auth');
+const { server, admin } = require('@middleware/auth');
 const validate = require('@middleware/validate');
 
 // Getters
@@ -19,10 +19,10 @@ router.route('/get/params')
 // Setters
 
 router.route('/set/duration')
-  .post(server, validate('value', false), controller.set.duration);
+  .post(admin, validate('value', false), controller.set.duration);
 
 router.route('/set/portal')
-  .post(server, validate('address', false), controller.set.portal);
+  .post(admin, validate('address', false), controller.set.portal);
 
 // Functions
 
