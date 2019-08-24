@@ -1,7 +1,8 @@
 const { currentBlock, getBlock } = require('@utils/tron');
 const dice = require('@workers/dice');
 const wheel = require('@workers/wheel');
-const withdraw = require('@workers/operations');
+const operations = require('@workers/operations');
+const bomb = require('@workers/bomb');
 
 module.exports = async(io) => {
   let lastBlock = (await currentBlock()).block_header;
@@ -18,7 +19,8 @@ module.exports = async(io) => {
 
       dice(number, io.in('dice'));
       wheel(number, io.in('wheel'));
-      withdraw(number, io.in('operations'));
+      operations(number, io.in('operations'));
+      bomb(number, io.in('bomb'));
     }
     lastBlock = current;
   }, 3000);
