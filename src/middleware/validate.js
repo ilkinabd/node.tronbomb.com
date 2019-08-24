@@ -4,6 +4,7 @@ const templates = {
   integer: Joi.number().integer().min(0),
   number: Joi.number().min(0),
   address: Joi.string().alphanum().length(34),
+  string: Joi.string().alphanum(),
   status: Joi.boolean(),
   bytes: Joi.string().regex(/0[xX][0-9a-fA-F]+/m),
   rtp: Joi.number().min(0.001).max(1.000),
@@ -27,6 +28,9 @@ const schemas = {
   }),
   amount: Joi.object().keys({
     amount: templates.number.required(),
+  }),
+  fund: Joi.object().keys({
+    type: templates.string.required(),
   }),
   allowance: Joi.object().keys({
     address: templates.address.required(),
@@ -59,6 +63,11 @@ const schemas = {
   }),
   transferFrom: Joi.object().keys({
     from: templates.address.required(),
+    to: templates.address.required(),
+    amount: templates.number.required(),
+  }),
+  withdraw: Joi.object().keys({
+    type: templates.string.required(),
     to: templates.address.required(),
     amount: templates.number.required(),
   }),

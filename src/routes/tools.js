@@ -9,9 +9,15 @@ router.route('/contracts')
   .get(server, controller.getContracts);
 
 router.route('/block')
-  .get(validate('index'), controller.block);
+  .get(server, validate('index'), controller.block);
+
+router.route('/fund_balance')
+  .get(server, validate('fund'), controller.fundBalance);
+
+router.route('/fund_balances')
+  .get(server, controller.fundBalances);
 
 router.route('/withdraw')
-  .post(server, validate('transfer', false), controller.withdraw);
+  .post(server, validate('withdraw', false), controller.withdraw);
 
 module.exports = router;
