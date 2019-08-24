@@ -26,7 +26,6 @@ const query = sql => (client
 );
 const request = template => params => {
   const sql = fillTemplate(template, params);
-  console.log(sql);
   return query(sql);
 };
 
@@ -37,6 +36,7 @@ module.exports = {
   },
   funds: {
     get: getRow(request(funds['get'])),
+    getAll: getAll(request(funds['get-all'])),
   },
   sockets: {
     add: getId(request(sockets['add'])),

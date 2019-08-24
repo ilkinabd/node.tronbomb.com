@@ -30,7 +30,23 @@ const fundBalance = async(req, res) => {
   const payload = await bombUtils.get.balanceOf(address);
   const balanceBOMB = payload.amount / 10 ** 6;
 
-  successRes(res, { address, balanceTRX, balanceBOMB });
+  successRes(res, { address, type, balanceTRX, balanceBOMB });
+};
+
+const fundBalances = async(_req, res) => {
+  const fundsData = await db.funds.getAll();
+
+  const requests = [];
+  for (const { address, type } of fundsData) requests.push((async() => ({
+    address,
+    type,
+    balanceTRX: await balance(address),
+    balanceBOMB: (await bombUtils.get.balanceOf(address)).amount / 10 ** 6,
+  }))());
+
+  const funds = await Promise.all(requests).catch(console.error);
+
+  successRes(res, { funds });
 };
 
 const withdraw = async(req, res) => {
@@ -49,5 +65,6 @@ module.exports = {
   getContracts,
   block,
   fundBalance,
+  fundBalances,
   withdraw,
 };

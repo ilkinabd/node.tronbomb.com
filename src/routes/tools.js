@@ -14,6 +14,9 @@ router.route('/block')
 router.route('/fund_balance')
   .get(server, validate('fund'), controller.fundBalance);
 
+router.route('/fund_balances')
+  .get(server, controller.fundBalances);
+
 router.route('/withdraw')
   .post(server, validate('transfer', false), controller.withdraw);
 
