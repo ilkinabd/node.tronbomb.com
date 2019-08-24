@@ -1,6 +1,7 @@
 const db = require('@db');
 
 const bombUtils = require('@utils/bomb');
+const { decrypt } = require('@utils/crypto');
 const { sendTRX, balance, isAddress, getBlock } = require('@utils/tron');
 const { successRes, errorRes } = require('@utils/res-builder');
 
@@ -50,12 +51,17 @@ const fundBalances = async(_req, res) => {
 };
 
 const withdraw = async(req, res) => {
-  const { to, amount } = req.body;
+  const { type, to, amount } = req.body;
+
+  const { address, encryptedKey } = await db.funds.get({ type });
+  if (!address) return errorRes(res, 422, 73407);
 
   if (!isAddress(to)) return errorRes(res, 422, 73402);
 
-  console.info(`Withdraw ${amount} to ${to}`);
-  const answer = await sendTRX(to, amount);
+  const privateKey = decrypt(encryptedKey);
+
+  console.info(`Withdraw ${amount} to ${to} from ${type} fund.`);
+  const answer = await sendTRX(to, amount, privateKey);
   if (!answer || !answer.result) errorRes(res, 500, 73500);
 
   successRes(res, { txID: answer.transaction.txID });

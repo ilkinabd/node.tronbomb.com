@@ -18,6 +18,6 @@ router.route('/fund_balances')
   .get(server, controller.fundBalances);
 
 router.route('/withdraw')
-  .post(server, validate('transfer', false), controller.withdraw);
+  .post(server, validate('withdraw', false), controller.withdraw);
 
 module.exports = router;

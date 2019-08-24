@@ -1,4 +1,4 @@
-const { PRIVATE_KEY, REFERRAL_KEY, PROVIDER } = process.env;
+const { PRIVATE_KEY, PROVIDER } = process.env;
 
 const TronWeb = require('tronweb');
 
@@ -65,8 +65,8 @@ const balance = async(address) => toTRX(await tronWeb.trx.getBalance(address));
 const currentBlock = async() =>
   (await tronWeb.trx.getCurrentBlock()).block_header.raw_data.number;
 
-const sendTRX = async(to, amount) =>
-  tronWeb.trx.sendTransaction(toHex(to), toSun(amount), REFERRAL_KEY);
+const sendTRX = async(to, amount, privateKey) =>
+  tronWeb.trx.sendTransaction(toHex(to), toSun(amount), privateKey);
 
 module.exports = {
   call,
