@@ -37,6 +37,7 @@ const getBalances = async(_req, res) => {
 
 const transferTRX = async(req, res) => {
   const { type, to, amount } = req.body;
+  const amount = parseFloat(req.body.amount.toFixed(6));
 
   const { address, encryptedKey } = await db.funds.get({ type });
   if (!address) return errorRes(res, 422, 73407);
@@ -54,7 +55,7 @@ const transferTRX = async(req, res) => {
 
 const transferBOMB = async(req, res) => {
   const { type, to } = req.body;
-  const amount = req.body.amount * 10 ** 6;
+  const amount = Math.floor(req.body.amount * 10 ** 6);
 
   const { address, encryptedKey } = await db.funds.get({ type });
   if (!address) return errorRes(res, 422, 73407);
