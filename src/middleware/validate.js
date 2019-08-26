@@ -32,10 +32,6 @@ const schemas = {
   fund: Joi.object().keys({
     type: templates.string.required(),
   }),
-  freezeFund: Joi.object().keys({
-    type: templates.string.required(),
-    amount: templates.number.required(),
-  }),
   allowance: Joi.object().keys({
     address: templates.address.required(),
     spender: templates.address.required(),

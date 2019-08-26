@@ -18,6 +18,6 @@ router.route('/transfer_bomb')
   .post(server, validate('withdraw', false), controller.transferBOMB);
 
 router.route('/freeze_all')
-  .post(server, validate('freezeFund', false), controller.freezeAll);
+  .post(server, validate('fund', false), controller.freezeAll);
 
 module.exports = router;
