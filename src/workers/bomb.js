@@ -12,6 +12,18 @@ const burn = async(block, chanel) => {
   }
 };
 
+const freeze = async(block, chanel) => {
+  const payload = await utils.events.freeze(block);
+  if (!payload) return setTimeout(() => freeze(block, chanel), 1000);
+
+  for (const item of payload) {
+    const event = models.freezeEvent(item.result);
+    event.hash = item.transaction;
+    chanel.emit('bomb-freeze', event);
+  }
+};
+
 module.exports = async(block, chanel) => {
   burn(block, chanel);
+  freeze(block, chanel);
 };
