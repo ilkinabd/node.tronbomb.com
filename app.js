@@ -9,6 +9,7 @@ const dice = require('@routes/dice');
 const wheel = require('@routes/wheel');
 const operations = require('@routes/operations');
 const tools = require('@routes/tools');
+const fund = require('@routes/fund');
 
 const app = express();
 
@@ -37,5 +38,6 @@ app.use('/dice', dice);
 app.use('/wheel', wheel);
 app.use('/operations', operations);
 app.use('/tools', tools);
+app.use('/fund', fund);
 
 module.exports = app;

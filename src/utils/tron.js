@@ -22,7 +22,9 @@ const call = (variable, contract) => async(...params) => {
   return result;
 };
 
-const send = (method, contract) => async(...params) => {
+const send = (method, contract, key = PRIVATE_KEY) => async(...params) => {
+  tronWeb.setPrivateKey(key);
+
   const result = await (await contract())[method](...params).send({
     shouldPollResponse: true,
   }).catch((payload) => {
