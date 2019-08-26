@@ -155,7 +155,7 @@ const acceptOwnership = async(_req, res) => {
 
 const transfer = async(req, res) => {
   const { to } = req.body;
-  const amount = req.body.amount * 10 ** 6;
+  const amount = Math.floor(req.body.amount * 10 ** 6);
 
   const result = await utils.func.transfer(to, amount);
   if (result.error) return errorRes(res, 500, 73501, result.error);
