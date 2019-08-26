@@ -1,31 +1,24 @@
-const { PRIVATE_KEY, PROVIDER } = process.env;
-
-const TronWeb = require('tronweb');
-
 const db = require('@db');
 const { call, send, events } = require('@utils/tron');
 
-const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
-
 const address = db.contracts.get({ type: 'dice' });
-const contract = async() => tronWeb.contract().at(await address);
 
 module.exports = {
   get: {
     address: () => address,
-    game: call('games', contract),
-    totalGames: call('totalGames', contract),
-    portal: call('portal', contract),
-    rtp: call('rtp', contract),
-    owner: call('owner', contract),
+    game: call('games', address),
+    totalGames: call('totalGames', address),
+    portal: call('portal', address),
+    rtp: call('rtp', address),
+    owner: call('owner', address),
   },
   set: {
-    portal: send('setPortal', contract),
-    rtp: send('setRTP', contract),
+    portal: send('setPortal', address),
+    rtp: send('setRTP', address),
   },
   func: {
-    rng: call('rng', contract),
-    finishGame: send('finishGame', contract),
+    rng: call('rng', address),
+    finishGame: send('finishGame', address),
   },
   events: {
     takeBet: events('TakeBet', address),

@@ -67,7 +67,7 @@ const transferBOMB = async(req, res) => {
   const result = await utils.transferBOMB(to, amount, privateKey);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
-  successRes(res, { result });
+  successRes(res);
 };
 
 module.exports = {
