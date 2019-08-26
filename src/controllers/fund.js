@@ -36,7 +36,8 @@ const getBalances = async(_req, res) => {
 };
 
 const transferTRX = async(req, res) => {
-  const { type, to, amount } = req.body;
+  const { type, to } = req.body;
+  const amount = parseFloat(req.body.amount.toFixed(6));
 
   const { address, encryptedKey } = await db.funds.get({ type });
   if (!address) return errorRes(res, 422, 73407);
@@ -54,7 +55,7 @@ const transferTRX = async(req, res) => {
 
 const transferBOMB = async(req, res) => {
   const { type, to } = req.body;
-  const amount = req.body.amount * 10 ** 6;
+  const amount = Math.floor(req.body.amount * 10 ** 6);
 
   const { address, encryptedKey } = await db.funds.get({ type });
   if (!address) return errorRes(res, 422, 73407);
@@ -70,9 +71,31 @@ const transferBOMB = async(req, res) => {
   successRes(res);
 };
 
+const freezeAll = async(req, res) => {
+  const { type } = req.body;
+
+  // Default period 365 days;
+  const period = 365;
+
+  const { address, encryptedKey } = await db.funds.get({ type });
+  if (!address) return errorRes(res, 422, 73407);
+
+  const { amount } = await bombUtils.get.balanceOf(address);
+  if (amount < 10 ** 6) return successRes(res);
+
+  const privateKey = decrypt(encryptedKey);
+
+  console.info(`Freeze ${amount} BOMB from ${type} fund.`);
+  const result = await utils.freeze(amount, period, privateKey);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
 module.exports = {
   getBalance,
   getBalances,
   transferTRX,
   transferBOMB,
+  freezeAll,
 };

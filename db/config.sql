@@ -20,10 +20,10 @@ CREATE TABLE "sockets" (
 CREATE TYPE FUND_TYPE AS ENUM (
   'dividends',
   'ad',
-  'random jackpot',
-  'bet amount jackpot',
+  'random-jackpot',
+  'bet-amount-jackpot',
   'technical',
-  'referral rewards',
+  'referral-rewards',
   'team',
   'auction'
 );

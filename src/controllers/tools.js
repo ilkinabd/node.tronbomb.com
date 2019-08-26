@@ -8,6 +8,11 @@ const getContracts = async(_req, res) => {
   successRes(res, { contracts });
 };
 
+const getFunds = async(_req, res) => {
+  const funds = await db.funds.getAll();
+  successRes(res, { funds });
+};
+
 const block = async(req, res) => {
   const { index } = req.query;
 
@@ -21,5 +26,6 @@ const block = async(req, res) => {
 
 module.exports = {
   getContracts,
+  getFunds,
   block,
 };
