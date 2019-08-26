@@ -8,6 +8,9 @@ const validate = require('@middleware/validate');
 router.route('/contracts')
   .get(server, controller.getContracts);
 
+router.route('/funds')
+  .get(server, controller.getFunds);
+
 router.route('/block')
   .get(server, validate('index'), controller.block);
 
