@@ -15,15 +15,20 @@ const isNullAddress = (address) => (address === nullAddress);
 const toTRX = (amount) => parseFloat(tronWeb.fromSun(toDecimal(amount)));
 const toSun = (amount) => parseFloat(tronWeb.toSun(amount));
 
-const call = (variable, contract) => async(...params) => {
-  const result = await (await contract())[variable](...params).call()
+const call = (variable, address) => async(...params) => {
+  const contract = await tronWeb.contract().at(await address);
+
+  const result = await contract[variable](...params).call()
     .catch(console.error);
 
   return result;
 };
 
-const send = (method, contract) => async(...params) => {
-  const result = await (await contract())[method](...params).send({
+const send = (method, address, key = PRIVATE_KEY) => async(...params) => {
+  const contract = await tronWeb.contract().at(await address);
+  tronWeb.setPrivateKey(key);
+
+  const result = await contract[method](...params).send({
     shouldPollResponse: true,
   }).catch((payload) => {
     console.error(payload);
@@ -36,8 +41,10 @@ const send = (method, contract) => async(...params) => {
   return result;
 };
 
-const payable = (method, contract) => async(amount, ...params) => {
-  const result = await (await contract())[method](...params).send({
+const payable = (method, address) => async(amount, ...params) => {
+  const contract = await tronWeb.contract().at(await address);
+
+  const result = await contract[method](...params).send({
     shouldPollResponse: true,
     callValue: amount,
   }).catch((payload) => {

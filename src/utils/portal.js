@@ -1,40 +1,33 @@
-const { PRIVATE_KEY, PROVIDER } = process.env;
-
-const TronWeb = require('tronweb');
-
 const db = require('@db');
 const { call, send, payable, events, balance } = require('@utils/tron');
 
-const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
-
 const address = db.contracts.get({ type: 'portal' });
-const contract = async() => tronWeb.contract().at(await address);
 
 module.exports = {
   get: {
     address: () => address,
     balance: async() => balance(await address),
-    mainStatus: call('mainStatus', contract),
-    owner: call('owner', contract),
-    game: call('games', contract),
-    gameStatuses: call('gameStatuses', contract),
-    BOMBHodler: call('BOMBHodler', contract),
-    minTRXBet: call('minTRXBet', contract),
-    maxTRXBet: call('maxTRXBet', contract),
-    minBOMBBet: call('minBOMBBet', contract),
-    maxBOMBBet: call('maxBOMBBet', contract),
+    mainStatus: call('mainStatus', address),
+    owner: call('owner', address),
+    game: call('games', address),
+    gameStatuses: call('gameStatuses', address),
+    BOMBHodler: call('BOMBHodler', address),
+    minTRXBet: call('minTRXBet', address),
+    maxTRXBet: call('maxTRXBet', address),
+    minBOMBBet: call('minBOMBBet', address),
+    maxBOMBBet: call('maxBOMBBet', address),
   },
   set: {
-    mainStatus: send('setMainStatus', contract),
-    betParams: send('setBetParams', contract),
-    bombHodler: send('setBOMBHodler', contract),
-    game: send('setGame', contract),
-    gameStatus: send('setGameStatus', contract),
+    mainStatus: send('setMainStatus', address),
+    betParams: send('setBetParams', address),
+    bombHodler: send('setBOMBHodler', address),
+    game: send('setGame', address),
+    gameStatus: send('setGameStatus', address),
   },
   func: {
-    takeBet: payable('takeBet', contract),
-    takeBOMBBet: send('takeBOMBBet', contract),
-    withdraw: send('withdraw', contract),
+    takeBet: payable('takeBet', address),
+    takeBOMBBet: send('takeBOMBBet', address),
+    withdraw: send('withdraw', address),
   },
   events: {
     payReward: events('PayReward', address),
