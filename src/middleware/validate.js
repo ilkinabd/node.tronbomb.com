@@ -4,7 +4,7 @@ const templates = {
   integer: Joi.number().integer().min(0),
   number: Joi.number().min(0),
   address: Joi.string().alphanum().length(34),
-  string: Joi.string().alphanum(),
+  string: Joi.string(),
   status: Joi.boolean(),
   bytes: Joi.string().regex(/0[xX][0-9a-fA-F]+/m),
   rtp: Joi.number().min(0.001).max(1.000),
