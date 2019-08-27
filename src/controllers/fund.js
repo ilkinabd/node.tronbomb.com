@@ -37,7 +37,7 @@ const getBalances = async(_req, res) => {
 
 const transferTRX = async(req, res) => {
   const { type, to } = req.body;
-  const amount = parseFloat(req.body.amount.toFixed(6));
+  const amount = parseFloat(parseFloat(req.body.amount).toFixed(6));
 
   const { address, encryptedKey } = await db.funds.get({ type });
   if (!address) return errorRes(res, 422, 73407);
