@@ -74,19 +74,14 @@ const transferBOMB = async(req, res) => {
 const freezeAll = async(req, res) => {
   const { type } = req.body;
 
-  // Default period 365 days;
-  const period = 365;
-
   const { address, encryptedKey } = await db.funds.get({ type });
   if (!address) return errorRes(res, 422, 73407);
 
   const { amount } = await bombUtils.get.balanceOf(address);
-  if (amount < 10 ** 6) return successRes(res);
-
   const privateKey = decrypt(encryptedKey);
 
   console.info(`Freeze ${amount} BOMB from ${type} fund.`);
-  const result = await utils.freeze(amount, period, privateKey);
+  const result = await utils.freeze(amount, privateKey);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
   successRes(res);
