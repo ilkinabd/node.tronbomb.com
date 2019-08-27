@@ -16,7 +16,6 @@ const templates = {
   to: toBase58,
   wallet: toBase58,
   spender: toBase58,
-  finishTime: (value) => new Date(value * 1000),
 };
 
 const modelBuilder = (payload, keys) => {
@@ -47,7 +46,7 @@ module.exports = {
     'amount', 'wallet', 'spender'
   ]),
   freezeEvent: (payload) => modelBuilder(payload, [
-    'amount', 'finishTime', 'wallet'
+    'amount', 'wallet'
   ]),
   mintEvent: (payload) => modelBuilder(payload, [
     'amount', 'to'

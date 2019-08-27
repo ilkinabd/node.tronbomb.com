@@ -174,10 +174,9 @@ const decreaseApproval = async(req, res) => {
 };
 
 const freeze = async(req, res) => {
-  const { period } = req.body;
-  const amount = req.body.amount * 10 ** 6;
+  const amount = Math.floor(req.body.amount * 10 ** 6);
 
-  const result = await utils.func.freeze(amount, period);
+  const result = await utils.func.freeze(amount);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
   successRes(res);

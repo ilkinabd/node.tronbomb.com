@@ -51,7 +51,7 @@ router.route('/func/decrease_approval')
   .post(server, validate('approve', false), controller.func.decreaseApproval);
 
 router.route('/func/freeze')
-  .post(server, validate('stackingParams', false), controller.func.freeze);
+  .post(server, validate('amount', false), controller.func.freeze);
 
 router.route('/func/freeze_again')
   .post(server, validate('stackingParams', false), controller.func.freezeAgain);
