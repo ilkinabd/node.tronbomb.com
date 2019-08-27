@@ -49,8 +49,7 @@ const allowance = async(req, res) => {
 const mainParams = async(_req, res) => {
   const requests = [];
   const params = [
-    'name', 'symbol', 'decimal', 'totalSupply',
-    'mintingFinished', 'totalBurned', 'stakingHodler',
+    'name', 'symbol', 'decimal', 'totalSupply', 'mintingFinished', 'totalBurned'
   ];
 
   for (const param of params) requests.push(utils.get[param]());
@@ -66,7 +65,7 @@ const mainParams = async(_req, res) => {
 
 const rolesParams = async(_req, res) => {
   const requests = [];
-  const params = ['owner', 'saleAgent', 'newOwner'];
+  const params = ['owner', 'saleAgent', 'newOwner', 'stakingHodler'];
 
   for (const param of params) requests.push(utils.get[param]());
   const results = await Promise.all(requests).catch(console.error);

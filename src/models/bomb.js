@@ -30,11 +30,10 @@ module.exports = {
     'amount'
   ]),
   mainParams: (payload) => modelBuilder(payload, [
-    'name', 'symbol', 'decimal', 'totalSupply',
-    'mintingFinished', 'totalBurned', 'stakingHodler'
+    'name', 'symbol', 'decimal', 'totalSupply', 'mintingFinished', 'totalBurned'
   ]),
   rolesParams: (payload) => modelBuilder(payload, [
-    'owner', 'saleAgent', 'newOwner'
+    'owner', 'saleAgent', 'newOwner', 'stakingHodler'
   ]),
   transferEvent: (payload) => modelBuilder(payload, [
     'amount', 'from', 'to'
