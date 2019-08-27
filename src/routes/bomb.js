@@ -27,11 +27,6 @@ router.route('/set/sale_agent')
 router.route('/set/stacking_hodler')
   .post(admin, validate('address', false), controller.set.setStackingHodler);
 
-router.route('/set/stacking_params').post(
-  admin, validate('stackingParams', false),
-  controller.set.setStackingParams
-);
-
 router.route('/set/transfer_ownership')
   .post(admin, validate('address', false), controller.set.transferOwnership);
 

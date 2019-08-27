@@ -53,10 +53,6 @@ const schemas = {
     block: templates.integer.required(),
     hash: templates.bytes.required(),
   }),
-  stackingParams: Joi.object().keys({
-    period: templates.integer.required(),
-    amount: templates.number.required(),
-  }),
   transfer: Joi.object().keys({
     to: templates.address.required(),
     amount: templates.number.required(),
