@@ -25,7 +25,8 @@ CREATE TYPE FUND_TYPE AS ENUM (
   'technical',
   'referral-rewards',
   'team',
-  'auction'
+  'auction',
+  'bomb-hodler'
 );
 
 CREATE TABLE "funds" (
