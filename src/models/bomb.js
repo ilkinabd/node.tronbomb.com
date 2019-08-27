@@ -11,8 +11,6 @@ const templates = {
   owner: toBase58,
   saleAgent: (value) => (isNullAddress(value) ? null : toBase58(value)),
   newOwner: (value) => (isNullAddress(value) ? null : toBase58(value)),
-  minStackingPeriod: (value) => toDecimal(value) / 3600,
-  minStackingAmount: (value) => (value / 10 ** 6),
   stakingHodler: toBase58,
   from: toBase58,
   to: toBase58,
@@ -33,13 +31,11 @@ module.exports = {
     'amount'
   ]),
   mainParams: (payload) => modelBuilder(payload, [
-    'name', 'symbol', 'decimal', 'totalSupply', 'mintingFinished', 'totalBurned'
+    'name', 'symbol', 'decimal', 'totalSupply',
+    'mintingFinished', 'totalBurned', 'stakingHodler'
   ]),
   rolesParams: (payload) => modelBuilder(payload, [
     'owner', 'saleAgent', 'newOwner'
-  ]),
-  stackingParams: (payload) => modelBuilder(payload, [
-    'minStackingPeriod', 'minStackingAmount', 'stakingHodler', 'amount'
   ]),
   transferEvent: (payload) => modelBuilder(payload, [
     'amount', 'from', 'to'
