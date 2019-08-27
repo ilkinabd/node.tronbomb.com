@@ -53,8 +53,8 @@ router.route('/func/decrease_approval')
 router.route('/func/freeze')
   .post(server, validate('amount', false), controller.func.freeze);
 
-router.route('/func/freeze_again')
-  .post(server, validate('stackingParams', false), controller.func.freezeAgain);
+router.route('/func/unfreeze')
+  .post(server, validate('amount', false), controller.func.unfreeze);
 
 router.route('/func/mint')
   .post(server, validate('transfer', false), controller.func.mint);
@@ -76,8 +76,8 @@ router.route('/events/approval')
 router.route('/events/freeze')
   .get(server, validate('events'), controller.events.freeze);
 
-router.route('/events/freeze_again')
-  .get(server, validate('events'), controller.events.freezeAgain);
+router.route('/events/unfreeze')
+  .get(server, validate('events'), controller.events.unfreeze);
 
 router.route('/events/mint')
   .get(server, validate('events'), controller.events.mint);

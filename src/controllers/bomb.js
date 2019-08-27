@@ -182,11 +182,10 @@ const freeze = async(req, res) => {
   successRes(res);
 };
 
-const freezeAgain = async(req, res) => {
-  const { period } = req.body;
-  const amount = req.body.amount * 10 ** 6;
+const unfreeze = async(req, res) => {
+  const amount = Math.floor(req.body.amount * 10 ** 6);
 
-  const result = await utils.func.freezeAgain(amount, period);
+  const result = await utils.func.unfreeze(amount);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
   successRes(res);
@@ -251,10 +250,10 @@ const freezeEvents = async(req, res) => {
   successRes(res, { events });
 };
 
-const freezeAgainEvents = async(req, res) => {
+const unfreezeEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  const payload = await utils.events.freezeAgain();
+  const payload = await utils.events.unfreeze();
   if (!payload) return errorRes(res, 500, 73500);
   const events = filterEvents(payload, models.freezeEvent, from, to);
 
@@ -311,7 +310,7 @@ module.exports = {
     increaseApproval,
     decreaseApproval,
     freeze,
-    freezeAgain,
+    unfreeze,
     mint,
     finishMinting,
   },
@@ -320,7 +319,7 @@ module.exports = {
     burn: burnEvent,
     approval: approvalEvent,
     freeze: freezeEvents,
-    freezeAgain: freezeAgainEvents,
+    unfreeze: unfreezeEvents,
     mint: mintEvents,
     newSaleAgent: newSaleAgentEvents,
     ownershipTransferred: ownershipEvents,
