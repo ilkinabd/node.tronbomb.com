@@ -3,6 +3,7 @@ const dice = require('@workers/dice');
 const wheel = require('@workers/wheel');
 const operations = require('@workers/operations');
 const bomb = require('@workers/bomb');
+const auction = require('@workers/auction');
 
 module.exports = async(io) => {
   let lastBlock = (await currentBlock()).block_header;
@@ -21,6 +22,7 @@ module.exports = async(io) => {
       wheel(number, io.in('wheel'));
       operations(number, io.in('operations'));
       bomb(number, io.in('bomb'));
+      auction(number, io.in('auction'));
     }
     lastBlock = current;
   }, 3000);
