@@ -4,7 +4,7 @@ const templates = {
   integer: Joi.number().integer().min(0),
   number: Joi.number().min(0),
   address: Joi.string().alphanum().length(34),
-  string: Joi.string().alphanum(),
+  string: Joi.string(),
   status: Joi.boolean(),
   bytes: Joi.string().regex(/0[xX][0-9a-fA-F]+/m),
   rtp: Joi.number().min(0.001).max(1.000),
@@ -52,10 +52,6 @@ const schemas = {
   wheelRNG: Joi.object().keys({
     block: templates.integer.required(),
     hash: templates.bytes.required(),
-  }),
-  stackingParams: Joi.object().keys({
-    period: templates.integer.required(),
-    amount: templates.number.required(),
   }),
   transfer: Joi.object().keys({
     to: templates.address.required(),

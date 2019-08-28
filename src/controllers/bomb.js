@@ -65,7 +65,7 @@ const mainParams = async(_req, res) => {
 
 const rolesParams = async(_req, res) => {
   const requests = [];
-  const params = ['owner', 'saleAgent', 'newOwner'];
+  const params = ['owner', 'saleAgent', 'newOwner', 'stakingHodler'];
 
   for (const param of params) requests.push(utils.get[param]());
   const results = await Promise.all(requests).catch(console.error);
@@ -74,27 +74,6 @@ const rolesParams = async(_req, res) => {
   const payload = {};
   for (const i in params) payload[params[i]] = results[i];
   const model = models.rolesParams(payload);
-
-  successRes(res, model);
-};
-
-const stackingParams = async(_req, res) => {
-  const requests = [];
-  const params = [
-    'minStackingPeriod', 'minStackingAmount', 'stakingHodler'
-  ];
-
-  for (const param of params) requests.push(utils.get[param]());
-  const results = await Promise.all(requests).catch(console.error);
-  if (!results) return errorRes(res, 500, 73500);
-
-  const payload = {};
-  for (const i in params) payload[params[i]] = results[i];
-
-  const amount = (await utils.get.balanceOf(results[2])).amount;
-  payload.amount = amount;
-
-  const model = models.stackingParams(payload);
 
   successRes(res, model);
 };
@@ -118,16 +97,6 @@ const setStackingHodler = async(req, res) => {
   if (!isAddress(address)) return errorRes(res, 403, 73402);
 
   const result = await utils.set.setStackingHodler(address);
-  if (result.error) return errorRes(res, 500, 73501, result.error);
-
-  successRes(res);
-};
-
-const setStackingParams = async(req, res) => {
-  const period = req.body.period * 86400;
-  const amount = req.body.amount * 10 ** 6;
-
-  const result = await utils.set.setStackingParams(period, amount);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
   successRes(res);
@@ -204,20 +173,18 @@ const decreaseApproval = async(req, res) => {
 };
 
 const freeze = async(req, res) => {
-  const { period } = req.body;
-  const amount = req.body.amount * 10 ** 6;
+  const amount = Math.floor(req.body.amount * 10 ** 6);
 
-  const result = await utils.func.freeze(amount, period);
+  const result = await utils.func.freeze(amount);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
   successRes(res);
 };
 
-const freezeAgain = async(req, res) => {
-  const { period } = req.body;
-  const amount = req.body.amount * 10 ** 6;
+const unfreeze = async(req, res) => {
+  const amount = Math.floor(req.body.amount * 10 ** 6);
 
-  const result = await utils.func.freezeAgain(amount, period);
+  const result = await utils.func.unfreeze(amount);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
   successRes(res);
@@ -282,10 +249,10 @@ const freezeEvents = async(req, res) => {
   successRes(res, { events });
 };
 
-const freezeAgainEvents = async(req, res) => {
+const unfreezeEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  const payload = await utils.events.freezeAgain();
+  const payload = await utils.events.unfreeze();
   if (!payload) return errorRes(res, 500, 73500);
   const events = filterEvents(payload, models.freezeEvent, from, to);
 
@@ -328,12 +295,10 @@ module.exports = {
     allowance,
     mainParams,
     rolesParams,
-    stackingParams,
   },
   set: {
     setSaleAgent,
     setStackingHodler,
-    setStackingParams,
     transferOwnership,
     acceptOwnership,
   },
@@ -344,7 +309,7 @@ module.exports = {
     increaseApproval,
     decreaseApproval,
     freeze,
-    freezeAgain,
+    unfreeze,
     mint,
     finishMinting,
   },
@@ -353,7 +318,7 @@ module.exports = {
     burn: burnEvent,
     approval: approvalEvent,
     freeze: freezeEvents,
-    freezeAgain: freezeAgainEvents,
+    unfreeze: unfreezeEvents,
     mint: mintEvents,
     newSaleAgent: newSaleAgentEvents,
     ownershipTransferred: ownershipEvents,

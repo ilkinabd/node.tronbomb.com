@@ -1,6 +1,8 @@
 const db = require('@db');
 
-const { getBlock } = require('@utils/tron');
+const { getBlock, balance } = require('@utils/tron');
+const bombUtils = require('@utils/bomb');
+const { toDecimal } = require('@utils/tron');
 const { successRes, errorRes } = require('@utils/res-builder');
 
 const getContracts = async(_req, res) => {
@@ -11,6 +13,20 @@ const getContracts = async(_req, res) => {
 const getFunds = async(_req, res) => {
   const funds = await db.funds.getAll();
   successRes(res, { funds });
+};
+
+const portalBalance = async(_req, res) => {
+  const address = await db.contracts.get({ type: 'portal' });
+  const balanceTRX = await balance(address);
+  successRes(res, { balanceTRX });
+};
+
+const totalMined = async(_req, res) => {
+  const totalSupply = toDecimal(await bombUtils.get.totalSupply());
+  const owner = await bombUtils.get.owner();
+  const ownerBalance = toDecimal((await bombUtils.get.balanceOf(owner)).amount);
+  const totalMined = (totalSupply - ownerBalance) / 10 ** 6;
+  successRes(res, { totalMined });
 };
 
 const block = async(req, res) => {
@@ -27,5 +43,7 @@ const block = async(req, res) => {
 module.exports = {
   getContracts,
   getFunds,
+  portalBalance,
+  totalMined,
   block,
 };

@@ -39,7 +39,7 @@ module.exports = {
     'to', 'prize', 'tokenId'
   ]),
   withdraw: (payload) => modelBuilder(payload, [
-    'amount', 'tokenId'
+    'to', 'amount'
   ]),
   mainStatus: (payload) => modelBuilder(payload, ['mainStatus']),
 };

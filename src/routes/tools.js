@@ -11,6 +11,12 @@ router.route('/contracts')
 router.route('/funds')
   .get(server, controller.getFunds);
 
+router.route('/portal_balance')
+  .get(server, controller.portalBalance);
+
+router.route('/total_mined')
+  .get(server, controller.totalMined);
+
 router.route('/block')
   .get(server, validate('index'), controller.block);
 

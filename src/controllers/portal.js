@@ -144,9 +144,12 @@ const takeBOMBBet = async(req, res) => {
 };
 
 const withdraw = async(req, res) => {
-  const { amount } = req.body;
+  const { to } = req.body;
+  const amount = Math.floor(toSun(req.body.amount));
 
-  const result = await utils.func.withdraw(toSun(amount));
+  if (!isAddress(to)) return errorRes(res, 422, 73402);
+
+  const result = await utils.func.withdraw(to, amount);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
   successRes(res);

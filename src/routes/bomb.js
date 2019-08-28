@@ -19,9 +19,6 @@ router.route('/get/main_params')
 router.route('/get/roles_params')
   .get(server, controller.get.rolesParams);
 
-router.route('/get/stacking_params')
-  .get(server, controller.get.stackingParams);
-
 // Setters
 
 router.route('/set/sale_agent')
@@ -29,11 +26,6 @@ router.route('/set/sale_agent')
 
 router.route('/set/stacking_hodler')
   .post(admin, validate('address', false), controller.set.setStackingHodler);
-
-router.route('/set/stacking_params').post(
-  admin, validate('stackingParams', false),
-  controller.set.setStackingParams
-);
 
 router.route('/set/transfer_ownership')
   .post(admin, validate('address', false), controller.set.transferOwnership);
@@ -59,10 +51,10 @@ router.route('/func/decrease_approval')
   .post(server, validate('approve', false), controller.func.decreaseApproval);
 
 router.route('/func/freeze')
-  .post(server, validate('stackingParams', false), controller.func.freeze);
+  .post(server, validate('amount', false), controller.func.freeze);
 
-router.route('/func/freeze_again')
-  .post(server, validate('stackingParams', false), controller.func.freezeAgain);
+router.route('/func/unfreeze')
+  .post(server, validate('amount', false), controller.func.unfreeze);
 
 router.route('/func/mint')
   .post(server, validate('transfer', false), controller.func.mint);
@@ -84,8 +76,8 @@ router.route('/events/approval')
 router.route('/events/freeze')
   .get(server, validate('events'), controller.events.freeze);
 
-router.route('/events/freeze_again')
-  .get(server, validate('events'), controller.events.freezeAgain);
+router.route('/events/unfreeze')
+  .get(server, validate('events'), controller.events.unfreeze);
 
 router.route('/events/mint')
   .get(server, validate('events'), controller.events.mint);

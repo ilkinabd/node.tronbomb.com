@@ -11,14 +11,11 @@ const templates = {
   owner: toBase58,
   saleAgent: (value) => (isNullAddress(value) ? null : toBase58(value)),
   newOwner: (value) => (isNullAddress(value) ? null : toBase58(value)),
-  minStackingPeriod: (value) => toDecimal(value) / 3600,
-  minStackingAmount: (value) => (value / 10 ** 6),
   stakingHodler: toBase58,
   from: toBase58,
   to: toBase58,
   wallet: toBase58,
   spender: toBase58,
-  finishTime: (value) => new Date(value * 1000),
 };
 
 const modelBuilder = (payload, keys) => {
@@ -36,10 +33,7 @@ module.exports = {
     'name', 'symbol', 'decimal', 'totalSupply', 'mintingFinished', 'totalBurned'
   ]),
   rolesParams: (payload) => modelBuilder(payload, [
-    'owner', 'saleAgent', 'newOwner'
-  ]),
-  stackingParams: (payload) => modelBuilder(payload, [
-    'minStackingPeriod', 'minStackingAmount', 'stakingHodler', 'amount'
+    'owner', 'saleAgent', 'newOwner', 'stakingHodler'
   ]),
   transferEvent: (payload) => modelBuilder(payload, [
     'amount', 'from', 'to'
@@ -51,7 +45,7 @@ module.exports = {
     'amount', 'wallet', 'spender'
   ]),
   freezeEvent: (payload) => modelBuilder(payload, [
-    'amount', 'finishTime', 'wallet'
+    'amount', 'wallet'
   ]),
   mintEvent: (payload) => modelBuilder(payload, [
     'amount', 'to'
