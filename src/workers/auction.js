@@ -10,9 +10,8 @@ const transfer = async(block, chanel) => {
   const { address } = await db.funds.get({ type });
 
   for (const item of payload) {
-    const event = models.transferEvent(item.result);
-
-    if (event.to === address) chanel.emit('auction-bet', event);
+    const { amount, from, to } = models.transferEvent(item.result);
+    if (to === address) chanel.emit('auction-bet', { amount, wallet: from });
   }
 };
 
