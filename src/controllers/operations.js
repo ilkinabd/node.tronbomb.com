@@ -65,6 +65,12 @@ const dividends = async(req, res) => {
   successRes(res);
 };
 
+const mine = async(req, res) => {
+  const result = await utils.func.mine();
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+  successRes(res);
+};
+
 // Events
 
 const withdrawEvents = async(req, res) => {
@@ -97,6 +103,16 @@ const dividendsEvents = async(req, res) => {
   successRes(res, { events });
 };
 
+const mineEvents = async(req, res) => {
+  const { from, to } = req.query;
+
+  const payload = await utils.events.mine();
+  if (!payload) return errorRes(res, 500, 73500);
+  const events = filterEvents(payload, models.mine, from, to);
+
+  successRes(res, { events });
+};
+
 module.exports = {
   get: {
     params: getParams,
@@ -105,10 +121,12 @@ module.exports = {
     withdraw,
     referralProfit,
     dividends,
+    mine,
   },
   events: {
     withdraw: withdrawEvents,
     referralProfit: referralProfitEvents,
     dividends: dividendsEvents,
+    mine: mineEvents,
   },
 };
