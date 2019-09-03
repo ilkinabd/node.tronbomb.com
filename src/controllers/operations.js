@@ -65,6 +65,12 @@ const dividends = async(req, res) => {
   successRes(res);
 };
 
+const mine = async(req, res) => {
+  const result = await utils.func.mine();
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+  successRes(res);
+};
+
 // Events
 
 const withdrawEvents = async(req, res) => {
@@ -105,6 +111,7 @@ module.exports = {
     withdraw,
     referralProfit,
     dividends,
+    mine,
   },
   events: {
     withdraw: withdrawEvents,

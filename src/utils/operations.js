@@ -12,6 +12,7 @@ module.exports = {
     withdraw: payable('withdraw', address),
     referralProfit: send('withdrawReferralProfit', address),
     dividends: send('withdrawDividends', address),
+    mine: send('mine', address),
   },
   events: {
     withdraw: events('Withdraw', address),
