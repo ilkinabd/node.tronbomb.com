@@ -31,12 +31,12 @@ const getFromParams = (keys, params) => {
     value = value[key];
   }
 
-  if (typeof value === 'undefined') return null;
-  if (typeof value === 'string') return `'${value}'`;
-  if (typeof value === 'object')
-    return JSON.stringify(value).replace(/"/gi, '\'');
-
-  return value;
+  switch (typeof value) {
+    case 'undefined': return null;
+    case 'string': return `'${value.replace(/"|'|`/gi, '')}'`;
+    case 'object': return JSON.stringify(value).replace(/"/gi, '\'');
+    default: return value;
+  }
 };
 
 const fillTemplate = (template, params = {}) => {
