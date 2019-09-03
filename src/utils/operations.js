@@ -18,5 +18,6 @@ module.exports = {
     withdraw: events('Withdraw', address),
     referralProfit: events('WithdrawReferralProfit', address),
     dividends: events('WithdrawDividends', address),
+    mine: events('Mine', address),
   },
 };

@@ -35,4 +35,7 @@ router.route('/events/withdraw_referral_profit')
 router.route('/events/withdraw_dividends')
   .get(server, validate('events'), controller.events.dividends);
 
+router.route('/events/mine')
+  .get(server, validate('events'), controller.events.mine);
+
 module.exports = router;
