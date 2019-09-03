@@ -31,8 +31,19 @@ const dividends = async(block, chanel) => {
   }
 };
 
+const mine = async(block, chanel) => {
+  const payload = await utils.events.mine(block);
+  if (!payload) return setTimeout(() => mine(block, chanel), 1000);
+
+  for (const item of payload) {
+    const event = models.mine(item.result);
+    chanel.emit('mine', event);
+  }
+};
+
 module.exports = async(block, chanel) => {
   withdraw(block, chanel);
   referralProfit(block, chanel);
   dividends(block, chanel);
+  mine(block, chanel);
 };
