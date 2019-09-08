@@ -181,12 +181,9 @@ const freeze = async(req, res) => {
   successRes(res);
 };
 
-const unfreeze = async(req, res) => {
-  const amount = Math.floor(req.body.amount * 10 ** 6);
-
-  const result = await utils.func.unfreeze(amount);
+const unfreezeAll = async(_req, res) => {
+  const result = await utils.func.unfreezeAll();
   if (result.error) return errorRes(res, 500, 73501, result.error);
-
   successRes(res);
 };
 
@@ -309,7 +306,7 @@ module.exports = {
     increaseApproval,
     decreaseApproval,
     freeze,
-    unfreeze,
+    unfreezeAll,
     mint,
     finishMinting,
   },

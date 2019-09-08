@@ -53,8 +53,8 @@ router.route('/func/decrease_approval')
 router.route('/func/freeze')
   .post(server, validate('amount', false), controller.func.freeze);
 
-router.route('/func/unfreeze')
-  .post(server, validate('amount', false), controller.func.unfreeze);
+router.route('/func/unfreeze_all')
+  .post(server, controller.func.unfreezeAll);
 
 router.route('/func/mint')
   .post(server, validate('transfer', false), controller.func.mint);

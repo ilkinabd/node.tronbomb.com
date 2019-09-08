@@ -31,7 +31,7 @@ module.exports = {
     increaseApproval: send('increaseApproval', address),
     decreaseApproval: send('decreaseApproval', address),
     freeze: send('freeze', address),
-    unfreeze: send('unfreeze', address),
+    unfreezeAll: send('unfreezeAll', address),
     mint: send('mint', address),
     finishMinting: send('finishMinting', address),
   },
