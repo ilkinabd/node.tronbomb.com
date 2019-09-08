@@ -47,6 +47,9 @@ module.exports = {
   freezeEvent: (payload) => modelBuilder(payload, [
     'amount', 'wallet'
   ]),
+  unfreezeAllEvent: (payload) => modelBuilder(payload, [
+    'wallet'
+  ]),
   mintEvent: (payload) => modelBuilder(payload, [
     'amount', 'to'
   ]),
