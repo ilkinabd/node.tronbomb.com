@@ -40,7 +40,7 @@ module.exports = {
     burn: events('Burn', address),
     approval: events('Approval', address),
     freeze: events('Freeze', address),
-    unfreeze: events('Unfreeze', address),
+    unfreezeAll: events('UnfreezeAll', address),
     mint: events('Mint', address),
     newSaleAgent: events('NewSaleAgent', address),
     ownershipTransferred: events('OwnershipTransferred', address),

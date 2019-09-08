@@ -76,8 +76,8 @@ router.route('/events/approval')
 router.route('/events/freeze')
   .get(server, validate('events'), controller.events.freeze);
 
-router.route('/events/unfreeze')
-  .get(server, validate('events'), controller.events.unfreeze);
+router.route('/events/unfreeze_all')
+  .get(server, validate('events'), controller.events.unfreezeAll);
 
 router.route('/events/mint')
   .get(server, validate('events'), controller.events.mint);

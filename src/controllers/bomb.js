@@ -246,12 +246,12 @@ const freezeEvents = async(req, res) => {
   successRes(res, { events });
 };
 
-const unfreezeEvents = async(req, res) => {
+const unfreezeAllEvents = async(req, res) => {
   const { from, to } = req.query;
 
-  const payload = await utils.events.unfreeze();
+  const payload = await utils.events.unfreezeAll();
   if (!payload) return errorRes(res, 500, 73500);
-  const events = filterEvents(payload, models.freezeEvent, from, to);
+  const events = filterEvents(payload, models.unfreezeAllEvent, from, to);
 
   successRes(res, { events });
 };
@@ -315,7 +315,7 @@ module.exports = {
     burn: burnEvent,
     approval: approvalEvent,
     freeze: freezeEvents,
-    unfreeze: unfreezeEvents,
+    unfreezeAll: unfreezeAllEvents,
     mint: mintEvents,
     newSaleAgent: newSaleAgentEvents,
     ownershipTransferred: ownershipEvents,
