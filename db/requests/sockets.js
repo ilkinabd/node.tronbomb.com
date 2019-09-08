@@ -1,12 +1,12 @@
 module.exports = {
   'add': `
       INSERT INTO "sockets" ("socket_id", "rooms")
-      VALUES ($id, ARRAY$rooms::VARCHAR(25)[])
+      VALUES ($id, $rooms)
       RETURNING "socket_id" as "id";`,
 
   'set-rooms': `
       UPDATE "sockets"
-      SET "rooms" = ARRAY$rooms::VARCHAR(25)[]
+      SET "rooms" = $rooms
       WHERE "socket_id" = $id;`,
 
   'delete': `
