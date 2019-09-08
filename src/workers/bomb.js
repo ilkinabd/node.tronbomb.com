@@ -23,19 +23,19 @@ const freeze = async(block, chanel) => {
   }
 };
 
-const unfreeze = async(block, chanel) => {
-  const payload = await utils.events.unfreeze(block);
-  if (!payload) return setTimeout(() => unfreeze(block, chanel), 1000);
+const unfreezeAll = async(block, chanel) => {
+  const payload = await utils.events.unfreezeAll(block);
+  if (!payload) return setTimeout(() => unfreezeAll(block, chanel), 1000);
 
   for (const item of payload) {
-    const event = models.freezeEvent(item.result);
+    const event = models.unfreezeAllEvent(item.result);
     event.hash = item.transaction;
-    chanel.emit('bomb-unfreeze', event);
+    chanel.emit('bomb-unfreeze-all', event);
   }
 };
 
 module.exports = async(block, chanel) => {
   burn(block, chanel);
   freeze(block, chanel);
-  unfreeze(block, chanel);
+  unfreezeAll(block, chanel);
 };
