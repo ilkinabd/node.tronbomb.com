@@ -68,7 +68,7 @@ const transferBOMB = async(req, res) => {
   const result = await utils.transferBOMB(to, amount, privateKey);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
-  successRes(res);
+  successRes(res, { result });
 };
 
 const freezeAll = async(req, res) => {
