@@ -24,22 +24,23 @@ const call = (variable, address) => async(...params) => {
   return result;
 };
 
-const send = (method, address, key = PRIVATE_KEY) => async(...params) => {
-  const contract = await tronWeb.contract().at(await address);
-  tronWeb.setPrivateKey(key);
+const send = (method, address, key = PRIVATE_KEY, shouldPollResponse = true) =>
+  async(...params) => {
+    const contract = await tronWeb.contract().at(await address);
+    tronWeb.setPrivateKey(key);
 
-  const result = await contract[method](...params).send({
-    shouldPollResponse: true,
-  }).catch((payload) => {
-    console.error(payload);
-    const output = payload.output.contractResult[0];
-    const message = output.slice(136, output.indexOf('2e') + 2);
-    const error = (!message) ? 'FAILED.' : toAscii(message);
-    return { error };
-  });
+    const result = await contract[method](...params).send({
+      shouldPollResponse,
+    }).catch((payload) => {
+      console.error(payload);
+      const output = payload.output.contractResult[0];
+      const message = output.slice(136, output.indexOf('2e') + 2);
+      const error = (!message) ? 'FAILED.' : toAscii(message);
+      return { error };
+    });
 
-  return result;
-};
+    return result;
+  };
 
 const payable = (method, address) => async(amount, ...params) => {
   const contract = await tronWeb.contract().at(await address);
