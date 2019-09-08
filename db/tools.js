@@ -19,33 +19,27 @@ const getValue = requestFunc => async(params) => {
   return getField(getFirst(getRows(result)), 'value');
 };
 
-const getFromParams = (keys, params) => {
-  let value = params;
+const getParams = params => {
+  const values = [];
+  const keyIndexes = Object.keys(params).reduce((obj, cur, i) => {
+    obj[cur] = `$${i + 1}`;
+    values.push(params[cur]);
+    return obj;
+  }, {});
 
-  for (const key of keys) {
-    if (typeof value !== 'object') {
-      value === undefined;
-      break;
-    }
-
-    value = value[key];
-  }
-
-  switch (typeof value) {
-    case 'undefined': return null;
-    case 'string': return `'${value.replace(/"|'|`/gi, '')}'`;
-    case 'object': return JSON.stringify(value).replace(/"/gi, '\'');
-    default: return value;
-  }
+  return { keyIndexes, values };
 };
 
 const fillTemplate = (template, params = {}) => {
+  const { keyIndexes, values } = getParams(params);
   const filter = /\$[\w.]+/g;
 
-  return template.replace(filter, (match) => {
-    const keys = match.slice(1).split('.');
-    return getFromParams(keys, params);
+  const sql = template.replace(filter, (match) => {
+    const key = match.slice(1);
+    return keyIndexes[key] || null;
   });
+
+  return { sql, values };
 };
 
 module.exports = {
