@@ -57,11 +57,8 @@ const referralProfit = async(req, res) => {
 };
 
 const dividends = async(req, res) => {
-  const { to, amount } = req.body;
-
-  const result = await utils.func.dividends(to, toSun(amount));
+  const result = await utils.func.dividends();
   if (result.error) return errorRes(res, 500, 73501, result.error);
-
   successRes(res);
 };
 
@@ -98,7 +95,7 @@ const dividendsEvents = async(req, res) => {
 
   const payload = await utils.events.dividends();
   if (!payload) return errorRes(res, 500, 73500);
-  const events = filterEvents(payload, models.withdraw, from, to);
+  const events = filterEvents(payload, models.wallet, from, to);
 
   successRes(res, { events });
 };
@@ -108,7 +105,7 @@ const mineEvents = async(req, res) => {
 
   const payload = await utils.events.mine();
   if (!payload) return errorRes(res, 500, 73500);
-  const events = filterEvents(payload, models.mine, from, to);
+  const events = filterEvents(payload, models.wallet, from, to);
 
   successRes(res, { events });
 };

@@ -19,7 +19,7 @@ router.route('/func/withdraw_referral_profit')
   .post(server, validate('transfer', false), controller.func.referralProfit);
 
 router.route('/func/withdraw_dividends')
-  .post(server, validate('transfer', false), controller.func.dividends);
+  .post(server, controller.func.dividends);
 
 router.route('/func/mine')
   .post(server, controller.func.mine);
