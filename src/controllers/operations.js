@@ -57,11 +57,8 @@ const referralProfit = async(req, res) => {
 };
 
 const dividends = async(req, res) => {
-  const { to, amount } = req.body;
-
-  const result = await utils.func.dividends(to, toSun(amount));
+  const result = await utils.func.dividends();
   if (result.error) return errorRes(res, 500, 73501, result.error);
-
   successRes(res);
 };
 
