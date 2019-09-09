@@ -1,6 +1,6 @@
 {
   "name": "node",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "Microservice for TRON blockchain.",
   "main": "server.js",
   "scripts": {
