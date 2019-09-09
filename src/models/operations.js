@@ -18,5 +18,5 @@ const modelBuilder = (payload, keys) => {
 module.exports = {
   params: (payload) => modelBuilder(payload, ['owner', 'address']),
   withdraw: (payload) => modelBuilder(payload, ['wallet', 'to', 'amount']),
-  mine: (payload) => modelBuilder(payload, ['wallet']),
+  wallet: (payload) => modelBuilder(payload, ['wallet']),
 };

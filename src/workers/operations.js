@@ -26,7 +26,7 @@ const dividends = async(block, chanel) => {
   if (!payload) return setTimeout(() => dividends(block, chanel), 1000);
 
   for (const item of payload) {
-    const event = models.withdraw(item.result);
+    const event = models.wallet(item.result);
     chanel.emit('withdraw-dividends', event);
   }
 };
@@ -36,7 +36,7 @@ const mine = async(block, chanel) => {
   if (!payload) return setTimeout(() => mine(block, chanel), 1000);
 
   for (const item of payload) {
-    const event = models.mine(item.result);
+    const event = models.wallet(item.result);
     chanel.emit('mine', event);
   }
 };
