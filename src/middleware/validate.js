@@ -40,14 +40,9 @@ const schemas = {
     from: templates.integer,
     to: templates.integer.min(Joi.ref('from')),
   }),
-  finishGame: Joi.object().keys({
-    index: templates.integer.required(),
-    hash: templates.bytes.required(),
-  }),
   diceRNG: Joi.object().keys({
     address: templates.address.required(),
     block: templates.integer.required(),
-    hash: templates.bytes.required(),
   }),
   wheelRNG: Joi.object().keys({
     block: templates.integer.required(),

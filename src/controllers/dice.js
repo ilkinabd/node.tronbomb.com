@@ -1,6 +1,6 @@
 const utils = require('@utils/dice');
 const models = require('@models/dice');
-const { toDecimal, isAddress } = require('@utils/tron');
+const { toDecimal, isAddress, getBlock } = require('@utils/tron');
 const { successRes, errorRes } = require('@utils/res-builder');
 
 const filterEvents = (payload, model, from, to) => {
@@ -95,7 +95,8 @@ const setRTP = async(req, res) => {
 // Functions
 
 const rng = async(req, res) => {
-  const { address, block, hash } = req.query;
+  const { address, block } = req.query;
+  const hash = '0x' + (await getBlock(block)).blockID;
 
   const payload = await utils.func.rng(address, block, hash);
   if (!payload) return errorRes(res, 500, 73500);
@@ -105,7 +106,12 @@ const rng = async(req, res) => {
 };
 
 const finishGame = async(req, res) => {
-  const { index, hash } = req.body;
+  const { index } = req.body;
+
+  const game = await utils.get.game(index);
+  if (!game) return errorRes(res, 500, 73500);
+  const block = toDecimal(game.finishBlock);
+  const hash = '0x' + (await getBlock(block)).blockID;
 
   const result = await utils.func.finishGame(index, hash);
   if (result.error) return errorRes(res, 500, 73501, result.error);
