@@ -32,6 +32,9 @@ const schemas = {
   fund: Joi.object().keys({
     type: templates.string.required(),
   }),
+  block: Joi.object().keys({
+    block: templates.integer.required(),
+  }),
   allowance: Joi.object().keys({
     address: templates.address.required(),
     spender: templates.address.required(),
@@ -43,10 +46,6 @@ const schemas = {
   diceRNG: Joi.object().keys({
     address: templates.address.required(),
     block: templates.integer.required(),
-  }),
-  wheelRNG: Joi.object().keys({
-    block: templates.integer.required(),
-    hash: templates.bytes.required(),
   }),
   transfer: Joi.object().keys({
     to: templates.address.required(),
