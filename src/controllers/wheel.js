@@ -1,6 +1,6 @@
 const utils = require('@utils/wheel');
 const models = require('@models/wheel');
-const { isAddress, toDecimal } = require('@utils/tron');
+const { isAddress, toDecimal, getBlock } = require('@utils/tron');
 const { successRes, errorRes } = require('@utils/res-builder');
 
 const filterEvents = (payload, model, from, to) => {
@@ -97,7 +97,8 @@ const setPortal = async(req, res) => {
 // Functions
 
 const rng = async(req, res) => {
-  const { block, hash } = req.query;
+  const { block } = req.query;
+  const hash = '0x' + (await getBlock(block)).blockID;
 
   const payload = await utils.func.rng(block, hash);
   if (!payload) return errorRes(res, 500, 73500);

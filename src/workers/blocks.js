@@ -1,4 +1,4 @@
-const { currentBlock, getBlock } = require('@utils/tron');
+const { currentBlock } = require('@utils/tron');
 const dice = require('@workers/dice');
 const wheel = require('@workers/wheel');
 const operations = require('@workers/operations');
@@ -10,19 +10,14 @@ module.exports = async(io) => {
 
   setInterval(async() => {
     const current = await currentBlock() - 1;
-    for (let number = lastBlock + 1; number <= current; number++) {
-      const block = {
-        number,
-        hash: '0x' + (await getBlock(number)).blockID,
-      };
-
+    for (let block = lastBlock + 1; block <= current; block++) {
       io.in('blocks').emit('blocks', block);
 
-      dice(number, io.in('dice'));
-      wheel(number, io.in('wheel'));
-      operations(number, io.in('operations'));
-      bomb(number, io.in('bomb'));
-      auction(number, io.in('auction'));
+      dice(block, io.in('dice'));
+      wheel(block, io.in('wheel'));
+      operations(block, io.in('operations'));
+      bomb(block, io.in('bomb'));
+      auction(block, io.in('auction'));
     }
     lastBlock = current;
   }, 3000);

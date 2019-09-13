@@ -27,7 +27,7 @@ router.route('/set/portal')
 // Functions
 
 router.route('/func/rng')
-  .get(server, validate('wheelRNG'), controller.func.rng);
+  .get(server, validate('block'), controller.func.rng);
 
 router.route('/func/finish')
   .post(server, controller.func.finish);
