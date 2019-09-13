@@ -82,7 +82,7 @@ const referralProfitEvents = async(req, res) => {
 
   const payload = await utils.events.referralProfit();
   if (!payload) return errorRes(res, 500, 73500);
-  const events = filterEvents(payload, models.withdraw, from, to);
+  const events = filterEvents(payload, models.wallet, from, to);
 
   successRes(res, { events });
 };
