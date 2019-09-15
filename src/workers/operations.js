@@ -16,7 +16,7 @@ const referralProfit = async(block, chanel) => {
   if (!payload) return setTimeout(() => referralProfit(block, chanel), 1000);
 
   for (const item of payload) {
-    const event = models.withdraw(item.result);
+    const event = models.wallet(item.result);
     chanel.emit('withdraw-referral-profit', event);
   }
 };

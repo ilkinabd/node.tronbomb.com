@@ -47,22 +47,19 @@ const withdraw = async(req, res) => {
   successRes(res);
 };
 
-const referralProfit = async(req, res) => {
-  const { to, amount } = req.body;
-
-  const result = await utils.func.referralProfit(to, toSun(amount));
+const referralProfit = async(_req, res) => {
+  const result = await utils.func.referralProfit();
   if (result.error) return errorRes(res, 500, 73501, result.error);
-
   successRes(res);
 };
 
-const dividends = async(req, res) => {
+const dividends = async(_req, res) => {
   const result = await utils.func.dividends();
   if (result.error) return errorRes(res, 500, 73501, result.error);
   successRes(res);
 };
 
-const mine = async(req, res) => {
+const mine = async(_req, res) => {
   const result = await utils.func.mine();
   if (result.error) return errorRes(res, 500, 73501, result.error);
   successRes(res);
@@ -85,7 +82,7 @@ const referralProfitEvents = async(req, res) => {
 
   const payload = await utils.events.referralProfit();
   if (!payload) return errorRes(res, 500, 73500);
-  const events = filterEvents(payload, models.withdraw, from, to);
+  const events = filterEvents(payload, models.wallet, from, to);
 
   successRes(res, { events });
 };
