@@ -13,8 +13,12 @@ const freeze = (amount, privateKey) =>
 const mine = (privateKey) =>
   send('mine', operations, privateKey)();
 
+const withdrawDividends = (privateKey) =>
+  send('withdrawDividends', operations, privateKey)();
+
 module.exports = {
   transferBOMB,
   freeze,
   mine,
+  withdrawDividends,
 };

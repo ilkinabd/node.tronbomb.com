@@ -23,4 +23,7 @@ router.route('/mine')
 router.route('/freeze_all')
   .post(server, validate('fund', false), controller.freezeAll);
 
+router.route('/withdraw_dividends')
+  .post(server, validate('fund', false), controller.withdrawDividends);
+
 module.exports = router;
