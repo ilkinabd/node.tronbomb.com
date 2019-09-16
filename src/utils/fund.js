@@ -1,15 +1,24 @@
 const db = require('@db');
 const { send } = require('@utils/tron');
 
-const address = db.contracts.get({ type: 'portal' });
+const portal = db.contracts.get({ type: 'portal' });
+const operations = db.contracts.get({ type: 'operations' });
 
 const transferBOMB = (to, amount, privateKey) =>
-  send('transfer', address, privateKey, false)(to, amount);
+  send('transfer', portal, privateKey, false)(to, amount);
 
 const freeze = (amount, privateKey) =>
-  send('freeze', address, privateKey)(amount);
+  send('freeze', portal, privateKey)(amount);
+
+const mine = (privateKey) =>
+  send('mine', operations, privateKey)();
+
+const withdrawDividends = (privateKey) =>
+  send('withdrawDividends', operations, privateKey)();
 
 module.exports = {
   transferBOMB,
   freeze,
+  mine,
+  withdrawDividends,
 };
