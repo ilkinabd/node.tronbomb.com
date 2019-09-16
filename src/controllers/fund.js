@@ -71,6 +71,20 @@ const transferBOMB = async(req, res) => {
   successRes(res, { result });
 };
 
+const mine = async(req, res) => {
+  const { type } = req.body;
+
+  const { address, encryptedKey } = await db.funds.get({ type });
+  if (!address) return errorRes(res, 422, 73407);
+  const privateKey = decrypt(encryptedKey);
+
+  console.info(`Mine BOMB from ${type} fund.`);
+  const result = await utils.mine(privateKey);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
 const freezeAll = async(req, res) => {
   const { type } = req.body;
 
@@ -87,10 +101,26 @@ const freezeAll = async(req, res) => {
   successRes(res);
 };
 
+const withdrawDividends = async(req, res) => {
+  const { type } = req.body;
+
+  const { address, encryptedKey } = await db.funds.get({ type });
+  if (!address) return errorRes(res, 422, 73407);
+  const privateKey = decrypt(encryptedKey);
+
+  console.info(`Withdraw dividends from ${type} fund.`);
+  const result = await utils.withdrawDividends(privateKey);
+  if (result.error) return errorRes(res, 500, 73501, result.error);
+
+  successRes(res);
+};
+
 module.exports = {
   getBalance,
   getBalances,
   transferTRX,
   transferBOMB,
+  mine,
   freezeAll,
+  withdrawDividends,
 };
