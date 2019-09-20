@@ -16,7 +16,7 @@ router.route('/get/params')
 // Setters
 
 router.route('/set/main_status')
-  .post(admin, validate('status', false), controller.set.mainStatus);
+  .post(server, validate('status', false), controller.set.mainStatus);
 
 router.route('/set/bet_params')
   .post(admin, validate('betParams', false), controller.set.betParams);
