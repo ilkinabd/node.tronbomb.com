@@ -68,7 +68,7 @@ const params = async(_req, res) => {
 const setMainStatus = async(req, res) => {
   const { status } = req.body;
 
-  const result = await utils.set.mainStatus(status === 'true');
+  const result = await utils.set.mainStatus(status);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
   successRes(res);
