@@ -1,8 +1,8 @@
-const { PRIVATE_KEY, PROVIDER } = process.env;
+const { FULL, SOLIDITY, EVENT, PRIVATE_KEY } = process.env;
 
 const TronWeb = require('tronweb');
 
-const tronWeb = new TronWeb(PROVIDER, PROVIDER, PROVIDER, PRIVATE_KEY);
+const tronWeb = new TronWeb(FULL, SOLIDITY, EVENT, PRIVATE_KEY);
 const nullAddress = '410000000000000000000000000000000000000000';
 
 const toBase58 = tronWeb.address.fromHex;
