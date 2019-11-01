@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
+app.use(express.static('logs'));
 app.use(express.json({
   type: ['application/json', 'text/plain']
 }));
