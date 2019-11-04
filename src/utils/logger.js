@@ -2,7 +2,7 @@ const log = require("simple-node-logger");
 
 const opts = {
     errorEventName:'error',
-    logDirectory:'/logs', // NOTE: folder must exist and be writable...
+    logDirectory:'/data/app/logs', // NOTE: folder must exist and be writable...
     fileNamePattern:'roll-<DATE>.log',
     dateFormat:'YYYY.MM.DD'
 };
