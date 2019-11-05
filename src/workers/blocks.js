@@ -1,5 +1,4 @@
 const { currentBlock } = require('@utils/tron');
-const { log } = require("@utils/logger");
 const dice = require('@workers/dice');
 const wheel = require('@workers/wheel');
 const operations = require('@workers/operations');
@@ -8,7 +7,7 @@ const auction = require('@workers/auction');
 
 module.exports = async(io) => {
   let lastBlock = (await currentBlock()).block_header;
-  log.error(
+  console.error(
       `=========Last Block Info======
       data: 
         ${lastBlock}
@@ -18,7 +17,7 @@ module.exports = async(io) => {
   setInterval(async() => {
     const current = await currentBlock() - 1;
     for (let block = lastBlock + 1; block <= current; block++) {
-      log.error(
+      console.error(
           `=========Block Info======
       current: 
         ${current}
@@ -27,6 +26,8 @@ module.exports = async(io) => {
        ============================== 
       `
       );
+
+
       io.in('blocks').emit('blocks', block);
 
       dice(block, io.in('dice'));
