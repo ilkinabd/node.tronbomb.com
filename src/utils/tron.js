@@ -1,6 +1,7 @@
 const { FULL, SOLIDITY, EVENT, PRIVATE_KEY } = process.env;
 
 const TronWeb = require('tronweb');
+const rollbar = require('@utils/rollbar');
 
 const tronWeb = new TronWeb(FULL, SOLIDITY, EVENT, PRIVATE_KEY);
 const nullAddress = '410000000000000000000000000000000000000000';
@@ -19,7 +20,7 @@ const call = (variable, address) => async(...params) => {
   const contract = await tronWeb.contract().at(await address);
 
   const result = await contract[variable](...params).call()
-    .catch(console.error);
+    .catch(rollbar.error);
 
   return result;
 };
@@ -33,6 +34,7 @@ const send = (method, address, key = PRIVATE_KEY, shouldPollResponse = true) =>
       shouldPollResponse,
     }).catch((payload) => {
       console.error(payload);
+      rollbar.error(payload);
       const output = payload.output.contractResult[0];
       const message = output.slice(136, output.indexOf('2e') + 2);
       const error = (!message) ? 'FAILED.' : toAscii(message);
@@ -52,6 +54,7 @@ const payable = (method, address, key = PRIVATE_KEY) =>
       callValue: amount,
     }).catch((payload) => {
       console.error(payload);
+      rollbar.error(payload);
       const output = payload.output.contractResult[0];
       const message = output.slice(136, output.indexOf('2e') + 2);
       const error = (!message) ? 'FAILED.' : toAscii(message);
@@ -65,18 +68,30 @@ const events = (eventName, address) => async(blockNumber) => {
   const events = await tronWeb.getEventResult(await address, {
     eventName,
     blockNumber,
-  }).catch(console.error);
+  }).catch((e) => {
+    console.log(e);
+    rollbar.error(e);
+  });
 
   return events;
 };
 
 const balance = async(address) => toTRX(await tronWeb.trx.getBalance(address));
 
-const currentBlock = async() =>
-  (await tronWeb.trx.getCurrentBlock()).block_header.raw_data.number;
+const currentBlock = async() => {
+  const response = await tronWeb.trx.getCurrentBlock()
+    .catch(rollbar.error);
 
-const sendTRX = async(to, amount, privateKey = PRIVATE_KEY) =>
-  tronWeb.trx.sendTransaction(toHex(to), toSun(amount), privateKey);
+  return response.block_header.raw_data.number;
+};
+
+const sendTRX = async(to, amount, privateKey = PRIVATE_KEY) => {
+  try {
+    tronWeb.trx.sendTransaction(toHex(to), toSun(amount), privateKey);
+  } catch (e) {
+    rollbar.error(e);
+  }
+};
 
 module.exports = {
   call,
