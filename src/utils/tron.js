@@ -19,8 +19,15 @@ const toSun = (amount) => parseFloat(tronWeb.toSun(amount));
 const call = (variable, address) => async(...params) => {
   const contract = await tronWeb.contract().at(await address);
 
-  const result = await contract[variable](...params).call()
-    .catch(rollbar.error);
+  let result = '';
+  try {
+    result = await contract[variable](...params).call()
+      .catch(rollbar.error);
+  } catch (e) {
+    console.error(e);
+    console.error('variable: ', variable);
+    console.log('params: ', params);
+  }
 
   return result;
 };
@@ -72,6 +79,8 @@ const events = (eventName, address) => async(blockNumber) => {
     console.log(e);
     rollbar.error(e);
   });
+
+  rollbar.info('New event: ', JSON.stringify(events));
 
   return events;
 };

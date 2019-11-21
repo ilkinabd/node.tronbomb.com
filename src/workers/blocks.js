@@ -7,27 +7,10 @@ const auction = require('@workers/auction');
 
 module.exports = async(io) => {
   let lastBlock = (await currentBlock()).block_header;
-  console.error(
-      `=========Last Block Info======
-      data: 
-        ${lastBlock}
-       ============================== 
-      `
-  );
+
   setInterval(async() => {
     const current = await currentBlock() - 1;
     for (let block = lastBlock + 1; block <= current; block++) {
-      console.error(
-          `=========Block Info======
-      current: 
-        ${current}
-      block: 
-        ${block}  
-       ============================== 
-      `
-      );
-
-
       io.in('blocks').emit('blocks', block);
 
       dice(block, io.in('dice'));
