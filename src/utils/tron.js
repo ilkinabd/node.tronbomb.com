@@ -95,11 +95,14 @@ const currentBlock = async() => {
 };
 
 const sendTRX = async(to, amount, privateKey = PRIVATE_KEY) => {
+  let result = null;
   try {
-    tronWeb.trx.sendTransaction(toHex(to), toSun(amount), privateKey);
+    result = tronWeb.trx.sendTransaction(toHex(to), toSun(amount), privateKey);
   } catch (e) {
     rollbar.error(e);
   }
+
+  return result;
 };
 
 module.exports = {
