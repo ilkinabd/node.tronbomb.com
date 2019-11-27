@@ -14,8 +14,7 @@ const templates = {
   bet: value => value / 10 ** 6,
   prize: value => value / 10 ** 6,
   rtp: value => value / 10 ** 3,
-  state: value => [null, "start", "finish"][value],
-  roll: value => ["under", "over", "exact"][value]
+  state: value => [null, "start", "finish"][value]
 };
 
 const modelBuilder = (payload, keys) => {

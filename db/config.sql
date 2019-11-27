@@ -1,4 +1,4 @@
-CREATE TYPE CONTRACT_TYPE AS ENUM ('portal', 'dice', 'wheel', 'operations');
+CREATE TYPE CONTRACT_TYPE AS ENUM ('portal', 'dice', 'wheel', 'coin', 'operations');
 
 CREATE TABLE "contracts" (
   "id"      SERIAL        NOT NULL,
