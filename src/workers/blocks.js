@@ -11,6 +11,7 @@ module.exports = async(io) => {
   setInterval(async() => {
     const current = await currentBlock() - 1;
     for (let block = lastBlock + 1; block <= current; block++) {
+      console.log(`Proceed block ${block}`);
       io.in('blocks').emit('blocks', block);
 
       dice(block, io.in('dice'));
