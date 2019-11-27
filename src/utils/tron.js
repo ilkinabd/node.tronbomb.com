@@ -22,9 +22,9 @@ const call = (variable, address) => async(...params) => {
   let result = '';
   try {
     result = await contract[variable](...params).call()
-      .catch(rollbar.error);
   } catch (e) {
     console.error(e);
+    rollbar.error(e.message);
     console.error('variable: ', variable);
     console.log('params: ', params);
   }
