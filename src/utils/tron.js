@@ -80,7 +80,7 @@ const events = (eventName, address) => async(blockNumber) => {
     rollbar.error(e);
   });
 
-  if (events.length > 0)
+  if (events && events.length > 0)
     rollbar.info(`New event: ${JSON.stringify(events)}`);
 
   return events;
