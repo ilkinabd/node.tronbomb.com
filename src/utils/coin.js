@@ -2,7 +2,6 @@ const db = require("@db");
 const { call, send, events } = require("@utils/tron");
 
 const address = db.contracts.get({ type: "coin" });
-console.log(`Coin contract address is ${address}`);
 module.exports = {
   get: {
     address: () => address,
