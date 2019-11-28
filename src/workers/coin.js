@@ -8,7 +8,10 @@ const takePart = async (block, chanel) => {
   
     for (const item of payload) {
       const event = models.takeBet(item.result);
+      console.log('Formatted event is :');
+      console.debug(event);
       chanel.emit("coin-take-part", event);
+      console.log('coin-take-part emitted');
     }
   }catch(err){
     console.debug(err);
