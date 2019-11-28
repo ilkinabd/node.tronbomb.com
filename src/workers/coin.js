@@ -3,7 +3,6 @@ const models = require("@models/coin");
 
 const takePart = async (block, chanel) => {
   try{
-    console.log('Coin take part start');
     const payload = await utils.events.takeBet(block);
     if (!payload) return setTimeout(() => takePart(block, chanel), 1000);
   

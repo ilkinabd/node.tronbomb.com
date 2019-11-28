@@ -63,15 +63,15 @@ const payable = (method, address, key = PRIVATE_KEY) =>
 
 const events = (eventName, address) => async(blockNumber) => {
   try{
+    const events = await tronWeb.getEventResult(await address, {
+      eventName,
+      blockNumber,
+    });
     console.log(`
       Event name is : ${eventName} \n
       Address is : ${address} \n
       Block number is : ${blockNumber} \n
     `);
-    const events = await tronWeb.getEventResult(await address, {
-      eventName,
-      blockNumber,
-    });
     console.log('Events array : ');
     console.debug(events);
     return events;
