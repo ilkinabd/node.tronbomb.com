@@ -27,6 +27,10 @@ const totalMined = async(_req, res) => {
   const owner = await bombUtils.get.owner();
   const ownerBalance = toDecimal((await bombUtils.get.balanceOf(owner)).amount);
   const totalMined = (totalSupply - ownerBalance) / 10 ** 6;
+
+  console.log("===========================");
+  console.log(`owner: ${owner}\nownerBalance: ${ownerBalance}\ntotalSupply: ${totalSupply}\n(totalSupply - ownerBalance) / 10 ** 6 = ${totalMined}`);
+  console.log("===========================");
   successRes(res, { totalMined });
 };
 
