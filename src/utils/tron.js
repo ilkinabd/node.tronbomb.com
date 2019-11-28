@@ -62,12 +62,15 @@ const payable = (method, address, key = PRIVATE_KEY) =>
   };
 
 const events = (eventName, address) => async(blockNumber) => {
-  const events = await tronWeb.getEventResult(await address, {
-    eventName,
-    blockNumber,
-  }).catch(console.error);
-
-  return events;
+  try{
+    const events = await tronWeb.getEventResult(await address, {
+      eventName,
+      blockNumber,
+    });
+    return events;
+  }catch(err){
+    console.debug(err);
+  }
 };
 
 const balance = async(address) => toTRX(await tronWeb.trx.getBalance(address));

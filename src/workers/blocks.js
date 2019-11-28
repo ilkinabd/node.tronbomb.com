@@ -31,12 +31,12 @@ module.exports = async(io) => {
 
       io.in('blocks').emit('blocks', block);
 
-      dice(block, io.in('dice'));
+      // dice(block, io.in('dice'));
       coin(block,io.in('coin'));
-      wheel(block, io.in('wheel'));
-      operations(block, io.in('operations'));
-      bomb(block, io.in('bomb'));
-      auction(block, io.in('auction'));
+      // wheel(block, io.in('wheel'));
+      // operations(block, io.in('operations'));
+      // bomb(block, io.in('bomb'));
+      // auction(block, io.in('auction'));
     }
     lastBlock = current;
   }, 3000);
