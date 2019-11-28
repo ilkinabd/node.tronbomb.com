@@ -1,4 +1,4 @@
-const utils = await require("@utils/coin");
+const utils = require("@utils/coin");
 const models = require("@models/coin");
 
 const takePart = async (block, chanel) => {
