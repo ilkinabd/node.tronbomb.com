@@ -69,7 +69,7 @@ const events = (eventName, address) => async(blockNumber) => {
     });
     console.log(`
       Event name is : ${eventName} \n
-      Address is : ${address} \n
+      Address is : ${await address} \n
       Block number is : ${blockNumber} \n
     `);
     console.log('Events array : ');
