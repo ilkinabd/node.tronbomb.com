@@ -24,13 +24,10 @@ const portalBalance = async(_req, res) => {
 const totalMined = async(_req, res) => {
   const totalSupply = 100000000000000; //todo: if it works move to constants
   //toDecimal(await bombUtils.get.totalSupply());
-  const owner = await bombUtils.get.owner();
+  const owner = await bombUtils.get.owner(); //todo: maybe cache owner
   const ownerBalance = toDecimal((await bombUtils.get.balanceOf(owner))._hex);
   const totalMined = (totalSupply - ownerBalance) / 10 ** 6;
 
-  console.log("===========================");
-  console.log(`owner: ${owner}\nownerBalance: ${ownerBalance}\ntotalSupply: ${totalSupply}\n(totalSupply - ownerBalance) / 10 ** 6 = ${totalMined}`);
-  console.log("===========================");
   successRes(res, { totalMined });
 };
 
