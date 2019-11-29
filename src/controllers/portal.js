@@ -154,7 +154,7 @@ const withdraw = async(req, res) => {
   const result = await utils.func.withdraw(to, amount, isToken);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
-  successRes(res);
+  successRes(res, { result });
 };
 
 // Events
