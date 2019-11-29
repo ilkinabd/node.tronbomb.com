@@ -105,9 +105,17 @@ const setRTP = async (req, res) => {
 const rng = async (req, res) => {
   console.log(`================ RNG method called ====================`);
   const { address, block } = req.query;
-  const hash = "0x" + (await getBlock(block)).blockID;
 
-  const payload = await utils.func.rng(address, block, hash);
+  console.log(`
+    Address is : ${address},
+    Block is : ${block}
+  `);
+
+  const hash = "0x" + (await getBlock(block)).blockID;
+  console.log(`Hash is ${hash}`);
+
+  // const payload = await utils.func.rng(address, block, hash);
+  const payload = await utils.func.rng();
   if (!payload) return errorRes(res, 500, 73500);
   const model = models.rng(payload);
 
