@@ -1,91 +1,91 @@
 const { FULL, SOLIDITY, EVENT, PRIVATE_KEY } = process.env;
 
-const TronWeb = require('tronweb');
+const TronWeb = require("tronweb");
 
 const tronWeb = new TronWeb(FULL, SOLIDITY, EVENT, PRIVATE_KEY);
-const nullAddress = '410000000000000000000000000000000000000000';
+const nullAddress = "410000000000000000000000000000000000000000";
 
 const toBase58 = tronWeb.address.fromHex;
 const toDecimal = tronWeb.toDecimal;
 const toAscii = tronWeb.toAscii;
 const toHex = tronWeb.address.toHex;
 const isAddress = tronWeb.isAddress;
-const getBlock = async(number) => await tronWeb.trx.getBlock(number);
-const isNullAddress = (address) => (address === nullAddress);
-const toTRX = (amount) => parseFloat(tronWeb.fromSun(toDecimal(amount)));
-const toSun = (amount) => parseFloat(tronWeb.toSun(amount));
+const getBlock = async number => await tronWeb.trx.getBlock(number);
+const isNullAddress = address => address === nullAddress;
+const toTRX = amount => parseFloat(tronWeb.fromSun(toDecimal(amount)));
+const toSun = amount => parseFloat(tronWeb.toSun(amount));
 
-const call = (variable, address) => async(...params) => {
+const call = (variable, address) => async (...params) => {
   const contract = await tronWeb.contract().at(await address);
 
-  const result = await contract[variable](...params).call()
+  const result = await contract[variable](...params)
+    .call()
     .catch(console.error);
 
   return result;
 };
 
-const send = (method, address, key = PRIVATE_KEY, shouldPollResponse = true) =>
-  async(...params) => {
-    const contract = await tronWeb.contract().at(await address);
-    tronWeb.setPrivateKey(key);
+const send = (
+  method,
+  address,
+  key = PRIVATE_KEY,
+  shouldPollResponse = true
+) => async (...params) => {
+  const contract = await tronWeb.contract().at(await address);
+  tronWeb.setPrivateKey(key);
 
-    const result = await contract[method](...params).send({
-      shouldPollResponse,
-    }).catch((payload) => {
+  const result = await contract[method](...params)
+    .send({
+      shouldPollResponse
+    })
+    .catch(payload => {
       console.error(payload);
       const output = payload.output.contractResult[0];
-      const message = output.slice(136, output.indexOf('2e') + 2);
-      const error = (!message) ? 'FAILED.' : toAscii(message);
+      const message = output.slice(136, output.indexOf("2e") + 2);
+      const error = !message ? "FAILED." : toAscii(message);
       return { error };
     });
 
-    return result;
-  };
-
-const payable = (method, address, key = PRIVATE_KEY) =>
-  async(amount, ...params) => {
-    const contract = await tronWeb.contract().at(await address);
-    tronWeb.setPrivateKey(key);
-
-    const result = await contract[method](...params).send({
-      shouldPollResponse: true,
-      callValue: amount,
-    }).catch((payload) => {
-      console.error(payload);
-      const output = payload.output.contractResult[0];
-      const message = output.slice(136, output.indexOf('2e') + 2);
-      const error = (!message) ? 'FAILED.' : toAscii(message);
-      return { error };
-    });
-
-    return result;
-  };
-
-const events = (eventName, address) => async(blockNumber) => {
-  try{
-    const events = await tronWeb.getEventResult(await address, {
-      eventName,
-      blockNumber,
-    });
-    console.log(`
-      Event name is : ${eventName} \n
-      Address is : ${await address} \n
-      Block number is : ${blockNumber} \n
-    `);
-    console.log('Events array : ');
-    console.debug(events);
-    return events;
-  }catch(err){
-    console.debug(err);
-  }
+  return result;
 };
 
-const balance = async(address) => toTRX(await tronWeb.trx.getBalance(address));
+const payable = (method, address, key = PRIVATE_KEY) => async (
+  amount,
+  ...params
+) => {
+  const contract = await tronWeb.contract().at(await address);
+  tronWeb.setPrivateKey(key);
 
-const currentBlock = async() =>
+  const result = await contract[method](...params)
+    .send({
+      shouldPollResponse: true,
+      callValue: amount
+    })
+    .catch(payload => {
+      console.error(payload);
+      const output = payload.output.contractResult[0];
+      const message = output.slice(136, output.indexOf("2e") + 2);
+      const error = !message ? "FAILED." : toAscii(message);
+      return { error };
+    });
+
+  return result;
+};
+
+const events = (eventName, address) => async blockNumber => {
+  const events = await tronWeb.getEventResult(await address, {
+    eventName,
+    blockNumber
+  });
+  return events;
+};
+
+const balance = async address => toTRX(await tronWeb.trx.getBalance(address));
+
+const currentBlock = async () =>
   (await tronWeb.trx.getCurrentBlock()).block_header.raw_data.number;
 
-const sendTRX = async(to, amount, privateKey = PRIVATE_KEY) =>
+const sendTRX = async (to, amount, privateKey = PRIVATE_KEY) =>
   tronWeb.trx.sendTransaction(toHex(to), toSun(amount), privateKey);
 
 module.exports = {
@@ -102,5 +102,5 @@ module.exports = {
   balance,
   currentBlock,
   getBlock,
-  sendTRX,
+  sendTRX
 };
