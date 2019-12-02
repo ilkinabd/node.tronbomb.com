@@ -114,8 +114,8 @@ const rng = async (req, res) => {
   const hash = "0x" + (await getBlock(block)).blockID;
   console.log(`Hash is ${hash}`);
 
-  // const payload = await utils.func.rng(address, block, hash);
-  const payload = await utils.func.rng();
+  const payload = await utils.func.rng(address, block, hash);
+  // const payload = await utils.func.rng();
   if (!payload) return errorRes(res, 500, 73500);
   const model = models.rng(payload);
 
