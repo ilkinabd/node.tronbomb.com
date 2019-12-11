@@ -4,6 +4,7 @@ const templates = {
   index: toDecimal,
   finishBlock: toDecimal,
   tokenId: toDecimal,
+  isToken: (value) => value === 'true',
   totalGames: toDecimal,
   number: toDecimal,
   result: toDecimal,
@@ -35,7 +36,7 @@ module.exports = {
   ]),
   rng: (payload) => modelBuilder(payload, ['result']),
   takeBet: (payload) => modelBuilder(payload, [
-    'wallet', 'bet', 'number', 'roll', 'tokenId', 'finishBlock', 'index'
+    'wallet', 'bet', 'number', 'roll', 'isToken', 'finishBlock', 'index'
   ]),
   finishGame: (payload) => modelBuilder(payload, ['result', 'index']),
   playerWin: (payload) => modelBuilder(payload, [
