@@ -4,21 +4,21 @@ const TronWeb = require('tronweb');
 const rollbar = require('@utils/rollbar');
 
 const tronWeb = new TronWeb(FULL, SOLIDITY, EVENT, PRIVATE_KEY);
-const nullAddress = '410000000000000000000000000000000000000000';
+const nullAddress = "410000000000000000000000000000000000000000";
 
 const toBase58 = tronWeb.address.fromHex;
 const toDecimal = tronWeb.toDecimal;
 const toAscii = tronWeb.toAscii;
 const toHex = tronWeb.address.toHex;
 const isAddress = tronWeb.isAddress;
-const getBlock = async(number) => await tronWeb.trx.getBlock(number);
-const isNullAddress = (address) => (address === nullAddress);
-const toTRX = (amount) => parseFloat(tronWeb.fromSun(toDecimal(amount)));
-const toSun = (amount) => parseFloat(tronWeb.toSun(amount));
+const getBlock = async number => await tronWeb.trx.getBlock(number);
+const isNullAddress = address => address === nullAddress;
+const toTRX = amount => parseFloat(tronWeb.fromSun(toDecimal(amount)));
+const toSun = amount => parseFloat(tronWeb.toSun(amount));
 
-const call = (variable, address) => async(...params) => {
+const call = (variable, address) => async (...params) => {
   const contract = await tronWeb.contract().at(await address);
-
+  
   let result = '';
   try {
     result = await contract[variable](...params).call();
@@ -29,53 +29,63 @@ const call = (variable, address) => async(...params) => {
     console.log('params: ', params);
     rollbar.error(JSON.stringify(e));
   }
+  
+  return result;
+};
+
+const send = (
+  method,
+  address,
+  key = PRIVATE_KEY,
+  shouldPollResponse = true
+) => async (...params) => {
+  const contract = await tronWeb.contract().at(await address);
+  tronWeb.setPrivateKey(key);
+
+  const result = await contract[method](...params)
+    .send({
+      shouldPollResponse
+    })
+    .catch(payload => {
+      console.error(payload);
+      rollbar.error(payload);
+      const output = payload.output.contractResult[0];
+      const message = output.slice(136, output.indexOf("2e") + 2);
+      const error = !message ? "FAILED." : toAscii(message);
+      return { error };
+    });
 
   return result;
 };
 
-const send = (method, address, key = PRIVATE_KEY, shouldPollResponse = true) =>
-  async(...params) => {
-    const contract = await tronWeb.contract().at(await address);
-    tronWeb.setPrivateKey(key);
+const payable = (method, address, key = PRIVATE_KEY) => async (
+  amount,
+  ...params
+) => {
+  const contract = await tronWeb.contract().at(await address);
+  tronWeb.setPrivateKey(key);
 
-    const result = await contract[method](...params).send({
-      shouldPollResponse,
-    }).catch((payload) => {
-      console.error(payload);
-      rollbar.error(payload);
-      const output = payload.output.contractResult[0];
-      const message = output.slice(136, output.indexOf('2e') + 2);
-      const error = (!message) ? 'FAILED.' : toAscii(message);
-      return { error };
-    });
-
-    return result;
-  };
-
-const payable = (method, address, key = PRIVATE_KEY) =>
-  async(amount, ...params) => {
-    const contract = await tronWeb.contract().at(await address);
-    tronWeb.setPrivateKey(key);
-
-    const result = await contract[method](...params).send({
+  const result = await contract[method](...params)
+    .send({
       shouldPollResponse: true,
-      callValue: amount,
-    }).catch((payload) => {
+      callValue: amount
+    })
+    .catch(payload => {
       console.error(payload);
       rollbar.error(payload);
       const output = payload.output.contractResult[0];
-      const message = output.slice(136, output.indexOf('2e') + 2);
-      const error = (!message) ? 'FAILED.' : toAscii(message);
+      const message = output.slice(136, output.indexOf("2e") + 2);
+      const error = !message ? "FAILED." : toAscii(message);
       return { error };
     });
 
-    return result;
-  };
+  return result;
+};
 
-const events = (eventName, address) => async(blockNumber) => {
+const events = (eventName, address) => async blockNumber => {
   const events = await tronWeb.getEventResult(await address, {
     eventName,
-    blockNumber,
+    blockNumber
   }).catch((e) => {
     console.log(e);
     rollbar.error(e);
@@ -87,7 +97,7 @@ const events = (eventName, address) => async(blockNumber) => {
   return events;
 };
 
-const balance = async(address) => toTRX(await tronWeb.trx.getBalance(address));
+const balance = async address => toTRX(await tronWeb.trx.getBalance(address));
 
 const currentBlock = async() => {
   const response = await tronWeb.trx.getCurrentBlock()
@@ -121,5 +131,5 @@ module.exports = {
   balance,
   currentBlock,
   getBlock,
-  sendTRX,
+  sendTRX
 };
