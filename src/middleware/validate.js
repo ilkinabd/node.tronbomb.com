@@ -50,6 +50,7 @@ const schemas = {
   transfer: Joi.object().keys({
     to: templates.address.required(),
     amount: templates.number.required(),
+    isToken: Joi.boolean(),
   }),
   transferFrom: Joi.object().keys({
     from: templates.address.required(),

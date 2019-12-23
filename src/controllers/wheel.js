@@ -3,6 +3,8 @@ const models = require('@models/wheel');
 const { isAddress, toDecimal, getBlock } = require('@utils/tron');
 const { successRes, errorRes } = require('@utils/res-builder');
 
+const rollbar = require('rollbar');
+
 const filterEvents = (payload, model, from, to) => {
   const events = payload.filter(item => (
     (from || 0) <= item.timestamp && item.timestamp <= (to || Infinity)
@@ -98,7 +100,15 @@ const setPortal = async(req, res) => {
 
 const rng = async(req, res) => {
   const { block } = req.query;
-  const hash = '0x' + (await getBlock(block)).blockID;
+  let hash = null;
+  try {
+    hash = '0x' + (await getBlock(block)).blockID;
+  } catch (e) {
+    console.error(`rng\nfinishBlock: ${block} \nerror: ${e}`);
+    rollbar(`rng\nfinishBlock: ${block} \nerror: ${e}`);
+  }
+
+  if (!hash) errorRes(res, 500, 73501);
 
   const payload = await utils.func.rng(block, hash);
   if (!payload) return errorRes(res, 500, 73500);

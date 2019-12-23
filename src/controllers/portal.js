@@ -149,10 +149,12 @@ const withdraw = async(req, res) => {
 
   if (!isAddress(to)) return errorRes(res, 422, 73402);
 
-  const result = await utils.func.withdraw(to, amount);
+  const isToken = req.body.isToken;
+
+  const result = await utils.func.withdraw(to, amount, isToken);
   if (result.error) return errorRes(res, 500, 73501, result.error);
 
-  successRes(res);
+  successRes(res, { result });
 };
 
 // Events

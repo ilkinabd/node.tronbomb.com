@@ -43,4 +43,7 @@ app.use('/operations', operations);
 app.use('/tools', tools);
 app.use('/fund', fund);
 
+const rollbar = require('@utils/rollbar');
+app.use(rollbar.errorHandler());
+
 module.exports = app;

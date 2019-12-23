@@ -8,34 +8,18 @@ const auction = require("@workers/auction");
 
 module.exports = async io => {
   let lastBlock = (await currentBlock()).block_header;
-  console.error(
-    `=========Last Block Info======
-      data: 
-        ${lastBlock}
-       ============================== 
-      `
-  );
-  setInterval(async () => {
-    const current = (await currentBlock()) - 1;
+  setInterval(async() => {
+    const current = await currentBlock() - 1;
     for (let block = lastBlock + 1; block <= current; block++) {
-      console.error(
-        `=========Block Info======
-      current: 
-        ${current}
-      block: 
-        ${block}  
-       ============================== 
-      `
-      );
+      console.log(`Proceed block ${block}`);
+      io.in('blocks').emit('blocks', block);
 
-      io.in("blocks").emit("blocks", block);
-
-      dice(block, io.in("dice"));
+      dice(block, io.in('dice'));
       coin(block, io.in("coin"));
-      wheel(block, io.in("wheel"));
-      operations(block, io.in("operations"));
-      bomb(block, io.in("bomb"));
-      auction(block, io.in("auction"));
+      wheel(block, io.in('wheel'));
+      operations(block, io.in('operations'));
+      bomb(block, io.in('bomb'));
+      auction(block, io.in('auction'));
     }
     lastBlock = current;
   }, 3000);

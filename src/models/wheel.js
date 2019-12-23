@@ -3,6 +3,7 @@ const { toDecimal, toBase58 } = require('@utils/tron');
 const templates = {
   index: toDecimal,
   tokenId: toDecimal,
+  isToken: (value) => value === 'true',
   sector: toDecimal,
   totalBets: toDecimal,
   processedBets: toDecimal,
@@ -35,7 +36,7 @@ module.exports = {
   ]),
   rng: (payload) => modelBuilder(payload, ['result']),
   takeBet: (payload) => modelBuilder(payload, [
-    'wallet', 'bet', 'tokenId', 'finishBlock', 'sector', 'index'
+    'wallet', 'bet', 'isToken', 'finishBlock', 'sector', 'index'
   ]),
   playerWin: (payload) => modelBuilder(payload, [
     'wallet', 'prize', 'tokenId', 'index'
