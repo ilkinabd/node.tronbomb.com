@@ -1,5 +1,5 @@
 const db = require('@db');
-const { events, call } = require('@utils/tron');
+const { events, send } = require('@utils/tron');
 
 const address = db.contracts.get({ type: 'wallet' });
 
