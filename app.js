@@ -11,6 +11,8 @@ const wheel = require('@routes/wheel');
 const operations = require('@routes/operations');
 const tools = require('@routes/tools');
 const fund = require('@routes/fund');
+const wallet = require('@routes/wallet');
+
 
 const app = express();
 
@@ -42,6 +44,8 @@ app.use('/wheel', wheel);
 app.use('/operations', operations);
 app.use('/tools', tools);
 app.use('/fund', fund);
+app.use('/wallet', wallet);
+
 
 const rollbar = require('@utils/rollbar');
 app.use(rollbar.errorHandler());
