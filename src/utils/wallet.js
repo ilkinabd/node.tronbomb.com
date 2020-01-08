@@ -5,7 +5,7 @@ const address = db.contracts.get({ type: 'wallet' });
 
 module.exports = {
   func: {
-    withdraw: call('withdrawTRX', address),
+    withdraw: send('withdrawTRX', address),
   },
   events: {
     charge: events('Charge', address),

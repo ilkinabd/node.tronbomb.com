@@ -24,7 +24,7 @@ const call = (variable, address) => async (...params) => {
     result = await contract[variable](...params).call();
   } catch (e) {
     console.error(e);
-    console.error('address: ', address);
+    console.error('address: ', await address);
     console.error('variable: ', variable);
     console.log('params: ', params);
     rollbar.error(JSON.stringify(e));
