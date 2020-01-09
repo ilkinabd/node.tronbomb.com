@@ -17,7 +17,24 @@ const chargeWallet = async (block, chanel) => {
   }
 };
 
+const withdrawWallet = async (block, chanel) => {
+  try {
+    const payload = await utils.events.withdraw(block);
+    if (!payload) return setTimeout(() => withdrawWallet(block, chanel), 1000);
+
+    for (const item of payload) {
+      const event = models.withdraw(item.result);
+      console.log("Withdraw event is :");
+      console.debug(event);
+      chanel.emit("withdraw-wallet", event);
+    }
+  } catch (err) {
+    console.debug(err);
+  }
+};
+
+
 module.exports = async (block, chanel) => {
   chargeWallet(block, chanel);
-  // withdrawWallet(block, chanel);
+  withdrawWallet(block, chanel);
 };
