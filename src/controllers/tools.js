@@ -5,33 +5,40 @@ const bombUtils = require('@utils/bomb');
 const { toDecimal } = require('@utils/tron');
 const { successRes, errorRes } = require('@utils/res-builder');
 
-const getContracts = async(_req, res) => {
+const getContracts = async (_req, res) => {
   const contracts = await db.contracts.getAll();
   successRes(res, { contracts });
 };
 
-const getFunds = async(_req, res) => {
+const getFunds = async (_req, res) => {
   const funds = await db.funds.getAll();
   successRes(res, { funds });
 };
 
-const portalBalance = async(_req, res) => {
+const portalBalance = async (_req, res) => {
   const address = await db.contracts.get({ type: 'portal' });
   const balanceTRX = await balance(address);
   successRes(res, { balanceTRX });
 };
 
-const totalMined = async(_req, res) => {
+const totalMined = async (_req, res) => {
   const totalSupply = 100000000000000; //todo: if it works move to constants
   //toDecimal(await bombUtils.get.totalSupply());
   const owner = await bombUtils.get.owner(); //todo: maybe cache owner
+  const balanceOfOwner = await bombUtils.get.balanceOf(owner);
+
+  console.log('Owner');
+  console.debug(owner);
+  console.log('Balance of owner');
+  console.debug(balanceOfOwner);
+  
   const ownerBalance = toDecimal(await bombUtils.get.balanceOf(owner));
   const totalMined = (totalSupply - ownerBalance) / 10 ** 6;
 
   successRes(res, { totalMined });
 };
 
-const block = async(req, res) => {
+const block = async (req, res) => {
   const { index } = req.query;
 
   try {
